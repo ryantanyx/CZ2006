@@ -47,6 +47,9 @@ public class Menu extends AppCompatActivity {
                     case R.id.account:
                         fragment = new AccountFragment();
                         break;
+                    case R.id.forum:
+                        fragment = new ForumFragment();
+                        break;
                 }
 
                 if (fragment != null){
