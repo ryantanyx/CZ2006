@@ -60,6 +60,8 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         dialog2 = new Dialog(RegisterUser.this);
         dialog2.setContentView(R.layout.custom_dialog);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
