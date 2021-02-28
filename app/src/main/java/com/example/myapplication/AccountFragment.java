@@ -56,10 +56,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private ImageView profileImg;
     private EditText profileName, profileEmail, profileDate;
     private EditText currentPassword, newPassword, rePassword;
-    private ImageView profileGender;
+    private ImageView profileGender, edit;
+    private int profileImageno;
 
     private DatePickerDialog picker;
-    private Dialog dialog2;
+    private Dialog dialog2, dialog3;
     private AlertDialog dialog;
     private AlertDialog.Builder builder;
 
@@ -122,6 +123,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         profileDate = (EditText) view.findViewById(R.id.profileDate);
         profileDate.setInputType(InputType.TYPE_NULL);
         profileDate.setOnClickListener(this);
+        edit = (ImageView) view.findViewById(R.id.edit);
+        edit.setOnClickListener(this);
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -186,6 +189,23 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         dialog2.setCancelable(false);
         dialog2.getWindow().getAttributes().windowAnimations = R.style.animation;
 
+        dialog3 = new Dialog(getActivity());
+        dialog3.setContentView(R.layout.image_picker);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog3.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
+        }
+        dialog3.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog3.getWindow().getAttributes().windowAnimations = R.style.animation;
+
+        CardView image1 = (CardView) dialog3.findViewById(R.id.image1);
+        image1.setOnClickListener(this);
+        CardView image2 = (CardView) dialog3.findViewById(R.id.image2);
+        image2.setOnClickListener(this);
+        CardView image3 = (CardView) dialog3.findViewById(R.id.image3);
+        image3.setOnClickListener(this);
+        CardView image4 = (CardView) dialog3.findViewById(R.id.image4);
+        image4.setOnClickListener(this);
+
         currentPassword = (EditText) dialog2.findViewById(R.id.currentPassword);
         newPassword = (EditText) dialog2.findViewById(R.id.newPassword);
         rePassword = (EditText) dialog2.findViewById(R.id.rePassword);
@@ -200,6 +220,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     public void onClick(View view){
         switch(view.getId()){
+            case R.id.edit:
+                dialog3.show();
+                break;
             case R.id.profileDate:
                 final Calendar cldr = Calendar.getInstance();
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
@@ -247,6 +270,26 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             case R.id.confirm:
                 changePassword();
                 break;
+            case R.id.image1:
+                profileImageno = 1;
+                dialog3.dismiss();
+                profileImg.setImageResource(R.drawable.image1);
+                break;
+            case R.id.image2:
+                profileImageno = 2;
+                dialog3.dismiss();
+                profileImg.setImageResource(R.drawable.image2);
+                break;
+            case R.id.image3:
+                profileImageno = 3;
+                dialog3.dismiss();
+                profileImg.setImageResource(R.drawable.image3);
+                break;
+            case R.id.image4:
+                profileImageno = 4;
+                dialog3.dismiss();
+                profileImg.setImageResource(R.drawable.image4);
+                break;
         }
     }
 
@@ -287,6 +330,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         reference.child(userID).child("name").setValue(name);
         user.updateEmail(email);
         reference.child(userID).child("date").setValue(date);
+        reference.child(userID).child("imageNo").setValue(profileImageno);
         Toast.makeText(getActivity(), "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
     }
 

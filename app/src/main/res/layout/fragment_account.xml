@@ -47,6 +47,16 @@
             </androidx.cardview.widget.CardView>
 
             <ImageView
+                android:id="@+id/edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:src="@drawable/ic_edit"
+                app:layout_constraintStart_toEndOf="@+id/profileImgbg"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
                 android:id="@+id/nameIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -219,6 +229,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_begin="88dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
