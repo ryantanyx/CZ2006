@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FirebaseAuth mAuth;
     private ProgressBar logProgress;
-//     dsadsadas
     private String test;
 
     @Override
