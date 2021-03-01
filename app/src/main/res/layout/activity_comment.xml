@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#222222"
+    android:background="#F3F3EB"
     tools:context=".CommentActivity">
 
 
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="25dp"
         app:layout_constraintStart_toEndOf="@+id/materialTextView"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
@@ -25,7 +25,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:text="TextView"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CAposttitle" />
@@ -62,7 +62,7 @@
         android:gravity="start|top"
         android:hint="Type your comment here"
         android:inputType="textMultiLine"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textColorHint="#A5A4A4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -74,7 +74,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:text="Post Title: "
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +84,6 @@
         android:id="@+id/CApostcommentbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#222222"
         android:text="POST"
         android:textColor="#149EF0"
         android:textSize="16dp"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#222222"
+    android:background="#F3F3EB"
     tools:context=".PostActivity">
 
     <Button
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:backgroundTint="#222222"
+        android:backgroundTint="@color/colorPrimary"
         android:text="POST"
         android:textColor="#149EF0"
         android:textSize="16dp"
@@ -59,7 +59,7 @@
         android:hint="Post title (required)"
         android:inputType="textPersonName"
         android:textColor="@color/white"
-        android:textColorHint="#A5A4A4"
+        android:textColorHint="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,8 +92,8 @@
         android:gravity="start|top"
         android:hint="Your text post (optional)"
         android:inputType="textMultiLine"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#A5A4A4"
+        android:textColor="#000000"
+        android:textColorHint="#222222"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline11" />
@@ -103,7 +103,7 @@
         android:layout_width="100dp"
         android:layout_height="27dp"
         android:text="Text Post"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toEndOf="parent"
