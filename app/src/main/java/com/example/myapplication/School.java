@@ -13,6 +13,7 @@ public class School implements Parcelable {
     }
 
     protected School(Parcel in) {
+        imageUrl = in.readString();
         schoolName = in.readString();
         address = in.readString();
     }
@@ -61,6 +62,7 @@ public class School implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(imageUrl);
         dest.writeString(schoolName);
         dest.writeString(address);
     }
