@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -37,12 +36,12 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
     private String mParam1;
     private String mParam2;
 
-    FirebaseDatabase db = FirebaseDatabase.getInstance();
-    DatabaseReference root = db.getReference().child("Posts");
-    FirebaseRecyclerOptions<Post> options;
-    FirebaseRecyclerAdapter<Post, PostViewHolder> adapter;
-    RecyclerView recyclerView;
-    ImageView createPost;
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference root = db.getReference().child("Posts");
+    private FirebaseRecyclerOptions<Post> options;
+    private FirebaseRecyclerAdapter<Post, PostViewHolder> adapter;
+    private RecyclerView recyclerView;
+    private ImageView createPost;
 
 
     public ForumFragment() {
@@ -129,7 +128,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
             @NonNull
             @Override
             public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v = getLayoutInflater().from(parent.getContext()).inflate(R.layout.item, parent, false);
+                View v = getLayoutInflater().from(parent.getContext()).inflate(R.layout.post_single_view, parent, false);
                 return new PostViewHolder(v);
             }
         };
