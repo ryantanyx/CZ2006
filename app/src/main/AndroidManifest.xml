@@ -9,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
+        <activity android:name=".CommentActivity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity
+            android:name=".PostActivity"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Details"/>
         <activity android:name=".ForgotPassword">
             <meta-data
