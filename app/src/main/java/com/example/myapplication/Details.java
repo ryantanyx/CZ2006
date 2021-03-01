@@ -18,8 +18,8 @@ public class Details extends AppCompatActivity {
         detailsTitle = findViewById(R.id.detailsTitle);
 
         Intent i = getIntent();
-        String title = i.getStringExtra("title");
+        School school = i.getParcelableExtra("School");
 
-        detailsTitle.setText(title);
+        detailsTitle.setText(school.getSchoolName());
     }
 }

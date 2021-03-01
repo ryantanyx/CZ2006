@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +34,9 @@ public class SearchFragment extends Fragment {
 
     RecyclerView recyclerView;
     Adapter adapter;
-    ArrayList<String> items;
+    ArrayList<School> items;
+
+    private List<School> schoolList = new ArrayList<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,16 +86,11 @@ public class SearchFragment extends Fragment {
         getActivity().setTitle("Search");
         setHasOptionsMenu(true);
 
-        items = new ArrayList<>();
-        items.add("Admiralty Secondary School");
-        items.add("Bartley Secondary School");
-        items.add("Catholic High School");
-        items.add("Dunman High School");
-        items.add("East Spring Secondary School");
+        readSchoolData();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new Adapter(getActivity(), items);
+        adapter = new Adapter(getActivity(), schoolList);
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -114,5 +118,31 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    private void readSchoolData(){
+
+        AssetManager am = getActivity().getAssets();
+        try {
+            InputStream is = am.open("general-information-of-schools.csv");
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(is, Charset.forName("UTF-8"))
+            );
+
+            String line;
+
+            reader.readLine();
+            while ((line= reader.readLine())!= null){
+
+                String[] tokens = line.split(",");
+
+                School school = new School();
+                school.setImageUrl(tokens[0]);
+                school.setSchoolName(tokens[1]);
+                school.setAddress(tokens[3]);
+                schoolList.add(school);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

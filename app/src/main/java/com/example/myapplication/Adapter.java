@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,13 +22,13 @@ import java.util.List;
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
 
     private LayoutInflater layoutInflater;
-    private List<String> data;
-    private List<String> dataset;
+    private List<School> data;
+    private List<School> dataset;
 
-    Adapter(Context context, List<String> data){
+    Adapter(Context context, List<School> data){
         this.layoutInflater = LayoutInflater.from(context);
         this.data = data;
-        this.dataset = new ArrayList<>(data);
+        this.dataset = new ArrayList<School>(data);
     }
 
     @NonNull
@@ -38,8 +41,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        String title = data.get(position);
-        holder.schoolTitle.setText(title);
+        School school = data.get(position);
+        String imageUrl = school.getImageUrl();
+        String schoolName = school.getSchoolName();
+        String schoolAddress = school.getAddress();
+        Glide.with(holder.schoolImage.getContext()).load(imageUrl).error(R.drawable.ic_person).into(holder.schoolImage);
+        holder.schoolTitle.setText(schoolName);
+        holder.schoolDesc.setText(schoolAddress);
     }
 
     @Override
@@ -56,14 +64,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            List<String> filteredList = new ArrayList<>();
+            List<School> filteredList = new ArrayList<>();
 
             if(constraint.toString().isEmpty()){
                 filteredList.addAll(dataset);
             }
             else{
-                for (String school: dataset){
-                    if (school.toLowerCase().contains(constraint.toString().toLowerCase())){
+                for (School school: dataset){
+                    if (school.getSchoolName().toLowerCase().contains(constraint.toString().toLowerCase())){
                         filteredList.add(school);
                     }
                 }
@@ -78,13 +86,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             data.clear();
-            data.addAll((Collection<? extends String>) results.values);
+            data.addAll((Collection<? extends School>) results.values);
             notifyDataSetChanged();
         }
     };
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        ImageView schoolImage;
         TextView schoolTitle, schoolDesc;
 
         public ViewHolder(@NonNull View itemView) {
@@ -95,10 +104,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                 public void onClick(View v) {
 
                     Intent i = new Intent(v.getContext(), Details.class);
-                    i.putExtra("title", data.get(getAdapterPosition()));
+                    School school = data.get(getAdapterPosition());
+                    i.putExtra("School", data.get(getAdapterPosition()));
                     v.getContext().startActivity(i);
                 }
             });
+            schoolImage = itemView.findViewById(R.id.schoolImage);
             schoolTitle = itemView.findViewById(R.id.schoolTitle);
             schoolDesc = itemView.findViewById(R.id.schoolDesc);
         }
