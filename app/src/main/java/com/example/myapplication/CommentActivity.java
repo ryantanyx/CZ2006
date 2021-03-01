@@ -19,13 +19,18 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    TextView CAposttitle, CApostcontent;
+    TextView CAposttitle, CApostcontent, username;
     ImageView CAbackbutton;
     EditText edittextpostcomment;
     Button CApostcommentbutton;
@@ -35,10 +40,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     FirebaseRecyclerAdapter<Comment, CommentViewHolder> adapter;
     RecyclerView recyclerView;
 
+    private FirebaseUser user;
+    private DatabaseReference reference;
+    private String userID;
+    private int imageNo;
+    private String name;
 
 
     FirebaseDatabase db = FirebaseDatabase.getInstance();
     DatabaseReference root = db.getReference().child("Comment");
+
 
 
     @Override
@@ -54,6 +65,34 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         CApostcommentbutton = (Button) findViewById(R.id.CApostcommentbutton);
         CApostcommentbutton.setOnClickListener(this);
+
+
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
+
+        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+
+                if (userProfile != null) {
+
+                    imageNo = userProfile.imageNo;
+                    name = userProfile.name;
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(CommentActivity.this, "Something went wrong!", Toast.LENGTH_LONG).show();
+            }
+        });
+
 
 
         Bundle extras = getIntent().getExtras();
@@ -80,8 +119,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull Comment comment) {
 
-
+                holder.username.setText(comment.getUsername());
                 holder.usercomment.setText(comment.getUsercomment());
+                if (comment.getImageNo() == 1){
+                    holder.userImage.setImageResource(R.drawable.image1);
+                }
+                else if (comment.getImageNo() == 2){
+                    holder.userImage.setImageResource(R.drawable.image2);
+                }
+                else if (comment.getImageNo() == 3){
+                    holder.userImage.setImageResource(R.drawable.image3);
+                }
+                else if (comment.getImageNo() == 4){
+                    holder.userImage.setImageResource(R.drawable.image4);
+                }
+
             }
 
 
@@ -130,19 +182,22 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         else
         {
+
+
             DatabaseReference root = db.getReference("Comment").child(postKey).push();
             String comment_content = edittextpostcomment.getText().toString();
-            Comment comment = new Comment(comment_content);
+            Comment comment = new Comment(comment_content, name, imageNo);
+
             root.setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(com.example.myapplication.CommentActivity.this, "Comment has been added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommentActivity.this, "Comment has been added", Toast.LENGTH_SHORT).show();
                     edittextpostcomment.setText("");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(com.example.myapplication.CommentActivity.this, "Failed to add comment", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommentActivity.this, "Failed to add comment", Toast.LENGTH_SHORT).show();
                     edittextpostcomment.setText("");
                 }
             });
