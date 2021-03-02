@@ -21,7 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,31 +118,35 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void readSchoolData(){
+    private void readSchoolData() {
 
         AssetManager am = getActivity().getAssets();
         try {
-            InputStream is = am.open("general-information-of-schools.csv");
+            //InputStream is = am.open("general-information-of-schools.tsv");
+            InputStream is = getResources().openRawResource(R.raw.general_information_of_schools);
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(is, Charset.forName("UTF-8"))
+                    new InputStreamReader(is, StandardCharsets.UTF_8)
             );
+            //Charset.forName("UTF-8")
 
             String line;
-
             reader.readLine();
-            while ((line= reader.readLine())!= null){
+            while ((line = reader.readLine()) != null) {
 
-                String[] tokens = line.split(",");
+                String[] tokens = line.split("\t");
 
-                School school = new School();
-                school.setImageUrl(tokens[0]);
-                school.setSchoolName(tokens[1]);
-                school.setAddress(tokens[3]);
-                schoolList.add(school);
+                if (tokens[27].toString().equalsIgnoreCase(getString(R.string.sch_type))){
+                    School school = new School();
+                    school.setImageUrl(tokens[0]);
+                    school.setSchoolName(tokens[1]);
+                    school.setAddress(tokens[3]);
+                    schoolList.add(school);
+                } else {
+                    continue;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
