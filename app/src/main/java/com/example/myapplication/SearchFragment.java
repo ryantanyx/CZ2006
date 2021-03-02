@@ -122,27 +122,24 @@ public class SearchFragment extends Fragment {
 
         AssetManager am = getActivity().getAssets();
         try {
-            //InputStream is = am.open("general-information-of-schools.tsv");
             InputStream is = getResources().openRawResource(R.raw.general_information_of_schools);
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(is, StandardCharsets.UTF_8)
             );
-            //Charset.forName("UTF-8")
-
             String line;
             reader.readLine();
             while ((line = reader.readLine()) != null) {
 
                 String[] tokens = line.split("\t");
 
-                if (tokens[27].toString().equalsIgnoreCase(getString(R.string.sch_type))){
+                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_type))){
                     School school = new School();
                     school.setImageUrl(tokens[0]);
                     school.setSchoolName(tokens[1]);
                     school.setAddress(tokens[3]);
+                    school.setMission(tokens[20]);
+                    school.setVision(tokens[19]);
                     schoolList.add(school);
-                } else {
-                    continue;
                 }
             }
         } catch (IOException e) {
