@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,15 +32,15 @@ import com.google.firebase.database.ValueEventListener;
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    TextView CAposttitle, CApostcontent, username;
-    ImageView CAbackbutton;
-    EditText edittextpostcomment;
-    Button CApostcommentbutton;
-    String postKey, content, title;
+    private TextView CAposttitle, CApostcontent, username;
+    private ImageView CAbackbutton;
+    private EditText edittextpostcomment;
+    private Button CApostcommentbutton;
+    private String postKey, content, title;
 
-    FirebaseRecyclerOptions<Comment> options;
-    FirebaseRecyclerAdapter<Comment, CommentViewHolder> adapter;
-    RecyclerView recyclerView;
+    private FirebaseRecyclerOptions<Comment> options;
+    private FirebaseRecyclerAdapter<Comment, CommentViewHolder> adapter;
+    private RecyclerView recyclerView;
 
     private FirebaseUser user;
     private DatabaseReference reference;
@@ -46,8 +49,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private String name;
 
 
-    FirebaseDatabase db = FirebaseDatabase.getInstance();
-    DatabaseReference root = db.getReference().child("Comment");
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference root = db.getReference().child("Comment");
 
 
 
@@ -58,12 +61,20 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         CAposttitle = findViewById(R.id.CAposttitle);
         CApostcontent = findViewById(R.id.CApostcontent);
+
         CAbackbutton = (ImageView) findViewById(R.id.CAbackbutton);
         CAbackbutton.setOnClickListener(this);
+
         edittextpostcomment = (EditText) findViewById(R.id.edittextpostcomment);
 
         CApostcommentbutton = (Button) findViewById(R.id.CApostcommentbutton);
         CApostcommentbutton.setOnClickListener(this);
+
+
+
+
+
+
 
 
 
@@ -118,6 +129,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull Comment comment) {
 
+                final String cid = comment.getCid();
+
+
                 holder.username.setText(comment.getUsername());
                 holder.usercomment.setText(comment.getUsercomment());
                 if (comment.getImageNo() == 1){
@@ -132,6 +146,42 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 else if (comment.getImageNo() == 4){
                     holder.userImage.setImageResource(R.drawable.image4);
                 }
+
+
+
+
+                holder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (comment.getUsername().equals(name))
+                        {
+                            deleteButtonmethod(cid);
+                            Snackbar.make(getCurrentFocus(), "Comment has been deleted!", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Dismiss", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    }).show();
+                        }
+                        else
+                        {
+                            System.out.println("Nope");
+                            Snackbar.make(getCurrentFocus(), "Unable to delete comments of others!", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Dismiss", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    }).show();
+                        }
+
+                    }
+                });
+
+
+
 
             }
 
@@ -158,6 +208,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.CApostcommentbutton:
                 CApostcommentbuttonmethod();
                 break;
+
             default:
                 break;
         }
@@ -174,7 +225,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         if (edittextpostcomment.length()== 0)
         {
-            edittextpostcomment.setError("Please enter a title");
+            edittextpostcomment.setError("Comment cannot be empty!");
             edittextpostcomment.setText("");
         }
 
@@ -182,10 +233,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         else
         {
 
-
             DatabaseReference root = db.getReference("Comment").child(postKey).push();
             String comment_content = edittextpostcomment.getText().toString();
             Comment comment = new Comment(comment_content, name, imageNo);
+
+            //create id for the comment
+            String cid = root.getKey();
+            comment.setCid(cid);
 
             root.setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -200,11 +254,20 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     edittextpostcomment.setText("");
                 }
             });
+
         }
 
 
     }
 
+
+
+    public void deleteButtonmethod(String cid){
+        DatabaseReference root = db.getReference("Comment").child(postKey).child(cid);
+        root.removeValue();
+
+
+    }
 
 
 

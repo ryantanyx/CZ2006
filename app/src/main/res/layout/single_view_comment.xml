@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="110dp">
+    android:background="#FFFFFF"
+    android:layout_height="110dp"
+    android:padding="10dp"
+    android:elevation="2dp">
 
     <TextView
         android:id="@+id/username"
@@ -11,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="Anonymous:"
+        android:text="Username:"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -39,7 +42,15 @@
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        />
+
+    <ImageView
+        android:id="@+id/cdeletebutton"
+        android:layout_width="60dp"
+        android:layout_height="26dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/delete" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
