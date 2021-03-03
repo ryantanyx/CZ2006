@@ -5,9 +5,7 @@ import android.os.Parcelable;
 
 public class School implements Parcelable {
 
-    private String imageUrl;
-    private String schoolName;
-    private String address;
+    private String imageUrl,schoolName, address, mission, vision;
 
     public School() {
     }
@@ -16,6 +14,8 @@ public class School implements Parcelable {
         imageUrl = in.readString();
         schoolName = in.readString();
         address = in.readString();
+        mission = in.readString();
+        vision = in.readString();
     }
 
     public static final Creator<School> CREATOR = new Creator<School>() {
@@ -30,6 +30,21 @@ public class School implements Parcelable {
         }
     };
 
+    public String getMission() {
+        return mission;
+    }
+
+    public void setMission(String mission) {
+        this.mission = mission;
+    }
+
+    public String getVision() {
+        return vision;
+    }
+
+    public void setVision(String vision) {
+        this.vision = vision;
+    }
 
     public String getImageUrl() {
         return imageUrl;
@@ -65,5 +80,7 @@ public class School implements Parcelable {
         dest.writeString(imageUrl);
         dest.writeString(schoolName);
         dest.writeString(address);
+        dest.writeString(mission);
+        dest.writeString(vision);
     }
 }
