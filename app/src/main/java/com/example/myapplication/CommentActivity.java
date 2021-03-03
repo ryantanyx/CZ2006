@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.model.stream.QMediaStoreUriLoader;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import static androidx.appcompat.app.AlertDialog.*;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -156,25 +159,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                         if (comment.getUsername().equals(name))
                         {
-                            deleteButtonmethod(cid);
-                            Snackbar.make(getCurrentFocus(), "Comment has been deleted!", Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("Dismiss", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+                                    deleteButtonmethod(cid);
+                            Toast.makeText(CommentActivity.this, "Comment has been deleted!", Toast.LENGTH_SHORT).show();
 
-                                        }
-                                    }).show();
-                        }
+                                }
                         else
                         {
-                            System.out.println("Nope");
-                            Snackbar.make(getCurrentFocus(), "Unable to delete comments of others!", Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("Dismiss", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                        }
-                                    }).show();
+                            Toast.makeText(CommentActivity.this, "Unable to delete comments of others!", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -265,6 +256,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void deleteButtonmethod(String cid){
         DatabaseReference root = db.getReference("Comment").child(postKey).child(cid);
         root.removeValue();
+
 
 
     }

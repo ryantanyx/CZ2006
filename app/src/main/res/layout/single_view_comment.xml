@@ -50,7 +50,7 @@
         android:layout_height="26dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/delete" />
+        android:src="@drawable/ic_delete" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
