@@ -14,20 +14,21 @@
 
     <nl.joery.animatedbottombar.AnimatedBottomBar
         android:id="@+id/bottom_bar"
-        android:background="#FFF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:abb_selectedTabType="text"
+        android:background="#FFF"
         app:abb_indicatorAppearance="round"
-        app:abb_indicatorMargin="16dp"
-        app:abb_indicatorHeight="4dp"
-        app:abb_tabColor="#454545"
-        app:abb_tabColorSelected="@color/colorPrimary"
         app:abb_indicatorColor="@color/colorAccent"
+        app:abb_indicatorHeight="4dp"
         app:abb_indicatorLocation="bottom"
-        app:abb_tabs="@menu/tabs"
+        app:abb_indicatorMargin="16dp"
         app:abb_rippleEnabled="true"
         app:abb_selectedIndex="0"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:abb_selectedTabType="text"
+        app:abb_tabColor="#454545"
+        app:abb_tabColorSelected="@color/colorPrimary"
+        app:abb_tabs="@menu/tabs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="132dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
