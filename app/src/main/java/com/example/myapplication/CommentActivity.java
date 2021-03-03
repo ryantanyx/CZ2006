@@ -79,8 +79,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                 if (userProfile != null) {
 
-                    imageNo = userProfile.imageNo;
-                    name = userProfile.name;
+                    imageNo = userProfile.getImageNo();
+                    name = userProfile.getName();
 
 
                 }

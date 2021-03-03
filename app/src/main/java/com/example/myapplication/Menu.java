@@ -50,6 +50,8 @@ public class Menu extends AppCompatActivity {
                     case R.id.forum:
                         fragment = new ForumFragment();
                         break;
+                    case R.id.favList:
+                        fragment = new FavListFragment();
                 }
 
                 if (fragment != null){
