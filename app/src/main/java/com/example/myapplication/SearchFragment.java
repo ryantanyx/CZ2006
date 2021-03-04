@@ -155,9 +155,9 @@ public class SearchFragment extends Fragment {
                     contact.add("Email address: "  + tokens[9]);
                     school.setContactInfo(contact);
                     if (tokens[10].contains("\"")){
-                        transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1));
+                        transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1).toLowerCase());
                     } else{
-                        transport.add("By MRT: " + tokens[10]);
+                        transport.add("By MRT: " + tokens[10].toLowerCase());
                     }
                     if (tokens[11].contains("\"")){
                         transport.add("By bus: " + tokens[11].substring(1,tokens[11].length() -1));
