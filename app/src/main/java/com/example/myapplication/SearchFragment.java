@@ -154,8 +154,16 @@ public class SearchFragment extends Fragment {
                     contact.add("Tel no: " + tokens[5]);
                     contact.add("Email address: "  + tokens[9]);
                     school.setContactInfo(contact);
-                    transport.add("By MRT: " + tokens[10]);
-                    transport.add("By bus: " + tokens[11]);
+                    if (tokens[10].contains("\"")){
+                        transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1));
+                    } else{
+                        transport.add("By MRT: " + tokens[10]);
+                    }
+                    if (tokens[11].contains("\"")){
+                        transport.add("By bus: " + tokens[11].substring(1,tokens[11].length() -1));
+                    } else{
+                        transport.add("By bus: " + tokens[11]);
+                    }
                     school.setTransport(transport);
 
                     schoolList.add(school);
