@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/list_child"
         android:textSize="20sp"
+        android:textColor="@color/black"
         android:paddingLeft="30dp"/>
 
 </LinearLayout>

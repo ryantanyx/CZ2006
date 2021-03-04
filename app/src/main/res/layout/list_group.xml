@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/list_parent"
         android:textSize="20sp"
+        android:textColor="@color/black"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
         />
 
