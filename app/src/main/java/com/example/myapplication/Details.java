@@ -35,7 +35,6 @@ public class Details extends AppCompatActivity {
         schGender = findViewById(R.id.schGender);
         schCutOff = findViewById(R.id.schCutOff);
         expandableListView = findViewById(R.id.expandable_listview);
-        //TODO: programme and cca expandable adaptor
 
 
         Intent i = getIntent();
