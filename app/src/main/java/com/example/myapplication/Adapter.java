@@ -10,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -126,11 +127,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                     if (flag) {
                         //addSchoolToFav();       //Remove comment to test
                         favIcon.setImageResource(R.drawable.ic_favstar);
+                        Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
                         flag = false;
                     }
                     else {
                         //removeSchoolfromFav();      //Remove comment to test
                         favIcon.setImageResource(R.drawable.ic_normalstar);
+                        Toast.makeText(v.getContext(), "School has been removed from favourite list", Toast.LENGTH_SHORT).show();
                         flag = true;
                     }
                 }
