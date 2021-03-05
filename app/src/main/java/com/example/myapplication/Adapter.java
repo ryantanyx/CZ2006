@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,11 +20,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable{
 
     private LayoutInflater layoutInflater;
     private List<School> data;
     private List<School> dataset;
+
+    boolean flag = true;
 
     Adapter(Context context, List<School> data){
         this.layoutInflater = LayoutInflater.from(context);
@@ -95,9 +98,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
         ImageView schoolImage;
         TextView schoolTitle, schoolDesc;
+        ImageButton favIcon;
+        Boolean flag = true;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            schoolImage = itemView.findViewById(R.id.schoolImage);
+            schoolTitle = itemView.findViewById(R.id.schoolTitle);
+            schoolDesc = itemView.findViewById(R.id.schoolDesc);
+            favIcon = itemView.findViewById(R.id.starIcon);
+            favIcon.setImageResource(R.drawable.ic_normalstar);
 
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -109,9 +119,28 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                     v.getContext().startActivity(i);
                 }
             });
-            schoolImage = itemView.findViewById(R.id.schoolImage);
-            schoolTitle = itemView.findViewById(R.id.schoolTitle);
-            schoolDesc = itemView.findViewById(R.id.schoolDesc);
+            favIcon.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    //favIcon.setSelected(!favIcon.isPressed());
+                    if (flag) {
+                        //addSchoolToFav();       //Remove comment to test
+                        favIcon.setImageResource(R.drawable.ic_favstar);
+                        flag = false;
+                    }
+                    else {
+                        //removeSchoolfromFav();      //Remove comment to test
+                        favIcon.setImageResource(R.drawable.ic_normalstar);
+                        flag = true;
+                    }
+                }
+
+                private void removeSchoolfromFav() {
+                }
+
+                private void addSchoolToFav() {
+                }
+            });
         }
     }
 }
