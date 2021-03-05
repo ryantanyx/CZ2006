@@ -62,7 +62,7 @@
                 app:layout_constraintStart_toEndOf="@+id/schoolImage"
                 app:layout_constraintTop_toBottomOf="@+id/schoolTitle" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/starIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -70,6 +70,7 @@
                 android:layout_margin="2dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                android:onClick="schoolFavorited"
                 />
 
 

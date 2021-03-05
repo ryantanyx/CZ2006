@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,14 +23,16 @@ import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
 
-    private LayoutInflater layoutInflater;
-    private List<School> data;
-    private List<School> dataset;
+    private final LayoutInflater layoutInflater;
+    private final List<School> data;
+    private final List<School> dataset;
+    private Context context;
 
     Adapter(Context context, List<School> data){
         this.layoutInflater = LayoutInflater.from(context);
         this.data = data;
         this.dataset = new ArrayList<School>(data);
+        this.context = context;
     }
 
     @NonNull
@@ -109,6 +113,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                     v.getContext().startActivity(i);
                 }
             });
+            /*View OnClickListener  = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   public void schoolFavorited (ImageView imageView) {
+                        Toast.makeText(context, "school is added to you favourite list", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+            };*/
             schoolImage = itemView.findViewById(R.id.schoolImage);
             schoolTitle = itemView.findViewById(R.id.schoolTitle);
             schoolDesc = itemView.findViewById(R.id.schoolDesc);
