@@ -104,7 +104,7 @@ public class SearchFragment extends Fragment {
         inflater.inflate(R.menu.searchbar, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        MenuItem item = menu.findItem(R.id.action_search);
+        MenuItem item = menu.findItem(R .id.action_search);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

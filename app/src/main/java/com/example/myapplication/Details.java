@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,10 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Details extends AppCompatActivity {
+public class Details extends AppCompatActivity implements View.OnClickListener{
 
     TextView schName, schVision, schMission, schGender, schCutOff;
-    ImageView schLogo;
+    ImageView schLogo, backbutton;
     ExpandableListView expandableListView;
     List<String> listGroup;
     ExpandableAdaptor adapter;
@@ -36,6 +37,8 @@ public class Details extends AppCompatActivity {
         schCutOff = findViewById(R.id.schCutOff);
         expandableListView = findViewById(R.id.expandable_listview);
 
+        backbutton =  (ImageView) findViewById(R.id.detailsBackButton);
+        backbutton.setOnClickListener(this);
 
         Intent i = getIntent();
         School school = i.getParcelableExtra("School");
@@ -74,5 +77,20 @@ public class Details extends AppCompatActivity {
         schCutOff.setText("Cut-Off Point: " + schoolCutOff.toString());
         schGender.setText("School Type: " + schoolGender.toLowerCase());
         Glide.with(this).load(imageUrl).error(R.drawable.ic_person).into(schLogo);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.detailsBackButton:
+                backbuttonmethod();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void backbuttonmethod() {
+        Details.this.finish();
     }
 }
