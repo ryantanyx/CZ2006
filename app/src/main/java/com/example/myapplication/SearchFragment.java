@@ -138,7 +138,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
                 String[] tokens = line.split("\t");
 
-                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_type))){
+                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))){
                     School school = new School();
                     school.setImageUrl(tokens[0]);
                     school.setSchoolName(tokens[1]);
