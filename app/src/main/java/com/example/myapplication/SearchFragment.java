@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.content.res.AssetManager;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -122,8 +121,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 adapter.getFilter().filter(newText);
                 return false;
             }
-
-
         });
     }
 
