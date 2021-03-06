@@ -21,18 +21,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable{
 
-    private final LayoutInflater layoutInflater;
-    private final List<School> data;
-    private final List<School> dataset;
-    private Context context;
+    private LayoutInflater layoutInflater;
+    private List<School> data;
+    private List<School> dataset;
+
+    boolean flag = true;
 
     Adapter(Context context, List<School> data){
         this.layoutInflater = LayoutInflater.from(context);
         this.data = data;
         this.dataset = new ArrayList<School>(data);
-        this.context = context;
     }
 
     @NonNull
@@ -99,9 +99,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
         ImageView schoolImage;
         TextView schoolTitle, schoolDesc;
+        ImageButton favIcon;
+        Boolean flag = true;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            schoolImage = itemView.findViewById(R.id.schoolImage);
+            schoolTitle = itemView.findViewById(R.id.schoolTitle);
+            schoolDesc = itemView.findViewById(R.id.schoolDesc);
+            favIcon = itemView.findViewById(R.id.starIcon);
+            favIcon.setImageResource(R.drawable.ic_normalstar);
 
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -113,19 +120,30 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                     v.getContext().startActivity(i);
                 }
             });
-            /*View OnClickListener  = new View.OnClickListener() {
+            favIcon.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                   public void schoolFavorited (ImageView imageView) {
-                        Toast.makeText(context, "school is added to you favourite list", Toast.LENGTH_SHORT).show();
+                    //favIcon.setSelected(!favIcon.isPressed());
+                    if (flag) {
+                        //addSchoolToFav();       //Remove comment to test
+                        favIcon.setImageResource(R.drawable.ic_favstar);
+                        Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
+                        flag = false;
+                    }
+                    else {
+                        //removeSchoolfromFav();      //Remove comment to test
+                        favIcon.setImageResource(R.drawable.ic_normalstar);
+                        Toast.makeText(v.getContext(), "School has been removed from favourite list", Toast.LENGTH_SHORT).show();
+                        flag = true;
                     }
                 }
 
+                private void removeSchoolfromFav() {
+                }
 
-            };*/
-            schoolImage = itemView.findViewById(R.id.schoolImage);
-            schoolTitle = itemView.findViewById(R.id.schoolTitle);
-            schoolDesc = itemView.findViewById(R.id.schoolDesc);
+                private void addSchoolToFav() {
+                }
+            });
         }
     }
 }
