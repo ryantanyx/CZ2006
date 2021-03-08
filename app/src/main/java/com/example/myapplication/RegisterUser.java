@@ -34,6 +34,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener{
@@ -192,6 +193,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         String reenterPassword = regReenterPassword.getText().toString().trim();
         String gender;
         String date = regDate.getText().toString().trim();
+        ArrayList<School> favList = new ArrayList<School>();
 
         if(name.isEmpty()){
             regName.setError("Full name is not entered!");
@@ -257,7 +259,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-                            User myUser = new User(name, gender, date, regImageno);
+                            User myUser = new User(name, gender, date, regImageno, favList);
 
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
