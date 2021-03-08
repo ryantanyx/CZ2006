@@ -32,12 +32,11 @@ import java.util.List;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment implements View.OnClickListener {
+public class SearchFragment extends Fragment  {
 
     RecyclerView recyclerView;
     Adapter adapter;
     ArrayList<School> items;
-    private ImageButton starButton;
 
     private List<School> schoolList = new ArrayList<>();
 
@@ -79,9 +78,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        starButton = (ImageButton) starButton.findViewById(R.id.starIcon);
-        starButton.setOnClickListener(this);
-
     }
 
     @Override
@@ -151,10 +147,5 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(getActivity(),"School added to your favourite list",Toast.LENGTH_LONG).show();
     }
 }
