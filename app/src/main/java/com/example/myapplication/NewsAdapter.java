@@ -32,7 +32,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
     private List<Article> articles;
     private Context context;
-    private OnItemClickListener onItemClickListener;
 
     public NewsAdapter(List<Article> articles, Context context) {
         this.articles = articles;
@@ -43,7 +42,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.newsitem, parent, false);
-        return new MyViewHolder(view, onItemClickListener);
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -89,52 +88,31 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         return articles.size();
     }
 
-
-    public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener)
-    {
-        this.onItemClickListener = (OnItemClickListener) onItemClickListener;
-    }
-
-    public interface OnItemClickListener{
-        void onItemClick(View view, int position);
-
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView title, desc,  date, source;
         ImageView newsImage;
-        OnItemClickListener onItemClickListener;
 
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener) {
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            itemView.setOnClickListener(this);
             title = itemView.findViewById(R.id.tvTitle);
             desc = itemView.findViewById(R.id.tvDescription);
             source = itemView.findViewById(R.id.tvSource);
             date = itemView.findViewById(R.id.tvDate);
 
             newsImage = itemView.findViewById(R.id.newsImage);
+            itemView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
 
-            this.onItemClickListener = onItemClickListener;
-        }
+                    Article article = articles.get(getAdapterPosition());
+                    String url = article.getUrl();
 
-        @Override
-        public void onClick(View v) {
-
-            //onItemClickListener.onItemClick(v, getAdapterPosition());
-            //Article article = articles.get();
-            //String url = article.getUrl();
-            String url = "https://www.youtube.com/watch?v=d1YBv2mWll0&ab_channel=Sordiway";
-
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            context.startActivity(i);
-
-
-
-
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    context.startActivity(i);
+                }
+            });
         }
     }
 
