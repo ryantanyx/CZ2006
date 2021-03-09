@@ -8,7 +8,7 @@ public class User {
     private String name, gender, date;
     private int imageNo;
 
-    private ArrayList<School> favList = new ArrayList<School>();
+    private ArrayList<School> favList;
     public User(){
 
     }

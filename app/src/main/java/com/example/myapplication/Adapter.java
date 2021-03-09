@@ -33,10 +33,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     private LayoutInflater layoutInflater;
     private List<School> data;
     private List<School> dataset;
-    private ArrayList<School> current_fav;
-    private User userProfile;
 
-    boolean flag = true;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
@@ -114,6 +111,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         TextView schoolTitle, schoolDesc;
         ImageButton favIcon;
         Boolean flag = true;
+        ArrayList<School> favlist;
+        User userProfile;
 
         public ViewHolder(@NonNull View itemView) {
 
@@ -128,11 +127,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             reference = FirebaseDatabase.getInstance().getReference("Users");
             userID = user.getUid();
 
-
+            // getting firebase reference
             reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    User userProfile = snapshot.getValue(User.class);
+                    userProfile = snapshot.getValue(User.class);
+
+                    if (userProfile != null){
+                        favlist = userProfile.getFavList();
+                    }
                 }
 
                 @Override
@@ -149,45 +152,45 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                     v.getContext().startActivity(i);
                 }
             });
-            favIcon.setOnClickListener(new View.OnClickListener(){
 
+            favIcon.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
                     //favIcon.setSelected(!favIcon.isPressed());
                     if (flag) {
-                        addSchoolToFav();       //Remove comment to test
+                        addSchoolToFav(favlist);       //Remove comment to test
                         favIcon.setImageResource(R.drawable.ic_favstar);
                         Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
                         flag = false;
                     }
                     else {
-                        removeSchoolfromFav();      //Remove comment to test
+                        removeSchoolfromFav(favlist);      //Remove comment to test
                         favIcon.setImageResource(R.drawable.ic_normalstar);
                         Toast.makeText(v.getContext(), "School has been removed from favourite list", Toast.LENGTH_SHORT).show();
                         flag = true;
                     }
                 }
 
-                private void removeSchoolfromFav() {
+                private void removeSchoolfromFav(ArrayList<School> favlist) {
                     School school =data.get(getAdapterPosition());
-                    if (userProfile.getFavList() == null) {
+                    /*if (userProfile.getFavList() == null) {
                         current_fav = new ArrayList<School>();
-                    }
-                    current_fav.remove(school);
-                    userProfile.setFavList(current_fav);
-                    System.out.println("hihi");
+                    }*/
+                    favlist.remove(school);
+                    userProfile.setFavList(favlist);
+                    reference.child(userID).child("favList").setValue(favlist);
+                    System.out.println(favlist.toString());
                 }
 
-
-                private void addSchoolToFav() {
+                private void addSchoolToFav(ArrayList<School> favlist) {
                     School school =data.get(getAdapterPosition());
-                    System.out.println(userProfile);
-                    if (userProfile.getFavList() == null) {
-                        current_fav = new ArrayList<School>();
+                    if (favlist == null) {
+                        favlist = new ArrayList<School>();
                     }
-                    current_fav.add(school);
-                    userProfile.setFavList(current_fav);
-                    System.out.println("hihi");
+                    favlist.add(school);
+                    userProfile.setFavList(favlist);
+                    reference.child(userID).child("favList").setValue(favlist);
+                    System.out.println(favlist.toString());
                 }
             });
         }
