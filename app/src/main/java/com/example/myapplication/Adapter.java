@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable{
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //implements Filterable{
 
     private LayoutInflater layoutInflater;
     private List<School> data;
     private List<School> dataset;
     private String selectedFilter = "all";
     private String currentSearchText ="";
+    private int min = 0,max = 300;
     boolean flag = true;
 
     Adapter(Context context, List<School> data){
@@ -60,41 +61,41 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         return data.size();
     }
 
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
-
-    Filter filter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-            List<School> filteredList = new ArrayList<>();
-
-            if(constraint.toString().isEmpty()){
-                filteredList.addAll(dataset);
-            }
-            else{
-                for (School school: dataset){
-                    if (school.getSchoolName().toLowerCase().contains(constraint.toString().toLowerCase())){
-                        filteredList.add(school);
-                    }
-                }
-            }
-
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = filteredList;
-
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            data.clear();
-            data.addAll((Collection<? extends School>) results.values);
-            notifyDataSetChanged();
-        }
-    };
+//    @Override
+//    public Filter getFilter() {
+//        return filter;
+//    }
+//
+//    Filter filter = new Filter() {
+//        @Override
+//        protected FilterResults performFiltering(CharSequence constraint) {
+//
+//            List<School> filteredList = new ArrayList<>();
+//
+//            if(constraint.toString().isEmpty()){
+//                filteredList.addAll(dataset);
+//            }
+//            else{
+//                for (School school: dataset){
+//                    if (school.getSchoolName().toLowerCase().contains(constraint.toString().toLowerCase())){
+//                        filteredList.add(school);
+//                    }
+//                }
+//            }
+//
+//            FilterResults filterResults = new FilterResults();
+//            filterResults.values = filteredList;
+//
+//            return filterResults;
+//        }
+//
+//        @Override
+//        protected void publishResults(CharSequence constraint, FilterResults results) {
+//            data.clear();
+//            data.addAll((Collection<? extends School>) results.values);
+//            notifyDataSetChanged();
+//        }
+//    };
 
     public void searchViewFilter(String newText){
         currentSearchText = newText;
@@ -103,11 +104,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         for(School school:dataset) {
             if (school.getSchoolName().toLowerCase().contains(newText.toLowerCase()))
             {
-                if (selectedFilter.equals("all"))
-                    filteredList.add(school);
-                else {
-                    if (school.getRegion().toLowerCase().contains(selectedFilter))
+                if (school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max){
+                    if (selectedFilter.equals("all"))
                         filteredList.add(school);
+                    else {
+                        if (school.getRegion().toLowerCase().contains(selectedFilter))
+                            filteredList.add(school);
+                    }
                 }
             }
         }
@@ -123,11 +126,45 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         for(School school:dataset)
         {
             if(school.getRegion().toLowerCase().contains(status)) {
-                if (currentSearchText=="")
-                    filteredList.add(school);
-                else{
-                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                if (school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max){
+                    if (currentSearchText.equals(""))
                         filteredList.add(school);
+                    else{
+                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                            filteredList.add(school);
+                    }
+                }
+            }
+        }
+        data.clear();
+        data.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
+    public void filterPSLE(int low, int high){
+        List<School> filteredList = new ArrayList<>();
+        resetSchoolList();
+        min = low;
+        max = high;
+        for(School school:dataset) {
+            if (school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max) {
+                if (!selectedFilter.equals("all")) {
+                    if (school.getRegion().toLowerCase().contains(selectedFilter)) {
+                        if (currentSearchText.equals(""))
+                            filteredList.add(school);
+                        else {
+                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                filteredList.add(school);
+                        }
+                    }
+                }
+                else {
+                    if (currentSearchText.equals(""))
+                        filteredList.add(school);
+                    else {
+                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                            filteredList.add(school);
+                    }
                 }
             }
         }
