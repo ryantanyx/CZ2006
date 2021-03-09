@@ -12,9 +12,7 @@
     <item
         android:id="@+id/action_sort"
         android:title="Sort"
-        android:icon="@drawable/ic_sort"
-        app:showAsAction="always|collapseActionView"/>
-
-
+        app:showAsAction="always|collapseActionView"
+        android:icon="@drawable/ic_sort"/>
 
 </menu>

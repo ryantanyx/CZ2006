@@ -24,8 +24,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private EditText posttitle, postcontent;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference root;
-    private FragmentManager fragmentManager;
-
 
 
 //Defining objects inside oncreate ----------------
