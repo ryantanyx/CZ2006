@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class SearchFragment extends Fragment {
     RecyclerView recyclerView;
     Adapter adapter;
     ArrayList<School> items;
+    Dialog myDialog;
 
     private List<School> schoolList = new ArrayList<>();
 
@@ -75,6 +78,7 @@ public class SearchFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        myDialog = new Dialog(this);
     }
 
     @Override
@@ -119,6 +123,13 @@ public class SearchFragment extends Fragment {
             }
         });
     }
+
+    public void showPopup (Menu menu)(
+            Button btnSort;
+            myDialog.setContentView(R.layout.sort);
+            txtclose = (TextView)myDialog
+
+            )
 
     private List<School> readSchoolData() {
         try {
