@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.TextView;
+
+import com.google.android.material.slider.RangeSlider;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +35,7 @@ import java.util.List;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements View.OnClickListener{
 
     RecyclerView recyclerView;
     Adapter adapter;
@@ -45,6 +51,15 @@ public class SearchFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+//    private String selectedFilter = "all";
+//    private String currentSearchText ="";
+    private SearchView searchView;
+    private boolean filterHidden = true;
+    private AppCompatButton resetButton,northButton,southButton,eastButton,westButton,filterButton;
+    private AppCompatButton expressButton,normalaButton,normaltButton;
+    private RangeSlider psleSlider;
+    private TextView region,streams,pslecutoff;
+    private int black,white,red;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -85,11 +100,36 @@ public class SearchFragment extends Fragment {
         getActivity().setTitle("Search");
         setHasOptionsMenu(true);
 
+        filterButton = view.findViewById(R.id.filter);
+        filterButton.setOnClickListener(this);
+        resetButton = view.findViewById(R.id.reset);
+        resetButton.setOnClickListener(this);
+        northButton = view.findViewById(R.id.north);
+        northButton.setOnClickListener(this);
+        southButton = view.findViewById(R.id.south);
+        southButton.setOnClickListener(this);
+        eastButton = view.findViewById(R.id.east);
+        eastButton.setOnClickListener(this);
+        westButton = view.findViewById(R.id.west);
+        westButton.setOnClickListener(this);
+        region =  view.findViewById(R.id.region);
+        expressButton = view.findViewById(R.id.express);
+        expressButton.setOnClickListener(this);
+        normalaButton = view.findViewById(R.id.normala);
+        normalaButton.setOnClickListener(this);
+        normaltButton = view.findViewById(R.id.normalt);
+        normaltButton.setOnClickListener(this);
+        streams =  view.findViewById(R.id.streams);
+        psleSlider = view.findViewById(R.id.psleslider);
+        pslecutoff = view.findViewById(R.id.pslecutoff);
+        hideFilter();
+        initColors();
+
         schoolList = readSchoolData();
         schoolList = readCCAData(schoolList);
         schoolList = readSubjectData(schoolList);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new Adapter(getActivity(), schoolList);
         recyclerView.setAdapter(adapter);
@@ -105,7 +145,7 @@ public class SearchFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         MenuItem item = menu.findItem(R .id.action_search);
-        SearchView searchView = (SearchView) item.getActionView();
+        searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -114,10 +154,28 @@ public class SearchFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                adapter.searchViewFilter(newText);
+//                currentSearchText = newText;
+//                ArrayList<School> filteredList = new ArrayList<School>();
+//                resetSchoolList();
+//                for(School school:schoolList) {
+//                    if (school.getSchoolName().toLowerCase().contains(newText.toLowerCase()))
+//                    {
+//                        if (selectedFilter.equals("all"))
+//                            filteredList.add(school);
+//                        else {
+//                            if (school.getRegion().toLowerCase().contains(selectedFilter))
+//                                filteredList.add(school);
+//                        }
+//                    }
+//                }
+//                schoolList.clear();
+//                schoolList.addAll(filteredList);
+//                adapter.notifyDataSetChanged();
                 return false;
             }
         });
+
     }
 
     private List<School> readSchoolData() {
@@ -280,4 +338,234 @@ public class SearchFragment extends Fragment {
         }
         return schoolList;
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.filter:
+                showFilterTapped();
+                break;
+            case R.id.reset:
+                adapter.resetFilter();
+                unselectAllRegion();
+                resetSlider();
+                break;
+            case R.id.north:
+                northFilter();
+                break;
+            case R.id.south:
+                southFilter();
+                break;
+            case R.id.east:
+                eastFilter();
+                break;
+            case R.id.west:
+                westFilter();
+                break;
+            case R.id.express:
+                expressFilter();
+                break;
+            case R.id.normala:
+                normalaFilter();
+                break;
+            case R.id.normalt:
+                normaltFilter();
+                break;
+
+        }
+    }
+
+//    private void filterList(String status){
+//        List<School> filteredList = new ArrayList<>();
+//        resetFilter();
+//        selectedFilter = status;
+//        for(School school:schoolList)
+//        {
+//            if(school.getRegion().toLowerCase().contains(status)) {
+//                if (currentSearchText=="")
+//                    filteredList.add(school);
+//                else{
+//                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+//                        filteredList.add(school);
+//                }
+//            }
+//        }
+//        schoolList.clear();
+//        schoolList.addAll(filteredList);
+//        adapter.notifyDataSetChanged();
+//
+//    }
+
+//    private void resetSchoolList(){
+//        schoolList.clear();
+//        schoolList = readSchoolData();
+//        schoolList = readCCAData(schoolList);
+//        schoolList = readSubjectData(schoolList);
+//    }
+//
+//    private void resetFilter(){
+//        selectedFilter = "all";
+//        unselectAllRegion();
+//        searchView.setQuery("",false);
+//        searchView.clearFocus();
+//        resetSchoolList();
+//        adapter.notifyDataSetChanged();
+//
+//    }
+
+    private void northFilter(){
+        if (!adapter.getSelectedFilter().contains("north"))
+        {
+            adapter.filterRegion("north");
+            unselectAllRegion();
+            lookSelected(northButton);
+
+        }
+
+        else {
+            lookUnSelected(northButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+
+    }
+
+    private void southFilter(){
+        if (!adapter.getSelectedFilter().contains("south"))
+        {
+            adapter.filterRegion("south");
+            unselectAllRegion();
+            lookSelected(southButton);
+
+        }
+
+        else {
+            lookUnSelected(southButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+    }
+
+    private void eastFilter(){
+        if (!adapter.getSelectedFilter().contains("east"))
+        {
+            adapter.filterRegion("east");
+            unselectAllRegion();
+            lookSelected(eastButton);
+
+        }
+
+        else {
+            lookUnSelected(eastButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+    }
+
+    private void westFilter(){
+        if (!adapter.getSelectedFilter().contains("west"))
+        {
+            adapter.filterRegion("west");
+            unselectAllRegion();
+            lookSelected(westButton);
+
+        }
+
+        else {
+            lookUnSelected(westButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+    }
+
+    private void expressFilter(){}
+
+    private void normalaFilter(){}
+
+    private void normaltFilter(){}
+
+    private void resetSlider(){
+        psleSlider.setValues((float)(0),(float)(300));
+    }
+
+    private void showFilterTapped(){
+        if(filterHidden) {
+            filterHidden = false;
+            showFilter();
+        }
+        else
+        {
+            filterHidden = true;
+            hideFilter();
+        }
+    }
+
+    private void hideFilter(){
+        resetButton.setVisibility(View.GONE);
+        northButton.setVisibility(View.GONE);
+        southButton.setVisibility(View.GONE);
+        eastButton.setVisibility(View.GONE);
+        westButton.setVisibility(View.GONE);
+        region.setVisibility(View.GONE);
+        expressButton.setVisibility(View.GONE);
+        normalaButton.setVisibility(View.GONE);
+        normaltButton.setVisibility(View.GONE);
+        streams.setVisibility(View.GONE);
+        psleSlider.setVisibility(View.GONE);
+        pslecutoff.setVisibility(View.GONE);
+        filterButton.setText("FILTER");
+    }
+
+    private void showFilter(){
+        resetButton.setVisibility(View.VISIBLE);
+        northButton.setVisibility(View.VISIBLE);
+        southButton.setVisibility(View.VISIBLE);
+        eastButton.setVisibility(View.VISIBLE);
+        westButton.setVisibility(View.VISIBLE);
+        region.setVisibility(View.VISIBLE);
+        expressButton.setVisibility(View.VISIBLE);
+        normalaButton.setVisibility(View.VISIBLE);
+        normaltButton.setVisibility(View.VISIBLE);
+        streams.setVisibility(View.VISIBLE);
+        psleSlider.setVisibility(View.VISIBLE);
+        pslecutoff.setVisibility(View.VISIBLE);
+        filterButton.setText("HIDE");
+    }
+
+    private void initColors()
+    {
+        black = ContextCompat.getColor(getContext(),R.color.black);
+        white = ContextCompat.getColor(getContext(),R.color.white);
+        red = ContextCompat.getColor(getContext(),android.R.color.holo_red_light);
+        //darkGrey = ContextCompat.getColor(getContext(),android.R.color.darker_gray);
+    }
+    private void lookSelected(AppCompatButton button){
+        button.setTextColor(white);
+        button.setBackgroundColor(red);
+    }
+
+    private void lookUnSelected(AppCompatButton button){
+        button.setTextColor(black);
+        button.setBackgroundColor(white);
+    }
+    private void unselectAllRegion(){
+        lookUnSelected(northButton);
+        lookUnSelected(southButton);
+        lookUnSelected(eastButton);
+        lookUnSelected(westButton);
+    }
+    private void unselectAllStreams(){
+        lookUnSelected(expressButton);
+        lookUnSelected(normalaButton);
+        lookUnSelected(normaltButton);
+    }
+
 }
