@@ -19,6 +19,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable{
@@ -95,6 +97,39 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         }
     };
 
+    public void sort(int choice){
+
+        switch(choice){
+            case 0:
+                Collections.sort(data, new Comparator<School>() {
+                            @Override
+                            public int compare(School o1, School o2) {
+                                return o1.getSchoolName().compareTo(o2.getSchoolName());
+                            }
+                        });
+                notifyDataSetChanged();
+                return;
+            case 1:
+                Collections.sort(data, new Comparator<School>() {
+                    @Override
+                    public int compare(School o1, School o2) {
+                        return o1.getCutOffPoint() - o2.getCutOffPoint();
+                    }
+                });
+                notifyDataSetChanged();
+                return;
+            case 2:
+                Collections.sort(data, new Comparator<School>() {
+                    @Override
+                    public int compare(School o1, School o2) {
+                        return o1.getRegion().compareTo(o2.getRegion());
+                    }
+                });
+                notifyDataSetChanged();
+                return;
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView schoolImage;
@@ -123,7 +158,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             favIcon.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    //favIcon.setSelected(!favIcon.isPressed());
+                    //favIcon.setSelected(!favIcon.isPres   sed());
                     if (flag) {
                         //addSchoolToFav();       //Remove comment to test
                         favIcon.setImageResource(R.drawable.ic_favstar);
