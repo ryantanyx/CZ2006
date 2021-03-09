@@ -30,12 +30,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import kotlin.ranges.URangesKt;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment implements View.OnClickListener{
+public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener{
 
     RecyclerView recyclerView;
     Adapter adapter;
@@ -51,8 +53,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-//    private String selectedFilter = "all";
-//    private String currentSearchText ="";
     private SearchView searchView;
     private boolean filterHidden = true;
     private AppCompatButton resetButton,northButton,southButton,eastButton,westButton,filterButton;
@@ -121,6 +121,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         normaltButton.setOnClickListener(this);
         streams =  view.findViewById(R.id.streams);
         psleSlider = view.findViewById(R.id.psleslider);
+        psleSlider.addOnChangeListener(this::onValueChange);
         pslecutoff = view.findViewById(R.id.pslecutoff);
         hideFilter();
         initColors();
@@ -155,23 +156,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.searchViewFilter(newText);
-//                currentSearchText = newText;
-//                ArrayList<School> filteredList = new ArrayList<School>();
-//                resetSchoolList();
-//                for(School school:schoolList) {
-//                    if (school.getSchoolName().toLowerCase().contains(newText.toLowerCase()))
-//                    {
-//                        if (selectedFilter.equals("all"))
-//                            filteredList.add(school);
-//                        else {
-//                            if (school.getRegion().toLowerCase().contains(selectedFilter))
-//                                filteredList.add(school);
-//                        }
-//                    }
-//                }
-//                schoolList.clear();
-//                schoolList.addAll(filteredList);
-//                adapter.notifyDataSetChanged();
                 return false;
             }
         });
@@ -377,44 +361,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-//    private void filterList(String status){
-//        List<School> filteredList = new ArrayList<>();
-//        resetFilter();
-//        selectedFilter = status;
-//        for(School school:schoolList)
-//        {
-//            if(school.getRegion().toLowerCase().contains(status)) {
-//                if (currentSearchText=="")
-//                    filteredList.add(school);
-//                else{
-//                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-//                        filteredList.add(school);
-//                }
-//            }
-//        }
-//        schoolList.clear();
-//        schoolList.addAll(filteredList);
-//        adapter.notifyDataSetChanged();
-//
-//    }
-
-//    private void resetSchoolList(){
-//        schoolList.clear();
-//        schoolList = readSchoolData();
-//        schoolList = readCCAData(schoolList);
-//        schoolList = readSubjectData(schoolList);
-//    }
-//
-//    private void resetFilter(){
-//        selectedFilter = "all";
-//        unselectAllRegion();
-//        searchView.setQuery("",false);
-//        searchView.clearFocus();
-//        resetSchoolList();
-//        adapter.notifyDataSetChanged();
-//
-//    }
-
     private void northFilter(){
         if (!adapter.getSelectedFilter().contains("north"))
         {
@@ -547,7 +493,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         black = ContextCompat.getColor(getContext(),R.color.black);
         white = ContextCompat.getColor(getContext(),R.color.white);
         red = ContextCompat.getColor(getContext(),android.R.color.holo_red_light);
-        //darkGrey = ContextCompat.getColor(getContext(),android.R.color.darker_gray);
     }
     private void lookSelected(AppCompatButton button){
         button.setTextColor(white);
@@ -570,4 +515,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         lookUnSelected(normaltButton);
     }
 
+    @Override
+    public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
+        int low = (int)(float)psleSlider.getValues().get(0);
+        int high = (int)(float)psleSlider.getValues().get(1);
+        adapter.filterPSLE(low,high);
+    }
 }
