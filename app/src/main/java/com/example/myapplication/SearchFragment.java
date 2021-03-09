@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,12 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import com.google.android.material.slider.RangeSlider;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +52,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     ArrayList<School> items;
 
     private List<School> schoolList = new ArrayList<>();
+
+    private Dialog dialog;
+    private RadioGroup sortRG;
+    private Switch ascending;
+
+    private int selectedID;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -135,6 +149,24 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         adapter = new Adapter(getActivity(), schoolList);
         recyclerView.setAdapter(adapter);
 
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.sort_view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+
+        TextView back = (TextView) dialog.findViewById(R.id.backbutton);
+        back.setOnClickListener(this);
+
+        Button sort = (Button) dialog.findViewById(R.id.sort);
+        sort.setOnClickListener(this);
+
+        sortRG = (RadioGroup) dialog.findViewById(R.id.sortRG);
+        ascending = (Switch) dialog.findViewById(R.id.ascending);
+
         return view;
     }
 
@@ -160,6 +192,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             }
         });
 
+        MenuItem item2 = menu.findItem(R.id.action_sort);
+        item2.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                dialog.show();
+                return false;
+            }
+        });
     }
 
     private List<School> readSchoolData() {
@@ -357,7 +397,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             case R.id.normalt:
                 normaltFilter();
                 break;
-
+            case R.id.backbutton:
+                dialog.dismiss();
+                break;
+            case R.id.sort:
+                sort();
+                dialog.dismiss();
+                break;
         }
     }
 
@@ -520,5 +566,33 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         int low = (int)(float)psleSlider.getValues().get(0);
         int high = (int)(float)psleSlider.getValues().get(1);
         adapter.filterPSLE(low,high);
+    }
+    public void sort() {
+
+        int index;
+
+        if(sortRG.getCheckedRadioButtonId()==-1){
+            Toast.makeText(getActivity(), "Please select a category to sort!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            selectedID = sortRG.getCheckedRadioButtonId();
+            View radioButton = sortRG.findViewById(selectedID);
+            index = sortRG.indexOfChild(radioButton);
+        }
+
+        if(!ascending.isChecked()){
+            switch(index){
+                case 0:
+                    adapter.sort(0);
+                    break;
+                case 1:
+                    adapter.sort(1);
+                    break;
+                case 2:
+                    adapter.sort(2);
+                    break;
+            }
+        }
     }
 }
