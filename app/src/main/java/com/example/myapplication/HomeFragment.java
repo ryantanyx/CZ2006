@@ -99,9 +99,8 @@ public class HomeFragment extends Fragment {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         String country = Utils.getCountry();
 
-
         Call<News> call;
-        call = apiInterface.getNews(country, API_KEY);
+        call = apiInterface.getNews();
         call.enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
