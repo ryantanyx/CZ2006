@@ -1,8 +1,10 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +116,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
         @Override
         public void onClick(View v) {
-            onItemClickListener.onItemClick(v, getAdapterPosition());
+            //onItemClickListener.onItemClick(v, getAdapterPosition());
+            String url = "https://www.youtube.com/watch?v=d1YBv2mWll0&ab_channel=Sordiway";
+
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            context.startActivity(i);
+
+
 
 
         }
