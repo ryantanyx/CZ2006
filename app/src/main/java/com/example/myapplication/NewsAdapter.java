@@ -77,6 +77,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         holder.source.setText(model.getSource().getName());
         holder.date.setText(model.getPublishedAt().substring(0,10));
 
+
+
+
+
+
     }
 
     @Override
@@ -92,6 +97,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
     public interface OnItemClickListener{
         void onItemClick(View view, int position);
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -116,7 +122,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
         @Override
         public void onClick(View v) {
+
             //onItemClickListener.onItemClick(v, getAdapterPosition());
+            //Article article = articles.get();
+            //String url = article.getUrl();
             String url = "https://www.youtube.com/watch?v=d1YBv2mWll0&ab_channel=Sordiway";
 
             Intent i = new Intent(Intent.ACTION_VIEW);
