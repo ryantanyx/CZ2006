@@ -26,7 +26,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     private LayoutInflater layoutInflater;
     private List<School> data;
     private List<School> dataset;
-
+    private String selectedFilter = "all";
+    private String currentSearchText ="";
     boolean flag = true;
 
     Adapter(Context context, List<School> data){
@@ -94,6 +95,61 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             notifyDataSetChanged();
         }
     };
+
+    public void searchViewFilter(String newText){
+        currentSearchText = newText;
+        ArrayList<School> filteredList = new ArrayList<School>();
+        resetSchoolList();
+        for(School school:dataset) {
+            if (school.getSchoolName().toLowerCase().contains(newText.toLowerCase()))
+            {
+                if (selectedFilter.equals("all"))
+                    filteredList.add(school);
+                else {
+                    if (school.getRegion().toLowerCase().contains(selectedFilter))
+                        filteredList.add(school);
+                }
+            }
+        }
+        data.clear();
+        data.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
+    public void filterRegion(String status){
+        List<School> filteredList = new ArrayList<>();
+        resetFilter();
+        selectedFilter = status;
+        for(School school:dataset)
+        {
+            if(school.getRegion().toLowerCase().contains(status)) {
+                if (currentSearchText=="")
+                    filteredList.add(school);
+                else{
+                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                        filteredList.add(school);
+                }
+            }
+        }
+        data.clear();
+        data.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
+    private void resetSchoolList(){
+        data.clear();
+        data.addAll(dataset);
+    }
+
+    public void resetFilter(){
+        selectedFilter = "all";
+        resetSchoolList();
+        notifyDataSetChanged();
+    }
+
+    public String getSelectedFilter(){
+        return selectedFilter;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
