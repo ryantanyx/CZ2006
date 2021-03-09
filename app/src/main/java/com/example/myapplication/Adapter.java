@@ -113,7 +113,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                 Collections.sort(data, new Comparator<School>() {
                     @Override
                     public int compare(School o1, School o2) {
-                        return o1.getCutOffPoint() - o2.getCutOffPoint();
+                        return 0;
                     }
                 });
                 notifyDataSetChanged();
