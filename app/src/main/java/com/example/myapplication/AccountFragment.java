@@ -132,11 +132,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 User userProfile = snapshot.getValue(User.class);
 
                 if (userProfile != null){
-                    int imageNo = userProfile.imageNo;
-                    String name = userProfile.name;
+                    int imageNo = userProfile.getImageNo();
+                    String name = userProfile.getName();
                     String email = user.getEmail();
-                    String gender = userProfile.gender;
-                    String date = userProfile.date;
+                    String gender = userProfile.getGender();
+                    String date = userProfile.getDate();
 
                     if (imageNo == 1){
                         profileImg.setImageResource(R.drawable.image1);

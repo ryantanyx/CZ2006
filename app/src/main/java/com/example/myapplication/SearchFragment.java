@@ -1,10 +1,10 @@
 package com.example.myapplication;
 
-import android.content.res.AssetManager;
+import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,13 +16,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,13 +37,19 @@ import java.util.List;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     Adapter adapter;
     ArrayList<School> items;
 
     private List<School> schoolList = new ArrayList<>();
+
+    private Dialog dialog;
+    private RadioGroup sortRG;
+    private Switch ascending;
+
+    private int selectedID;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,15 +99,36 @@ public class SearchFragment extends Fragment {
         getActivity().setTitle("Search");
         setHasOptionsMenu(true);
 
-        readSchoolData();
+        schoolList = readSchoolData();
+        schoolList = readCCAData(schoolList);
+        schoolList = readSubjectData(schoolList);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new Adapter(getActivity(), schoolList);
         recyclerView.setAdapter(adapter);
 
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.sort_view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+
+        TextView back = (TextView) dialog.findViewById(R.id.backbutton);
+        back.setOnClickListener(this);
+
+        Button sort = (Button) dialog.findViewById(R.id.sort);
+        sort.setOnClickListener(this);
+
+        sortRG = (RadioGroup) dialog.findViewById(R.id.sortRG);
+        ascending = (Switch) dialog.findViewById(R.id.ascending);
+
         return view;
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -102,7 +136,7 @@ public class SearchFragment extends Fragment {
         inflater.inflate(R.menu.searchbar, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        MenuItem item = menu.findItem(R.id.action_search);
+        MenuItem item = menu.findItem(R .id.action_search);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -116,33 +150,219 @@ public class SearchFragment extends Fragment {
                 return false;
             }
         });
+
+        MenuItem item2 = menu.findItem(R.id.action_sort);
+        item2.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                dialog.show();
+                return false;
+            }
+        });
     }
 
-    private void readSchoolData(){
-
-        AssetManager am = getActivity().getAssets();
+    private List<School> readSchoolData() {
         try {
-            InputStream is = am.open("general-information-of-schools.csv");
+            InputStream is = getResources().openRawResource(R.raw.general_information_of_schools);
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(is, Charset.forName("UTF-8"))
+                    new InputStreamReader(is, StandardCharsets.UTF_8)
             );
-
             String line;
-
             reader.readLine();
-            while ((line= reader.readLine())!= null){
+            while ((line = reader.readLine()) != null) {
 
-                String[] tokens = line.split(",");
+                String[] tokens = line.split("\t");
 
-                School school = new School();
-                school.setImageUrl(tokens[0]);
-                school.setSchoolName(tokens[1]);
-                school.setAddress(tokens[3]);
-                schoolList.add(school);
+                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))){
+                    ArrayList<String> contact = new ArrayList<String>();
+                    ArrayList<String> transport = new ArrayList<String>();
+                    HashMap<String, Integer> cut_off= new HashMap<String, Integer>();
+
+                    School school = new School();
+                    school.setImageUrl(tokens[0]);
+                    school.setSchoolName(tokens[1]);
+                    school.setAddress(tokens[3]);
+                    school.setMission(tokens[20]);
+                    school.setVision(tokens[19]);
+                    school.setLocation(tokens[22]);
+                    school.setRegion(tokens[23]);
+                    school.setType(tokens[24]);
+                    school.setGender(tokens[25]);
+
+                    cut_off.put("express", Integer.parseInt(tokens[36]));
+                    cut_off.put("na", Integer.parseInt(tokens[37]));
+                    cut_off.put("nt", Integer.parseInt(tokens[38]));
+                    school.setCutOffPoint(cut_off);
+
+                    contact.add("Tel no: " + tokens[5]);
+                    contact.add("Email address: "  + tokens[9].toLowerCase());
+                    school.setContactInfo(contact);
+                    if (tokens[10].contains("\"")){
+                        transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1).toLowerCase());
+                    } else{
+                        transport.add("By MRT: " + tokens[10].toLowerCase());
+                    }
+                    if (tokens[11].contains("\"")){
+                        transport.add("By bus: " + tokens[11].substring(1,tokens[11].length() -1));
+                    } else{
+                        transport.add("By bus: " + tokens[11]);
+                    }
+                    school.setTransport(transport);
+
+                    schoolList.add(school);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return schoolList;
     }
 
+    private List<School> readCCAData(List<School> schoolList) {
+        HashMap<String, ArrayList<String>> schCCA = new HashMap<String, ArrayList<String>>();
+
+        try {
+            InputStream is = getResources().openRawResource(R.raw.co_curricular_activities_ccas);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(is, StandardCharsets.UTF_8)
+            );
+            String line;
+            int i;
+            reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String cca, ccaType;
+                String[] tokens = line.split("\t");
+                if (tokens[1].equalsIgnoreCase(getString(R.string.sch_level))){
+                    if (!schCCA.containsKey(tokens[0])){
+                        ArrayList<String> ccas = new ArrayList<String>();
+                        ccas.add("");
+                        ccas.add("");
+                        ccas.add("");
+                        ccas.add("");
+                        ccas.add("");
+                        schCCA.put(tokens[0], ccas);
+                    }
+                    switch(tokens[2]) {
+                        case "PHYSICAL SPORTS":
+                            i = 0;
+                            ccaType = "Sports: ";
+                            break;
+                        case "VISUAL AND PERFORMING ARTS":
+                            ccaType = "Performing Arts: ";
+                            i = 1;
+                            break;
+                        case "CLUBS AND SOCIETIES":
+                            ccaType = "Clubs & Societies: ";
+                            i = 2;
+                            break;
+                        case "UNIFORMED GROUPS":
+                            ccaType = "Uniformed Groups: ";
+                            i = 3;
+                            break;
+                        case "OTHERS":
+                            ccaType = "Others: ";
+                            i = 4;
+                            break;
+                        default:
+                            continue;
+                    }
+                        if (schCCA.get(tokens[0]).get(i).equals("")){
+                            cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
+                        } else{
+                            cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
+                        }
+                        schCCA.get(tokens[0]).set(i, cca);
+                }
+            }
+            for (School school: schoolList){
+                if (schCCA.containsKey(school.getSchoolName())){
+                    school.setCca(schCCA.get(school.getSchoolName()));
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return schoolList;
+    }
+
+    private List<School> readSubjectData(List<School> schoolList) {
+        HashMap<String, String> schSubject = new HashMap<String, String>();
+
+        try {
+            InputStream is = getResources().openRawResource(R.raw.subjects_offered);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(is, StandardCharsets.UTF_8)
+            );
+            String line;
+            int i;
+            reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String subject;
+                String[] tokens = line.split("\t");
+                if (!schSubject.containsKey(tokens[0])){
+                    String subjects = new String("");
+                    schSubject.put(tokens[0], subjects);
+                }
+                if (schSubject.get(tokens[0]).equals("")){
+                    subject = new String("Subjects: " + schSubject.get(tokens[0]) + tokens[1].toLowerCase());
+                } else{
+                    subject = new String(schSubject.get(tokens[0]) + ", " + tokens[1].toLowerCase());
+                }
+                schSubject.put(tokens[0], subject);
+            }
+            for (School school: schoolList){
+                if (schSubject.containsKey(school.getSchoolName())){
+                    school.setSubjects(schSubject.get(school.getSchoolName()));
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return schoolList;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.backbutton:
+                dialog.dismiss();
+                break;
+            case R.id.sort:
+                sort();
+                dialog.dismiss();
+                break;
+        }
+    }
+
+    public void sort() {
+
+        int index;
+
+        if(sortRG.getCheckedRadioButtonId()==-1){
+            Toast.makeText(getActivity(), "Please select a category to sort!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            selectedID = sortRG.getCheckedRadioButtonId();
+            View radioButton = sortRG.findViewById(selectedID);
+            index = sortRG.indexOfChild(radioButton);
+        }
+
+        if(!ascending.isChecked()){
+            switch(index){
+                case 0:
+                    adapter.sort(0);
+                    break;
+                case 1:
+                    adapter.sort(1);
+                    break;
+                case 2:
+                    adapter.sort(2);
+                    break;
+            }
+        }
+    }
 }
