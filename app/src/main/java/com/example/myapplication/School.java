@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class School implements Parcelable {
 
@@ -11,7 +12,7 @@ public class School implements Parcelable {
             mission, vision, gender, location,
             region, type, subjects;
     private ArrayList<String> cca, contactInfo, transport;
-    private Integer cutOffPoint;
+    private HashMap<String, Integer> cutOffPoint;
 
     public School() {
     }
@@ -26,7 +27,7 @@ public class School implements Parcelable {
         location = in.readString();
         region = in.readString();
         type = in.readString();
-        cutOffPoint = in.readInt();
+        cutOffPoint = in.readHashMap(null);
         cca = in.readArrayList(null);
         subjects = in.readString();
         contactInfo = in.readArrayList(null);
@@ -117,11 +118,11 @@ public class School implements Parcelable {
         this.type = type;
     }
 
-    public int getCutOffPoint() {
+    public HashMap<String, Integer> getCutOffPoint() {
         return cutOffPoint;
     }
 
-    public void setCutOffPoint(int cutOffPoint) {
+    public void setCutOffPoint(HashMap<String, Integer> cutOffPoint) {
         this.cutOffPoint = cutOffPoint;
     }
 
@@ -173,7 +174,7 @@ public class School implements Parcelable {
         dest.writeString(location);
         dest.writeString(region);
         dest.writeString(type);
-        dest.writeInt(cutOffPoint);
+        dest.writeMap(cutOffPoint);
         dest.writeList(cca);
         dest.writeString(subjects);
         dest.writeList(contactInfo);
