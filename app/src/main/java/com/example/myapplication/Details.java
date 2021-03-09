@@ -49,12 +49,13 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         String schoolMission = school.getMission();
         String schoolVision = school.getVision();
         String schoolGender = school.getGender();
-        Integer schoolCutOff = school.getCutOffPoint();
+        HashMap<String, Integer> schoolCutOff = school.getCutOffPoint();
         ArrayList<String> schoolCCA = school.getCca();
         String subjects = school.getSubjects();
         ArrayList<String> schoolSubject = new ArrayList<String>();
         schoolSubject.add(subjects);
         ArrayList<String> schoolContact = school.getContactInfo();
+        schoolContact.add(0, new String("Address: " + schoolAddress.toLowerCase()));
         ArrayList<String> schoolTransport = school.getTransport();
 
         listGroup = new ArrayList<String>();
@@ -71,10 +72,24 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         adapter = new ExpandableAdaptor(this, listGroup, listItem);
         expandableListView.setAdapter(adapter);
 
+        String points = "";
+        if (schoolCutOff.get("express") != 0){
+            points = new String(points + "Express: " + schoolCutOff.get("express").toString() + "\n");
+        }
+        if (schoolCutOff.get("na") != 0){
+            points = new String(points + "Normal Academic: " + schoolCutOff.get("na").toString() + "\n");
+        }
+        if (schoolCutOff.get("nt") != 0) {
+            points = new String(points + "Normal Technical: " + schoolCutOff.get("nt").toString() + "\n");
+        }
+        if (!points.equals("")) {
+            points = new String("Cut off point: \n\n" + points);
+        }
+
         schName.setText(schoolName);
         schVision.setText("Vision:" + "\n" + schoolVision);
         schMission.setText("Mission:" + "\n" + schoolMission);
-        schCutOff.setText("Cut-Off Point: " + schoolCutOff.toString());
+        schCutOff.setText(points);
         schGender.setText("School Type: " + schoolGender.toLowerCase());
         Glide.with(this).load(imageUrl).error(R.drawable.ic_person).into(schLogo);
     }
