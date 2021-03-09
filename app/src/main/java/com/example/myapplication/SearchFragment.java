@@ -78,7 +78,6 @@ public class SearchFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        myDialog = new Dialog(this);
     }
 
     @Override
@@ -124,12 +123,6 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    public void showPopup (Menu menu)(
-            Button btnSort;
-            myDialog.setContentView(R.layout.sort);
-            txtclose = (TextView)myDialog
-
-            )
 
     private List<School> readSchoolData() {
         try {
