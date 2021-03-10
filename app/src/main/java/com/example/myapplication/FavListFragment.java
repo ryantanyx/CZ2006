@@ -32,6 +32,8 @@ public class FavListFragment extends Fragment {
     
     private String mParam1;
     private String mParam2;
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     private FirebaseUser user;
     private DatabaseReference reference;
@@ -42,33 +44,22 @@ public class FavListFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static FavListFragment newInstance(String param1, String param2) {
+        FavListFragment fragment = new FavListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users");
-        userID = user.getUid();
-
-        // getting firebase reference
-        reference.child(userID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userProfile = snapshot.getValue(User.class);
-                if (userProfile != null){
-                    ArrayList<School> favlist = new ArrayList<School>();
-                    for (DataSnapshot snapchild: snapshot.child("favList").getChildren()) {
-                        School sch = snapchild.getValue(School.class);
-                        favlist.add(sch);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(recyclerView.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-            }
-        });
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +67,7 @@ public class FavListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favlist, container, false);
         getActivity().setTitle("Favourite List");
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.favListView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new FavListAdapter(getActivity(), favlist);
         recyclerView.setAdapter(adapter);

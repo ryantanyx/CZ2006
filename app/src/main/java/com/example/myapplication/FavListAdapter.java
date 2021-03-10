@@ -19,11 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
-public class FavListAdapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
+public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHolder>{
     private final LayoutInflater layoutInflater;
     private FirebaseUser user;
     private DatabaseReference reference;
@@ -38,37 +36,43 @@ public class FavListAdapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
     @NonNull
     @Override
-    public Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = layoutInflater.inflate(R.layout.custom_view, parent, false);
 
+        return new ViewHolder(view);
+    }
+
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        School school = favlist.get(position);
+        String schoolName = school.getSchoolName();
+        holder.schoolTitle.setText(schoolName);
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
 
-
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        // getting firebase reference
+        reference.child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userProfile = snapshot.getValue(User.class);
-
                 if (userProfile != null){
-                    favlist = userProfile.getFavList();
+                    ArrayList<School> favlist = new ArrayList<School>();
+                    for (DataSnapshot snapchild: snapshot.child("favList").getChildren()) {
+                        School sch = snapchild.getValue(School.class);
+                        favlist.add(sch);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(parent.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                Toast.makeText(holder.itemView.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
             }
         });
-        return null;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, int position) {
-        School school = favlist.get(position);
-        String schoolName = school.getSchoolName();
-        holder.schoolTitle.setText(schoolName);
-    }
 
     @Override
     public int getItemCount() {
