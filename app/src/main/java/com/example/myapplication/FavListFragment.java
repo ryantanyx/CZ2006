@@ -32,13 +32,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Inflater;
 
-public class FavListFragment extends Fragment implements View.OnClickListener{
+public class FavListFragment extends Fragment{
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     RecyclerView recyclerView;
     FavListAdapter adapter;
     ArrayList<School> items;
+    Button btn;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String mParam1;
     private String mParam2;
@@ -48,7 +49,6 @@ public class FavListFragment extends Fragment implements View.OnClickListener{
     private String userID;
     private User userProfile;
     private ArrayList<School> favlist;
-    Button btn;
     public FavListFragment() {
         // Required empty public constructor
     }
@@ -103,9 +103,6 @@ public class FavListFragment extends Fragment implements View.OnClickListener{
         });
 
         btn = view.findViewById(R.id.compareSelector);
-
-        TextView tv = view.findViewById(R.id.test); // TESTER OUTPUT ONLY
-
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,10 +119,6 @@ public class FavListFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         checkedSchs[which] = isChecked;
-                        // Get the current focused item
-                        String currentItem = schList.get(which);
-                        // Notify the current action
-                        //Toast.makeText(v.getContext(), currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setCancelable(false);
@@ -159,15 +152,6 @@ public class FavListFragment extends Fragment implements View.OnClickListener{
                         } else {
                             Toast.makeText(view.getContext(), "Choose exactly 2 schools!", Toast.LENGTH_LONG).show();
                         }
-
-                        /*tv.setText("Your preferred schools..... \n");
-                        for (int i = 0; i< checkedSchs.length; i++){
-                            boolean checked = checkedSchs[i];
-                            if (checked) {
-                                tv.setText(tv.getText() + schList.get(i) + "\n");
-                            }
-                        }*/
-
                     }
                 });
 
@@ -186,26 +170,6 @@ public class FavListFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-
-        /*dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.sort_view);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
-        }
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.setCancelable(false);
-        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
-
-        TextView back = (TextView) dialog.findViewById(R.id.backbutton);
-        back.setOnClickListener(this);*/
-
-
         return view;
-    }
-
-
-    @Override
-    public void onClick(View v) {
-
     }
 }
