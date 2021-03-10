@@ -7,4 +7,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="sch_level">SECONDARY</string>
+    <string-array name="rangeSliderValues">
+        <item>0</item>
+        <item>300</item>
+    </string-array>
 </resources>

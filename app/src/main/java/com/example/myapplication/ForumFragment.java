@@ -96,7 +96,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-//To move data from one activity to next---------------------------------------------------------------------
+
         options = new FirebaseRecyclerOptions.Builder<Post>().setQuery(root, Post.class).build();
         adapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(options) {
             @Override
