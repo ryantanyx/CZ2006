@@ -53,7 +53,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.custom_view, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -92,6 +91,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                             holder.favIcon.setTag(R.drawable.ic_normalstar);
                         }
                     }
+                    System.out.println("Out of for loop");
                 }
             }
 
@@ -273,8 +273,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
         TextView schoolTitle, schoolDesc;
         ImageButton favIcon;
         Boolean success;
-        ArrayList<School> favlist = new ArrayList<School>();
-        User userProfile;
+        ArrayList<School> favlist;
 
         public ViewHolder(@NonNull View itemView) {
 
@@ -286,17 +285,29 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
             //favIcon.setImageResource(R.drawable.ic_normalstar);
             favIcon.setTag(R.drawable.ic_normalstar);
 
+
             user = FirebaseAuth.getInstance().getCurrentUser();
             reference = FirebaseDatabase.getInstance().getReference("Users");
             userID = user.getUid();
 
             // getting firebase reference
-            reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child(userID).child("favList").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    favlist = new ArrayList<School>();
                     for (DataSnapshot snapchild: snapshot.getChildren()) {
                         School sch = snapchild.getValue(School.class);
                         favlist.add(sch);
+                    }
+                    School school = data.get(getAdapterPosition());
+                    for (School sch : favlist){
+                        if (sch.getSchoolName().equals(school.getSchoolName())){
+                            favIcon.setImageResource(R.drawable.ic_favstar);
+                            favIcon.setTag(R.drawable.ic_favstar);
+                        } else {
+                            favIcon.setImageResource(R.drawable.ic_normalstar);
+                            favIcon.setTag(R.drawable.ic_normalstar);
+                        }
                     }
                 }
 
@@ -345,22 +356,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                 private Boolean removeSchoolfromFav(ArrayList<School> favlist, School school) {
                     for (School sch : favlist){
                         if (sch.getSchoolName().equals(school.getSchoolName())){
-                            favlist.remove(school);
+                            favlist.remove(sch);
                             reference.child(userID).child("favList").setValue(favlist);
                             return true;
                         }
                     }
                     return false;
-
-                    /*if (!favlist.contains(school)){
-                        return false;
-                    }
-                    if (userProfile.getFavList() == null) {
-                        current_fav = new ArrayList<School>();
-                    }
-                    favlist.remove(school);
-                    reference.child(userID).child("favList").setValue(favlist);
-                    return true;*/
                 }
 
                 private Boolean addSchoolToFav(ArrayList<School> favlist, School school) {
