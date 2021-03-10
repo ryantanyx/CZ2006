@@ -1,8 +1,12 @@
 package com.example.myapplication;
 
+import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +18,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.TextView;
+
+import com.google.android.material.slider.RangeSlider;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,18 +38,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import kotlin.ranges.URangesKt;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener{
 
     RecyclerView recyclerView;
     Adapter adapter;
     ArrayList<School> items;
 
     private List<School> schoolList = new ArrayList<>();
+
+    private Dialog dialog;
+    private RadioGroup sortRG;
+    private Switch ascending;
+
+    private int selectedID;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,6 +67,13 @@ public class SearchFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private SearchView searchView;
+    private boolean filterHidden = true;
+    private AppCompatButton resetButton,northButton,southButton,eastButton,westButton,filterButton;
+    private AppCompatButton expressButton,normalaButton,normaltButton;
+    private RangeSlider psleSlider;
+    private TextView region,streams,pslecutoff;
+    private int black,white,red;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -85,14 +114,58 @@ public class SearchFragment extends Fragment {
         getActivity().setTitle("Search");
         setHasOptionsMenu(true);
 
+        filterButton = view.findViewById(R.id.filter);
+        filterButton.setOnClickListener(this);
+        resetButton = view.findViewById(R.id.reset);
+        resetButton.setOnClickListener(this);
+        northButton = view.findViewById(R.id.north);
+        northButton.setOnClickListener(this);
+        southButton = view.findViewById(R.id.south);
+        southButton.setOnClickListener(this);
+        eastButton = view.findViewById(R.id.east);
+        eastButton.setOnClickListener(this);
+        westButton = view.findViewById(R.id.west);
+        westButton.setOnClickListener(this);
+        region =  view.findViewById(R.id.region);
+        expressButton = view.findViewById(R.id.express);
+        expressButton.setOnClickListener(this);
+        normalaButton = view.findViewById(R.id.normala);
+        normalaButton.setOnClickListener(this);
+        normaltButton = view.findViewById(R.id.normalt);
+        normaltButton.setOnClickListener(this);
+        streams =  view.findViewById(R.id.streams);
+        psleSlider = view.findViewById(R.id.psleslider);
+        psleSlider.addOnChangeListener(this::onValueChange);
+        pslecutoff = view.findViewById(R.id.pslecutoff);
+        hideFilter();
+        initColors();
+
         schoolList = readSchoolData();
         schoolList = readCCAData(schoolList);
         schoolList = readSubjectData(schoolList);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new Adapter(getActivity(), schoolList);
         recyclerView.setAdapter(adapter);
+
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.sort_view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+
+        TextView back = (TextView) dialog.findViewById(R.id.backbutton);
+        back.setOnClickListener(this);
+
+        Button sort = (Button) dialog.findViewById(R.id.sort);
+        sort.setOnClickListener(this);
+
+        sortRG = (RadioGroup) dialog.findViewById(R.id.sortRG);
+        ascending = (Switch) dialog.findViewById(R.id.ascending);
 
         return view;
     }
@@ -105,7 +178,7 @@ public class SearchFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         MenuItem item = menu.findItem(R .id.action_search);
-        SearchView searchView = (SearchView) item.getActionView();
+        searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -114,7 +187,16 @@ public class SearchFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                adapter.searchViewFilter(newText);
+                return false;
+            }
+        });
+
+        MenuItem item2 = menu.findItem(R.id.action_sort);
+        item2.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                dialog.show();
                 return false;
             }
         });
@@ -135,6 +217,7 @@ public class SearchFragment extends Fragment {
                 if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))){
                     ArrayList<String> contact = new ArrayList<String>();
                     ArrayList<String> transport = new ArrayList<String>();
+                    HashMap<String, Integer> cut_off= new HashMap<String, Integer>();
 
                     School school = new School();
                     school.setImageUrl(tokens[0]);
@@ -147,12 +230,13 @@ public class SearchFragment extends Fragment {
                     school.setType(tokens[24]);
                     school.setGender(tokens[25]);
 
-                    if (!tokens[36].equalsIgnoreCase("-")){
-                        school.setCutOffPoint(Integer.parseInt(tokens[36]));
-                    }
+                    cut_off.put("express", Integer.parseInt(tokens[36]));
+                    cut_off.put("na", Integer.parseInt(tokens[37]));
+                    cut_off.put("nt", Integer.parseInt(tokens[38]));
+                    school.setCutOffPoint(cut_off);
 
                     contact.add("Tel no: " + tokens[5]);
-                    contact.add("Email address: "  + tokens[9]);
+                    contact.add("Email address: "  + tokens[9].toLowerCase());
                     school.setContactInfo(contact);
                     if (tokens[10].contains("\"")){
                         transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1).toLowerCase());
@@ -223,12 +307,12 @@ public class SearchFragment extends Fragment {
                         default:
                             continue;
                     }
-                        if (schCCA.get(tokens[0]).get(i).equals("")){
-                            cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
-                        } else{
-                            cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
-                        }
-                        schCCA.get(tokens[0]).set(i, cca);
+                    if (schCCA.get(tokens[0]).get(i).equals("")){
+                        cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
+                    } else{
+                        cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
+                    }
+                    schCCA.get(tokens[0]).set(i, cca);
                 }
             }
             for (School school: schoolList){
@@ -279,5 +363,236 @@ public class SearchFragment extends Fragment {
             e.printStackTrace();
         }
         return schoolList;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.filter:
+                showFilterTapped();
+                break;
+            case R.id.reset:
+                adapter.resetFilter();
+                unselectAllRegion();
+                resetSlider();
+                break;
+            case R.id.north:
+                northFilter();
+                break;
+            case R.id.south:
+                southFilter();
+                break;
+            case R.id.east:
+                eastFilter();
+                break;
+            case R.id.west:
+                westFilter();
+                break;
+            case R.id.express:
+                expressFilter();
+                break;
+            case R.id.normala:
+                normalaFilter();
+                break;
+            case R.id.normalt:
+                normaltFilter();
+                break;
+            case R.id.backbutton:
+                dialog.dismiss();
+                break;
+            case R.id.sort:
+                sort();
+                dialog.dismiss();
+                break;
+        }
+    }
+
+    private void northFilter(){
+        if (!adapter.getSelectedFilter().contains("north"))
+        {
+            adapter.filterRegion("north");
+            unselectAllRegion();
+            lookSelected(northButton);
+
+        }
+
+        else {
+            lookUnSelected(northButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+
+    }
+
+    private void southFilter(){
+        if (!adapter.getSelectedFilter().contains("south"))
+        {
+            adapter.filterRegion("south");
+            unselectAllRegion();
+            lookSelected(southButton);
+
+        }
+
+        else {
+            lookUnSelected(southButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+    }
+
+    private void eastFilter(){
+        if (!adapter.getSelectedFilter().contains("east"))
+        {
+            adapter.filterRegion("east");
+            unselectAllRegion();
+            lookSelected(eastButton);
+
+        }
+
+        else {
+            lookUnSelected(eastButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+    }
+
+    private void westFilter(){
+        if (!adapter.getSelectedFilter().contains("west"))
+        {
+            adapter.filterRegion("west");
+            unselectAllRegion();
+            lookSelected(westButton);
+
+        }
+
+        else {
+            lookUnSelected(westButton);
+            unselectAllRegion();
+            adapter.resetFilter();
+            searchView.setQuery("",false);
+            searchView.clearFocus();
+        }
+    }
+
+    private void expressFilter(){}
+
+    private void normalaFilter(){}
+
+    private void normaltFilter(){}
+
+    private void resetSlider(){
+        psleSlider.setValues((float)(0),(float)(300));
+    }
+
+    private void showFilterTapped(){
+        if(filterHidden) {
+            filterHidden = false;
+            showFilter();
+        }
+        else
+        {
+            filterHidden = true;
+            hideFilter();
+        }
+    }
+
+    private void hideFilter(){
+        resetButton.setVisibility(View.GONE);
+        northButton.setVisibility(View.GONE);
+        southButton.setVisibility(View.GONE);
+        eastButton.setVisibility(View.GONE);
+        westButton.setVisibility(View.GONE);
+        region.setVisibility(View.GONE);
+        expressButton.setVisibility(View.GONE);
+        normalaButton.setVisibility(View.GONE);
+        normaltButton.setVisibility(View.GONE);
+        streams.setVisibility(View.GONE);
+        psleSlider.setVisibility(View.GONE);
+        pslecutoff.setVisibility(View.GONE);
+        filterButton.setText("FILTER");
+    }
+
+    private void showFilter(){
+        resetButton.setVisibility(View.VISIBLE);
+        northButton.setVisibility(View.VISIBLE);
+        southButton.setVisibility(View.VISIBLE);
+        eastButton.setVisibility(View.VISIBLE);
+        westButton.setVisibility(View.VISIBLE);
+        region.setVisibility(View.VISIBLE);
+        expressButton.setVisibility(View.VISIBLE);
+        normalaButton.setVisibility(View.VISIBLE);
+        normaltButton.setVisibility(View.VISIBLE);
+        streams.setVisibility(View.VISIBLE);
+        psleSlider.setVisibility(View.VISIBLE);
+        pslecutoff.setVisibility(View.VISIBLE);
+        filterButton.setText("HIDE");
+    }
+
+    private void initColors()
+    {
+        black = ContextCompat.getColor(getContext(),R.color.black);
+        white = ContextCompat.getColor(getContext(),R.color.white);
+        red = ContextCompat.getColor(getContext(),android.R.color.holo_red_light);
+    }
+    private void lookSelected(AppCompatButton button){
+        button.setTextColor(white);
+        button.setBackgroundColor(red);
+    }
+
+    private void lookUnSelected(AppCompatButton button){
+        button.setTextColor(black);
+        button.setBackgroundColor(white);
+    }
+    private void unselectAllRegion(){
+        lookUnSelected(northButton);
+        lookUnSelected(southButton);
+        lookUnSelected(eastButton);
+        lookUnSelected(westButton);
+    }
+    private void unselectAllStreams(){
+        lookUnSelected(expressButton);
+        lookUnSelected(normalaButton);
+        lookUnSelected(normaltButton);
+    }
+
+    @Override
+    public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
+        int low = (int)(float)psleSlider.getValues().get(0);
+        int high = (int)(float)psleSlider.getValues().get(1);
+        adapter.filterPSLE(low,high);
+    }
+    public void sort() {
+
+        int index;
+
+        if(sortRG.getCheckedRadioButtonId()==-1){
+            Toast.makeText(getActivity(), "Please select a category to sort!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            selectedID = sortRG.getCheckedRadioButtonId();
+            View radioButton = sortRG.findViewById(selectedID);
+            index = sortRG.indexOfChild(radioButton);
+        }
+
+        if(!ascending.isChecked()){
+            switch(index){
+                case 0:
+                    adapter.sort(0);
+                    break;
+                case 1:
+                    adapter.sort(1);
+                    break;
+                case 2:
+                    adapter.sort(2);
+                    break;
+            }
+        }
     }
 }
