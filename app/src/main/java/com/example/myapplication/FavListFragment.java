@@ -67,10 +67,32 @@ public class FavListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favlist, container, false);
         getActivity().setTitle("Favourite List");
 
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new FavListAdapter(getActivity(), favlist);
-        recyclerView.setAdapter(adapter);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
+        // getting firebase reference
+        reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                favlist = new ArrayList<School>();
+                for (DataSnapshot snapchild: snapshot.getChildren()) {
+                    School sch = snapchild.getValue(School.class);
+                    favlist.add(sch);
+                }
+                System.out.println(favlist);
+                recyclerView = view.findViewById(R.id.recyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                adapter = new FavListAdapter(getActivity(), favlist);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(view.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+            }
+        });
+
 
         return view;
     }

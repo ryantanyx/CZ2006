@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHolder>{
     private final LayoutInflater layoutInflater;
@@ -27,9 +28,9 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
     private DatabaseReference reference;
     private String userID;
     private User userProfile;
-    private ArrayList<School> favlist;
+    private List<School> favlist;
 
-    FavListAdapter(Context context, ArrayList<School> favlist){
+    FavListAdapter(Context context, List<School> favlist){
         this.layoutInflater = LayoutInflater.from(context);
         this.favlist = favlist;
     }
@@ -48,42 +49,18 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
         School school = favlist.get(position);
         String schoolName = school.getSchoolName();
         holder.schoolTitle.setText(schoolName);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users");
-        userID = user.getUid();
-
-        // getting firebase reference
-        reference.child(userID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userProfile = snapshot.getValue(User.class);
-                if (userProfile != null){
-                    ArrayList<School> favlist = new ArrayList<School>();
-                    for (DataSnapshot snapchild: snapshot.child("favList").getChildren()) {
-                        School sch = snapchild.getValue(School.class);
-                        favlist.add(sch);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(holder.itemView.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
 
     @Override
     public int getItemCount() {
-        return 0;
+        return favlist.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView schoolImage;
         TextView schoolTitle;
-
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
