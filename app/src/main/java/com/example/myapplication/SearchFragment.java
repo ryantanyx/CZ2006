@@ -217,6 +217,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))){
                     ArrayList<String> contact = new ArrayList<String>();
                     ArrayList<String> transport = new ArrayList<String>();
+                    HashMap<String, Integer> cut_off= new HashMap<String, Integer>();
 
                     School school = new School();
                     school.setImageUrl(tokens[0]);
@@ -229,12 +230,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                     school.setType(tokens[24]);
                     school.setGender(tokens[25]);
 
-                    if (!tokens[36].equalsIgnoreCase("-")){
-                        school.setCutOffPoint(Integer.parseInt(tokens[36]));
-                    }
+                    cut_off.put("express", Integer.parseInt(tokens[36]));
+                    cut_off.put("na", Integer.parseInt(tokens[37]));
+                    cut_off.put("nt", Integer.parseInt(tokens[38]));
+                    school.setCutOffPoint(cut_off);
 
                     contact.add("Tel no: " + tokens[5]);
-                    contact.add("Email address: "  + tokens[9]);
+                    contact.add("Email address: "  + tokens[9].toLowerCase());
                     school.setContactInfo(contact);
                     if (tokens[10].contains("\"")){
                         transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1).toLowerCase());
@@ -305,12 +307,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                         default:
                             continue;
                     }
-                        if (schCCA.get(tokens[0]).get(i).equals("")){
-                            cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
-                        } else{
-                            cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
-                        }
-                        schCCA.get(tokens[0]).set(i, cca);
+                    if (schCCA.get(tokens[0]).get(i).equals("")){
+                        cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
+                    } else{
+                        cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
+                    }
+                    schCCA.get(tokens[0]).set(i, cca);
                 }
             }
             for (School school: schoolList){
