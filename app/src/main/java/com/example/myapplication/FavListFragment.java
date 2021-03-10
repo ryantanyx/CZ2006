@@ -1,9 +1,17 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,26 +28,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.Inflater;
 
-public class FavListFragment extends Fragment {
+public class FavListFragment extends Fragment implements View.OnClickListener{
 
-    private FirebaseDatabase db = FirebaseDatabase.getInstance();
-    
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
     RecyclerView recyclerView;
     FavListAdapter adapter;
     ArrayList<School> items;
-    
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String mParam1;
     private String mParam2;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
+    private Dialog dialog;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
     private User userProfile;
     private ArrayList<School> favlist;
+    Button btn;
     public FavListFragment() {
         // Required empty public constructor
     }
@@ -80,7 +89,7 @@ public class FavListFragment extends Fragment {
                     School sch = snapchild.getValue(School.class);
                     favlist.add(sch);
                 }
-                System.out.println(favlist);
+
                 recyclerView = view.findViewById(R.id.recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 adapter = new FavListAdapter(getActivity(), favlist);
@@ -93,9 +102,110 @@ public class FavListFragment extends Fragment {
             }
         });
 
+        btn = view.findViewById(R.id.compareSelector);
+
+        TextView tv = view.findViewById(R.id.test); // TESTER OUTPUT ONLY
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                String[] schools = new String[favlist.size()];
+                boolean[] checkedSchs = new boolean[favlist.size()];
+
+                for (int i = 0; i < favlist.size(); i++){
+                    schools[i] = favlist.get(i).getSchoolName();
+                    checkedSchs[i] = false;
+                }
+                List<String> schList = Arrays.asList(schools);
+                builder.setMultiChoiceItems(schools, checkedSchs, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        checkedSchs[which] = isChecked;
+                        // Get the current focused item
+                        String currentItem = schList.get(which);
+                        // Notify the current action
+                        //Toast.makeText(v.getContext(), currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setCancelable(false);
+
+                // Set a title for alert dialog
+                builder.setTitle("Select your schools for comparison");
+
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int count = 0;
+                        for (int k = 0; k< checkedSchs.length; k++){
+                            if (checkedSchs[k]) count++;
+                        }
+                        if (count == 2){
+                            //Supposed to bring up another page
+                            ArrayList<School> selectedSchs = new ArrayList<School>();
+                            for (int j = 0; j< checkedSchs.length; j++){
+                                boolean checked = checkedSchs[j];
+                                if (checked) {
+                                    for (School sch : favlist){
+                                        if (schList.get(j).equals(sch.getSchoolName())){
+                                            selectedSchs.add(sch);
+                                        }
+                                    }
+                                }
+                            }
+                            Intent i = new Intent(v.getContext(), Comparison.class);
+                            i.putExtra("Selected", selectedSchs);
+                            v.getContext().startActivity(i);
+                        } else {
+                            Toast.makeText(view.getContext(), "Choose exactly 2 schools!", Toast.LENGTH_LONG).show();
+                        }
+
+                        /*tv.setText("Your preferred schools..... \n");
+                        for (int i = 0; i< checkedSchs.length; i++){
+                            boolean checked = checkedSchs[i];
+                            if (checked) {
+                                tv.setText(tv.getText() + schList.get(i) + "\n");
+                            }
+                        }*/
+
+                    }
+                });
+
+                // Set the negative/no button click listener
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do something when click the negative button
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                // Display the alert dialog on interface
+                dialog.show();
+            }
+        });
+
+
+        /*dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.sort_view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+
+        TextView back = (TextView) dialog.findViewById(R.id.backbutton);
+        back.setOnClickListener(this);*/
+
 
         return view;
     }
 
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }

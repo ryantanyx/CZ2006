@@ -37,7 +37,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
     private String currentSearchText ="";
     private int min = 0,max = 300;
 
-    ArrayList<School> favlist;
     private User userProfile;
     private FirebaseUser user;
     private DatabaseReference reference;
@@ -274,7 +273,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
         ImageButton favIcon;
         Boolean success;
         ArrayList<School> favlist = new ArrayList<School>();
-        User userProfile;
 
         public ViewHolder(@NonNull View itemView) {
 
@@ -321,17 +319,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                 public void onClick(View v) {
                     School school =data.get(getAdapterPosition());
                     if (Integer.parseInt(favIcon.getTag().toString()) == R.drawable.ic_normalstar) {
-                        success = addSchoolToFav(favlist, school);       //Remove comment to test
-                        if (success) {
-                            favIcon.setImageResource(R.drawable.ic_favstar);
-                            favIcon.setTag(R.drawable.ic_favstar);
-                            Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(v.getContext(), "You already have more than 3 schools in your favourite list", Toast.LENGTH_SHORT).show();
+                        int success = addSchoolToFav(favlist, school);
+                        switch(success){
+                            case 1:
+                                favIcon.setImageResource(R.drawable.ic_favstar);
+                                favIcon.setTag(R.drawable.ic_favstar);
+                                Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
+                            case 2:
+                                Toast.makeText(v.getContext(), "School is already in favourite list", Toast.LENGTH_SHORT).show();
+                            default:
+                                Toast.makeText(v.getContext(), "You already have more than 3 schools in your favourite list", Toast.LENGTH_SHORT).show();
+
                         }
                     }
                     else {
-                        success = removeSchoolfromFav(favlist, school);      //Remove comment to test
+                        success = removeSchoolfromFav(favlist, school);
                         if (success) {
                             favIcon.setImageResource(R.drawable.ic_normalstar);
                             favIcon.setTag(R.drawable.ic_normalstar);
@@ -351,28 +353,23 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                         }
                     }
                     return false;
-
-                    /*if (!favlist.contains(school)){
-                        return false;
-                    }
-                    if (userProfile.getFavList() == null) {
-                        current_fav = new ArrayList<School>();
-                    }
-                    favlist.remove(school);
-                    reference.child(userID).child("favList").setValue(favlist);
-                    return true;*/
                 }
 
-                private Boolean addSchoolToFav(ArrayList<School> favlist, School school) {
+                private int addSchoolToFav(ArrayList<School> favlist, School school) {
                     if (favlist.size() > 3){
-                        return false;
+                        return 0;
+                    }
+                    for (School sch : favlist){
+                        if (sch.getSchoolName().equals(school.getSchoolName())){
+                            return 2;
+                        }
                     }
                     if (favlist == null) {
                         favlist = new ArrayList<School>();
                     }
                     favlist.add(school);
                     reference.child(userID).child("favList").setValue(favlist);
-                    return true;
+                    return 1;
                 }
             });
         }
