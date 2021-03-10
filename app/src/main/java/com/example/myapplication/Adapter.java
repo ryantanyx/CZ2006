@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,15 +20,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //implements Filterable{
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
     private LayoutInflater layoutInflater;
     private List<School> data;
@@ -38,8 +36,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
     private String selectedFilter = "all";
     private String currentSearchText ="";
     private int min = 0,max = 300;
-    boolean flag = true;
 
+    ArrayList<School> favlist;
+    private User userProfile;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
@@ -54,6 +53,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.custom_view, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -67,6 +67,39 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         Glide.with(holder.schoolImage.getContext()).load(imageUrl).error(R.drawable.ic_person).into(holder.schoolImage);
         holder.schoolTitle.setText(schoolName);
         holder.schoolDesc.setText(schoolAddress);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
+        // getting firebase reference
+        reference.child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userProfile = snapshot.getValue(User.class);
+                if (userProfile != null){
+                    ArrayList<School> favlist = new ArrayList<School>();
+                    for (DataSnapshot snapchild: snapshot.child("favList").getChildren()) {
+                        School sch = snapchild.getValue(School.class);
+                        favlist.add(sch);
+                    }
+                    for (School sch : favlist){
+                        if (sch.getSchoolName().equals(school.getSchoolName())){
+                            holder.favIcon.setImageResource(R.drawable.ic_favstar);
+                            holder.favIcon.setTag(R.drawable.ic_favstar);
+                        } else {
+                            holder.favIcon.setImageResource(R.drawable.ic_normalstar);
+                            holder.favIcon.setTag(R.drawable.ic_normalstar);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(holder.itemView.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -239,8 +272,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         ImageView schoolImage;
         TextView schoolTitle, schoolDesc;
         ImageButton favIcon;
-        Boolean flag = true;
-        ArrayList<School> favlist;
+        Boolean success;
+        ArrayList<School> favlist = new ArrayList<School>();
         User userProfile;
 
         public ViewHolder(@NonNull View itemView) {
@@ -250,20 +283,20 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
             schoolTitle = itemView.findViewById(R.id.schoolTitle);
             schoolDesc = itemView.findViewById(R.id.schoolDesc);
             favIcon = itemView.findViewById(R.id.starIcon);
-            favIcon.setImageResource(R.drawable.ic_normalstar);
+            //favIcon.setImageResource(R.drawable.ic_normalstar);
+            favIcon.setTag(R.drawable.ic_normalstar);
 
             user = FirebaseAuth.getInstance().getCurrentUser();
             reference = FirebaseDatabase.getInstance().getReference("Users");
             userID = user.getUid();
 
             // getting firebase reference
-            reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    userProfile = snapshot.getValue(User.class);
-
-                    if (userProfile != null){
-                        favlist = userProfile.getFavList();
+                    for (DataSnapshot snapchild: snapshot.getChildren()) {
+                        School sch = snapchild.getValue(School.class);
+                        favlist.add(sch);
                     }
                 }
 
@@ -286,41 +319,60 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
             favIcon.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    //favIcon.setSelected(!favIcon.isPres   sed());
-                    if (flag) {
-                        addSchoolToFav(favlist);       //Remove comment to test
-                        favIcon.setImageResource(R.drawable.ic_favstar);
-                        Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
-                        flag = false;
+                    School school =data.get(getAdapterPosition());
+                    if (Integer.parseInt(favIcon.getTag().toString()) == R.drawable.ic_normalstar) {
+                        success = addSchoolToFav(favlist, school);       //Remove comment to test
+                        if (success) {
+                            favIcon.setImageResource(R.drawable.ic_favstar);
+                            favIcon.setTag(R.drawable.ic_favstar);
+                            Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(v.getContext(), "You already have more than 3 schools in your favourite list", Toast.LENGTH_SHORT).show();
+                        }
                     }
                     else {
-                        removeSchoolfromFav(favlist);      //Remove comment to test
-                        favIcon.setImageResource(R.drawable.ic_normalstar);
-                        Toast.makeText(v.getContext(), "School has been removed from favourite list", Toast.LENGTH_SHORT).show();
-                        flag = true;
+                        success = removeSchoolfromFav(favlist, school);      //Remove comment to test
+                        if (success) {
+                            favIcon.setImageResource(R.drawable.ic_normalstar);
+                            favIcon.setTag(R.drawable.ic_normalstar);
+                            Toast.makeText(v.getContext(), "School has been removed from favourite list", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(v.getContext(), "School is not in favourite list", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 
-                private void removeSchoolfromFav(ArrayList<School> favlist) {
-                    School school =data.get(getAdapterPosition());
-                    /*if (userProfile.getFavList() == null) {
+                private Boolean removeSchoolfromFav(ArrayList<School> favlist, School school) {
+                    for (School sch : favlist){
+                        if (sch.getSchoolName().equals(school.getSchoolName())){
+                            favlist.remove(school);
+                            reference.child(userID).child("favList").setValue(favlist);
+                            return true;
+                        }
+                    }
+                    return false;
+
+                    /*if (!favlist.contains(school)){
+                        return false;
+                    }
+                    if (userProfile.getFavList() == null) {
                         current_fav = new ArrayList<School>();
-                    }*/
+                    }
                     favlist.remove(school);
-                    userProfile.setFavList(favlist);
                     reference.child(userID).child("favList").setValue(favlist);
-                    System.out.println(favlist.toString());
+                    return true;*/
                 }
 
-                private void addSchoolToFav(ArrayList<School> favlist) {
-                    School school =data.get(getAdapterPosition());
+                private Boolean addSchoolToFav(ArrayList<School> favlist, School school) {
+                    if (favlist.size() > 3){
+                        return false;
+                    }
                     if (favlist == null) {
                         favlist = new ArrayList<School>();
                     }
                     favlist.add(school);
-                    userProfile.setFavList(favlist);
                     reference.child(userID).child("favList").setValue(favlist);
-                    System.out.println(favlist.toString());
+                    return true;
                 }
             });
         }
