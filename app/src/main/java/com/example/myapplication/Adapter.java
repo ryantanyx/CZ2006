@@ -206,7 +206,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
                 Collections.sort(data, new Comparator<School>() {
                     @Override
                     public int compare(School o1, School o2) {
-                        return 0;
+                        return o1.getRegion().compareTo(o2.getRegion());
                     }
                 });
                 notifyDataSetChanged();
@@ -215,13 +215,38 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
                 Collections.sort(data, new Comparator<School>() {
                     @Override
                     public int compare(School o1, School o2) {
-                        return o1.getRegion().compareTo(o2.getRegion());
+                        return o1.getCutOffPoint().get("express").compareTo(o2.getCutOffPoint().get("express"));
                     }
                 });
                 notifyDataSetChanged();
                 return;
+            case 3:
+                Collections.sort(data, new Comparator<School>() {
+                    @Override
+                    public int compare(School o1, School o2) {
+                        return o1.getCutOffPoint().get("na").compareTo(o2.getCutOffPoint().get("na"));
+                    }
+                });
+                notifyDataSetChanged();
+                return;
+            case 4:
+                Collections.sort(data, new Comparator<School>() {
+                    @Override
+                    public int compare(School o1, School o2) {
+                        return o1.getCutOffPoint().get("nt").compareTo(o2.getCutOffPoint().get("nt"));
+                    }
+                });
+                notifyDataSetChanged();
+                return;
+
+
         }
     }
+
+    public void reverse(){
+        Collections.reverse(data);
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 

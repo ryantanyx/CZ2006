@@ -16,6 +16,7 @@
             android:name=".PostActivity"
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Details"/>
+        <activity android:name=".Comparison"/>
         <activity android:name=".ForgotPassword">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

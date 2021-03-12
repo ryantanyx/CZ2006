@@ -35,17 +35,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import kotlin.ranges.URangesKt;
+
+import static com.example.myapplication.R.id.sortRegion;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener{
+public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener {
 
     RecyclerView recyclerView;
     Adapter adapter;
@@ -69,11 +72,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     private String mParam2;
     private SearchView searchView;
     private boolean filterHidden = true;
-    private AppCompatButton resetButton,northButton,southButton,eastButton,westButton,filterButton;
-    private AppCompatButton expressButton,normalaButton,normaltButton;
+    private AppCompatButton resetButton, northButton, southButton, eastButton, westButton, filterButton;
+    private AppCompatButton expressButton, normalaButton, normaltButton;
+    private AppCompatButton expressSort, normalAcadSort, normalTechSort;
+    private RadioButton sortSchoolName, sortRegion, sortPSLECutOff;
     private RangeSlider psleSlider;
-    private TextView region,streams,pslecutoff;
-    private int black,white,red;
+    private TextView region, streams, pslecutoff;
+    private int black, white, red;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -126,14 +131,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         eastButton.setOnClickListener(this);
         westButton = view.findViewById(R.id.west);
         westButton.setOnClickListener(this);
-        region =  view.findViewById(R.id.region);
+        region = view.findViewById(R.id.region);
         expressButton = view.findViewById(R.id.express);
         expressButton.setOnClickListener(this);
         normalaButton = view.findViewById(R.id.normala);
         normalaButton.setOnClickListener(this);
         normaltButton = view.findViewById(R.id.normalt);
         normaltButton.setOnClickListener(this);
-        streams =  view.findViewById(R.id.streams);
+        streams = view.findViewById(R.id.streams);
         psleSlider = view.findViewById(R.id.psleslider);
         psleSlider.addOnChangeListener(this::onValueChange);
         pslecutoff = view.findViewById(R.id.pslecutoff);
@@ -154,9 +159,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
         }
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.setCancelable(false);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
         dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+        dialog.setCancelable(false);
 
         TextView back = (TextView) dialog.findViewById(R.id.backbutton);
         back.setOnClickListener(this);
@@ -165,8 +171,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         sort.setOnClickListener(this);
 
         sortRG = (RadioGroup) dialog.findViewById(R.id.sortRG);
-        ascending = (Switch) dialog.findViewById(R.id.ascending);
-
+        ascending = (Switch) dialog.findViewById(R.id.switchAsc);
+        expressSort = dialog.findViewById(R.id.expressSort);
+        expressSort.setOnClickListener(this);
+        normalAcadSort = dialog.findViewById(R.id.normalAcadSort);
+        normalAcadSort.setOnClickListener(this);
+        normalTechSort = dialog.findViewById(R.id.normalTechSort);
+        normalTechSort.setOnClickListener(this);
+        sortSchoolName = dialog.findViewById(R.id.sortSchoolName);
+        sortSchoolName.setOnClickListener(this);
+        sortRegion = dialog.findViewById(R.id.sortRegion);
+        sortRegion.setOnClickListener(this);
+        sortPSLECutOff = dialog.findViewById(R.id.sortPSLECutOff);
+        sortPSLECutOff.setOnClickListener(this);
         return view;
     }
 
@@ -177,7 +194,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         inflater.inflate(R.menu.searchbar, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        MenuItem item = menu.findItem(R .id.action_search);
+        MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -214,10 +231,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
                 String[] tokens = line.split("\t");
 
-                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))){
+                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))) {
                     ArrayList<String> contact = new ArrayList<String>();
                     ArrayList<String> transport = new ArrayList<String>();
-                    HashMap<String, Integer> cut_off= new HashMap<String, Integer>();
+                    HashMap<String, Integer> cut_off = new HashMap<String, Integer>();
 
                     School school = new School();
                     school.setImageUrl(tokens[0]);
@@ -236,16 +253,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                     school.setCutOffPoint(cut_off);
 
                     contact.add("Tel no: " + tokens[5]);
-                    contact.add("Email address: "  + tokens[9].toLowerCase());
+                    contact.add("Email address: " + tokens[9].toLowerCase());
                     school.setContactInfo(contact);
-                    if (tokens[10].contains("\"")){
-                        transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1).toLowerCase());
-                    } else{
+                    if (tokens[10].contains("\"")) {
+                        transport.add("By MRT: " + tokens[10].substring(1, tokens[10].length() - 1).toLowerCase());
+                    } else {
                         transport.add("By MRT: " + tokens[10].toLowerCase());
                     }
-                    if (tokens[11].contains("\"")){
-                        transport.add("By bus: " + tokens[11].substring(1,tokens[11].length() -1));
-                    } else{
+                    if (tokens[11].contains("\"")) {
+                        transport.add("By bus: " + tokens[11].substring(1, tokens[11].length() - 1));
+                    } else {
                         transport.add("By bus: " + tokens[11]);
                     }
                     school.setTransport(transport);
@@ -273,8 +290,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             while ((line = reader.readLine()) != null) {
                 String cca, ccaType;
                 String[] tokens = line.split("\t");
-                if (tokens[1].equalsIgnoreCase(getString(R.string.sch_level))){
-                    if (!schCCA.containsKey(tokens[0])){
+                if (tokens[1].equalsIgnoreCase(getString(R.string.sch_level))) {
+                    if (!schCCA.containsKey(tokens[0])) {
                         ArrayList<String> ccas = new ArrayList<String>();
                         ccas.add("");
                         ccas.add("");
@@ -283,7 +300,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                         ccas.add("");
                         schCCA.put(tokens[0], ccas);
                     }
-                    switch(tokens[2]) {
+                    switch (tokens[2]) {
                         case "PHYSICAL SPORTS":
                             i = 0;
                             ccaType = "Sports: ";
@@ -307,16 +324,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                         default:
                             continue;
                     }
-                        if (schCCA.get(tokens[0]).get(i).equals("")){
-                            cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
-                        } else{
-                            cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
-                        }
-                        schCCA.get(tokens[0]).set(i, cca);
+                    if (schCCA.get(tokens[0]).get(i).equals("")) {
+                        cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
+                    } else {
+                        cca = new String(schCCA.get(tokens[0]).get(i) + ", " + tokens[3].toLowerCase());
+                    }
+                    schCCA.get(tokens[0]).set(i, cca);
                 }
             }
-            for (School school: schoolList){
-                if (schCCA.containsKey(school.getSchoolName())){
+            for (School school : schoolList) {
+                if (schCCA.containsKey(school.getSchoolName())) {
                     school.setCca(schCCA.get(school.getSchoolName()));
                 }
             }
@@ -342,19 +359,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             while ((line = reader.readLine()) != null) {
                 String subject;
                 String[] tokens = line.split("\t");
-                if (!schSubject.containsKey(tokens[0])){
+                if (!schSubject.containsKey(tokens[0])) {
                     String subjects = new String("");
                     schSubject.put(tokens[0], subjects);
                 }
-                if (schSubject.get(tokens[0]).equals("")){
+                if (schSubject.get(tokens[0]).equals("")) {
                     subject = new String("Subjects: " + schSubject.get(tokens[0]) + tokens[1].toLowerCase());
-                } else{
+                } else {
                     subject = new String(schSubject.get(tokens[0]) + ", " + tokens[1].toLowerCase());
                 }
                 schSubject.put(tokens[0], subject);
             }
-            for (School school: schoolList){
-                if (schSubject.containsKey(school.getSchoolName())){
+            for (School school : schoolList) {
+                if (schSubject.containsKey(school.getSchoolName())) {
                     school.setSubjects(schSubject.get(school.getSchoolName()));
                 }
             }
@@ -367,7 +384,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.filter:
                 showFilterTapped();
                 break;
@@ -404,105 +421,110 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 sort();
                 dialog.dismiss();
                 break;
+            case R.id.sortSchoolName:
+            case R.id.sortRegion:
+                nonScoreSelect();
+                break;
+            case R.id.sortPSLECutOff:
+                scoreSelect();
+                break;
+            case R.id.expressSort:
+                expressSortSelect();
+                break;
+            case R.id.normalAcadSort:
+                normalAcadSelect();
+                break;
+            case R.id.normalTechSort:
+                normalTechSelect();
+                break;
         }
     }
 
-    private void northFilter(){
-        if (!adapter.getSelectedFilter().contains("north"))
-        {
+    private void northFilter() {
+        if (!adapter.getSelectedFilter().contains("north")) {
             adapter.filterRegion("north");
             unselectAllRegion();
             lookSelected(northButton);
 
-        }
-
-        else {
+        } else {
             lookUnSelected(northButton);
             unselectAllRegion();
             adapter.resetFilter();
-            searchView.setQuery("",false);
+            searchView.setQuery("", false);
             searchView.clearFocus();
         }
 
     }
 
-    private void southFilter(){
-        if (!adapter.getSelectedFilter().contains("south"))
-        {
+    private void southFilter() {
+        if (!adapter.getSelectedFilter().contains("south")) {
             adapter.filterRegion("south");
             unselectAllRegion();
             lookSelected(southButton);
 
-        }
-
-        else {
+        } else {
             lookUnSelected(southButton);
             unselectAllRegion();
             adapter.resetFilter();
-            searchView.setQuery("",false);
+            searchView.setQuery("", false);
             searchView.clearFocus();
         }
     }
 
-    private void eastFilter(){
-        if (!adapter.getSelectedFilter().contains("east"))
-        {
+    private void eastFilter() {
+        if (!adapter.getSelectedFilter().contains("east")) {
             adapter.filterRegion("east");
             unselectAllRegion();
             lookSelected(eastButton);
 
-        }
-
-        else {
+        } else {
             lookUnSelected(eastButton);
             unselectAllRegion();
             adapter.resetFilter();
-            searchView.setQuery("",false);
+            searchView.setQuery("", false);
             searchView.clearFocus();
         }
     }
 
-    private void westFilter(){
-        if (!adapter.getSelectedFilter().contains("west"))
-        {
+    private void westFilter() {
+        if (!adapter.getSelectedFilter().contains("west")) {
             adapter.filterRegion("west");
             unselectAllRegion();
             lookSelected(westButton);
 
-        }
-
-        else {
+        } else {
             lookUnSelected(westButton);
             unselectAllRegion();
             adapter.resetFilter();
-            searchView.setQuery("",false);
+            searchView.setQuery("", false);
             searchView.clearFocus();
         }
     }
 
-    private void expressFilter(){}
-
-    private void normalaFilter(){}
-
-    private void normaltFilter(){}
-
-    private void resetSlider(){
-        psleSlider.setValues((float)(0),(float)(300));
+    private void expressFilter() {
     }
 
-    private void showFilterTapped(){
-        if(filterHidden) {
+    private void normalaFilter() {
+    }
+
+    private void normaltFilter() {
+    }
+
+    private void resetSlider() {
+        psleSlider.setValues((float) (0), (float) (300));
+    }
+
+    private void showFilterTapped() {
+        if (filterHidden) {
             filterHidden = false;
             showFilter();
-        }
-        else
-        {
+        } else {
             filterHidden = true;
             hideFilter();
         }
     }
 
-    private void hideFilter(){
+    private void hideFilter() {
         resetButton.setVisibility(View.GONE);
         northButton.setVisibility(View.GONE);
         southButton.setVisibility(View.GONE);
@@ -518,7 +540,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         filterButton.setText("FILTER");
     }
 
-    private void showFilter(){
+    private void showFilter() {
         resetButton.setVisibility(View.VISIBLE);
         northButton.setVisibility(View.VISIBLE);
         southButton.setVisibility(View.VISIBLE);
@@ -534,28 +556,30 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         filterButton.setText("HIDE");
     }
 
-    private void initColors()
-    {
-        black = ContextCompat.getColor(getContext(),R.color.black);
-        white = ContextCompat.getColor(getContext(),R.color.white);
-        red = ContextCompat.getColor(getContext(),android.R.color.holo_red_light);
+    private void initColors() {
+        black = ContextCompat.getColor(getContext(), R.color.black);
+        white = ContextCompat.getColor(getContext(), R.color.white);
+        red = ContextCompat.getColor(getContext(), android.R.color.holo_red_light);
     }
-    private void lookSelected(AppCompatButton button){
+
+    private void lookSelected(AppCompatButton button) {
         button.setTextColor(white);
         button.setBackgroundColor(red);
     }
 
-    private void lookUnSelected(AppCompatButton button){
+    private void lookUnSelected(AppCompatButton button) {
         button.setTextColor(black);
         button.setBackgroundColor(white);
     }
-    private void unselectAllRegion(){
+
+    private void unselectAllRegion() {
         lookUnSelected(northButton);
         lookUnSelected(southButton);
         lookUnSelected(eastButton);
         lookUnSelected(westButton);
     }
-    private void unselectAllStreams(){
+
+    private void unselectAllStreams() {
         lookUnSelected(expressButton);
         lookUnSelected(normalaButton);
         lookUnSelected(normaltButton);
@@ -563,26 +587,25 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
     @Override
     public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
-        int low = (int)(float)psleSlider.getValues().get(0);
-        int high = (int)(float)psleSlider.getValues().get(1);
-        adapter.filterPSLE(low,high);
+        int low = (int) (float) psleSlider.getValues().get(0);
+        int high = (int) (float) psleSlider.getValues().get(1);
+        adapter.filterPSLE(low, high);
     }
+
     public void sort() {
 
         int index;
 
-        if(sortRG.getCheckedRadioButtonId()==-1){
+        if (sortRG.getCheckedRadioButtonId() == -1) {
             Toast.makeText(getActivity(), "Please select a category to sort!", Toast.LENGTH_SHORT).show();
             return;
-        }
-        else{
+        } else {
             selectedID = sortRG.getCheckedRadioButtonId();
             View radioButton = sortRG.findViewById(selectedID);
             index = sortRG.indexOfChild(radioButton);
         }
 
-        if(!ascending.isChecked()){
-            switch(index){
+            switch (index) {
                 case 0:
                     adapter.sort(0);
                     break;
@@ -590,9 +613,66 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                     adapter.sort(1);
                     break;
                 case 2:
-                    adapter.sort(2);
+                    if (expressSort.isSelected())
+                        adapter.sort(2);
+                    else if(normalAcadSort.isSelected())
+                        adapter.sort(3);
+                    else if (normalTechSort.isSelected())
+                        adapter.sort(4);
                     break;
             }
+        if (!ascending.isChecked()) {
+            adapter.reverse();
         }
+        }
+
+
+    public void expressSortSelect() {
+        if (expressSort.isSelected()) {
+            lookUnSelected(expressSort);
+            expressSort.setSelected(false);
+        } else {
+            unselectAllSort();
+            lookSelected(expressSort);
+            expressSort.setSelected(true);
+        }
+    }
+
+    public void normalAcadSelect() {
+        if (normalAcadSort.isSelected()) {
+            lookUnSelected(normalAcadSort);
+            normalAcadSort.setSelected(false);
+        } else {
+            unselectAllSort();
+            lookSelected(normalAcadSort);
+            normalAcadSort.setSelected(true);
+        }
+    }
+
+    public void normalTechSelect() {
+        if (normalTechSort.isSelected()) {
+            lookUnSelected(normalTechSort);
+            normalTechSort.setSelected(false);
+        } else {
+            unselectAllSort();
+            lookSelected(normalTechSort);
+            normalTechSort.setSelected(true);
+        }
+    }
+
+    private void unselectAllSort() {
+        lookUnSelected(expressSort);
+        lookUnSelected(normalAcadSort);
+        lookUnSelected(normalTechSort);
+    }
+    private void nonScoreSelect(){
+        expressSort.setVisibility(View.GONE);
+        normalAcadSort.setVisibility(View.GONE);
+        normalTechSort.setVisibility(View.GONE);
+    }
+    private void scoreSelect(){
+        expressSort.setVisibility(View.VISIBLE);
+        normalAcadSort.setVisibility(View.VISIBLE);
+        normalTechSort.setVisibility(View.VISIBLE);
     }
 }
