@@ -307,12 +307,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                         default:
                             continue;
                     }
-                        if (schCCA.get(tokens[0]).get(i).equals("")){
-                            cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
-                        } else{
-                            cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
-                        }
-                        schCCA.get(tokens[0]).set(i, cca);
+                    if (schCCA.get(tokens[0]).get(i).equals("")){
+                        cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
+                    } else{
+                        cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
+                    }
+                    schCCA.get(tokens[0]).set(i, cca);
                 }
             }
             for (School school: schoolList){

@@ -98,14 +98,10 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.detailsBackButton:
-                backbuttonmethod();
+                this.finish();
                 break;
             default:
                 break;
         }
-    }
-
-    private void backbuttonmethod() {
-        Details.this.finish();
     }
 }
