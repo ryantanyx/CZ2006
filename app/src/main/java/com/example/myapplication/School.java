@@ -8,22 +8,10 @@ import java.util.HashMap;
 
 public class School implements Parcelable {
 
-    public static final Creator<School> CREATOR = new Creator<School>() {
-        @Override
-        public School createFromParcel(Parcel in) {
-            return new School(in);
-        }
-
-        @Override
-        public School[] newArray(int size) {
-            return new School[size];
-        }
-    };
-    HashMap<String, ArrayList<String>> cca;
     private String imageUrl,schoolName, address,
             mission, vision, gender, location,
             region, type, subjects;
-    private ArrayList<String> contactInfo, transport;
+    private ArrayList<String> cca, contactInfo, transport;
     private HashMap<String, Integer> cutOffPoint;
 
     public School() {
@@ -40,11 +28,23 @@ public class School implements Parcelable {
         region = in.readString();
         type = in.readString();
         cutOffPoint = in.readHashMap(null);
-        cca = in.readHashMap(null);
+        cca = in.readArrayList(null);
         subjects = in.readString();
         contactInfo = in.readArrayList(null);
         transport = in.readArrayList(null);
     }
+
+    public static final Creator<School> CREATOR = new Creator<School>() {
+        @Override
+        public School createFromParcel(Parcel in) {
+            return new School(in);
+        }
+
+        @Override
+        public School[] newArray(int size) {
+            return new School[size];
+        }
+    };
 
     public String getMission() {
         return mission;
@@ -126,11 +126,11 @@ public class School implements Parcelable {
         this.cutOffPoint = cutOffPoint;
     }
 
-    public HashMap<String, ArrayList<String>> getCca() {
+    public ArrayList<String> getCca() {
         return cca;
     }
 
-    public void setCca(HashMap<String, ArrayList<String>> cca) {
+    public void setCca(ArrayList<String> cca) {
         this.cca = cca;
     }
 
@@ -175,7 +175,7 @@ public class School implements Parcelable {
         dest.writeString(region);
         dest.writeString(type);
         dest.writeMap(cutOffPoint);
-        dest.writeMap(cca);
+        dest.writeList(cca);
         dest.writeString(subjects);
         dest.writeList(contactInfo);
         dest.writeList(transport);

@@ -277,7 +277,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     }
 
     private List<School> readCCAData(List<School> schoolList) {
-        HashMap<String, ArrayList<String>> schCCA = new HashMap<String, ArrayList<String>>();
 
         try {
             InputStream is = getResources().openRawResource(R.raw.co_curricular_activities_ccas);
@@ -287,6 +286,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             String line;
             int i;
             reader.readLine();
+            HashMap<String, ArrayList<String>> schCCA = new HashMap<String, ArrayList<String>>();
             while ((line = reader.readLine()) != null) {
                 String cca, ccaType;
                 String[] tokens = line.split("\t");
@@ -421,8 +421,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 sort();
                 dialog.dismiss();
                 break;
-            case R.id.sortSchoolName:
-            case R.id.sortRegion:
+            case R.id.sortSchoolName: sortRegion:
                 nonScoreSelect();
                 break;
             case R.id.sortPSLECutOff:
