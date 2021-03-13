@@ -69,6 +69,32 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
         Glide.with(holder.schoolImage.getContext()).load(imageUrl).error(R.drawable.ic_person).into(holder.schoolImage);
         holder.schoolTitle.setText(schoolName);
         holder.schoolDesc.setText(schoolAddress);
+        ArrayList<School> favlist = new ArrayList<School>();
+        // getting firebase reference
+        reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapchild: snapshot.getChildren()) {
+                    School sch = snapchild.getValue(School.class);
+                    favlist.add(sch);
+                }
+                for (School sch : favlist){
+                    if (sch.getSchoolName().equals(school.getSchoolName())){
+                        holder.favIcon.setImageResource(R.drawable.ic_favstar);
+                        holder.favIcon.setTag(R.drawable.ic_favstar);
+                        break;
+                    } else {
+                        holder.favIcon.setImageResource(R.drawable.ic_normalstar);
+                        holder.favIcon.setTag(R.drawable.ic_normalstar);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(holder.itemView.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -251,6 +277,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
             schoolTitle = itemView.findViewById(R.id.schoolTitle);
             schoolDesc = itemView.findViewById(R.id.schoolDesc);
             favIcon = itemView.findViewById(R.id.starIcon);
+            favIcon.setTag(R.drawable.ic_normalstar);
 
             user = FirebaseAuth.getInstance().getCurrentUser();
             reference = FirebaseDatabase.getInstance().getReference("Users");
