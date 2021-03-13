@@ -303,8 +303,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                             temp.add(tokens[3].toLowerCase());
                             ccas.put("Performing Arts", temp);
                             schCCA.put(tokens[0], ccas);
-                            //ccaType = "Performing Arts: ";
-                            //i = 1;
                             break;
                         case "CLUBS AND SOCIETIES":
                             if (schCCA.get(tokens[0]).containsKey("Clubs & Societies")){
@@ -316,8 +314,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                             temp.add(tokens[3].toLowerCase());
                             ccas.put("Clubs & Societies", temp);
                             schCCA.put(tokens[0], ccas);
-                            //ccaType = "Clubs & Societies: ";
-                           // i = 2;
                             break;
                         case "UNIFORMED GROUPS":
                             if (schCCA.get(tokens[0]).containsKey("Uniformed Groups")){
@@ -329,8 +325,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                             temp.add(tokens[3].toLowerCase());
                             ccas.put("Uniformed Groups", temp);
                             schCCA.put(tokens[0], ccas);
-                            //ccaType = "Uniformed Groups: ";
-                           // i = 3;
                             break;
                         case "OTHERS":
                             if (schCCA.get(tokens[0]).containsKey("Others")){
@@ -342,18 +336,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                             temp.add(tokens[3].toLowerCase());
                             ccas.put("Others", temp);
                             schCCA.put(tokens[0], ccas);
-                            //ccaType = "Others: ";
-                            //i = 4;
                             break;
                         default:
                             continue;
                     }
-                    /*if (schCCA.get(tokens[0]).get(i).equals("")){
-                        cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
-                    } else{
-                        cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
-                    }
-                    schCCA.get(tokens[0]).set(i, cca);*/
                 }
             }
             for (School school: schoolList){
