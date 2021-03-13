@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Details extends AppCompatActivity implements View.OnClickListener{
 
@@ -50,13 +51,34 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         String schoolVision = school.getVision();
         String schoolGender = school.getGender();
         HashMap<String, Integer> schoolCutOff = school.getCutOffPoint();
-        ArrayList<String> schoolCCA = school.getCca();
+        HashMap<String, ArrayList<String>> schoolCCA = school.getCca();
+
         String subjects = school.getSubjects();
         ArrayList<String> schoolSubject = new ArrayList<String>();
         schoolSubject.add(subjects);
         ArrayList<String> schoolContact = school.getContactInfo();
         schoolContact.add(0, new String("Address: " + schoolAddress.toLowerCase()));
         ArrayList<String> schoolTransport = school.getTransport();
+
+        ArrayList<String> cca = new ArrayList<String>();
+        ArrayList<String> type = new ArrayList<String>();
+        type.add("Sports");
+        type.add("Performing Arts");
+        type.add("Clubs & Societies");
+        type.add("Uniformed Groups");
+        type.add("Others");
+        ArrayList<String> temp = new ArrayList<String>();
+        String entry;
+        for (String ccatype : type){
+            temp = schoolCCA.get(ccatype);
+            entry = new String(ccatype + ": ");
+            if (temp != null){
+                for (String s : temp) {
+                    entry = entry + s + ", ";
+                }
+            }
+            cca.add(entry.substring(0,entry.length()-1));
+        }
 
         listGroup = new ArrayList<String>();
         listItem = new HashMap<>();
@@ -65,7 +87,8 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         listGroup.add("Subjects Offered");
         listGroup.add("Transport");
         listGroup.add("Contact Information");
-        listItem.put(listGroup.get(0), schoolCCA);
+
+        listItem.put(listGroup.get(0), cca);
         listItem.put(listGroup.get(1), schoolSubject);
         listItem.put(listGroup.get(2), schoolTransport);
         listItem.put(listGroup.get(3), schoolContact);

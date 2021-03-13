@@ -260,7 +260,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     }
 
     private List<School> readCCAData(List<School> schoolList) {
-        HashMap<String, ArrayList<String>> schCCA = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> temp;
+        HashMap<String, ArrayList<String>> ccas;
+        HashMap<String, HashMap<String, ArrayList<String>>> schCCA = new HashMap<String, HashMap<String, ArrayList<String>>>();
 
         try {
             InputStream is = getResources().openRawResource(R.raw.co_curricular_activities_ccas);
@@ -275,44 +277,83 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 String[] tokens = line.split("\t");
                 if (tokens[1].equalsIgnoreCase(getString(R.string.sch_level))){
                     if (!schCCA.containsKey(tokens[0])){
-                        ArrayList<String> ccas = new ArrayList<String>();
-                        ccas.add("");
-                        ccas.add("");
-                        ccas.add("");
-                        ccas.add("");
-                        ccas.add("");
+                        ccas = new HashMap<String, ArrayList<String>>();
                         schCCA.put(tokens[0], ccas);
                     }
                     switch(tokens[2]) {
                         case "PHYSICAL SPORTS":
-                            i = 0;
-                            ccaType = "Sports: ";
+                            if (schCCA.get(tokens[0]).containsKey("Sports")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Sports"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Sports", temp);
+                            schCCA.put(tokens[0], ccas);
                             break;
+
                         case "VISUAL AND PERFORMING ARTS":
-                            ccaType = "Performing Arts: ";
-                            i = 1;
+                            if (schCCA.get(tokens[0]).containsKey("Performing Arts")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Performing Arts"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Performing Arts", temp);
+                            schCCA.put(tokens[0], ccas);
+                            //ccaType = "Performing Arts: ";
+                            //i = 1;
                             break;
                         case "CLUBS AND SOCIETIES":
-                            ccaType = "Clubs & Societies: ";
-                            i = 2;
+                            if (schCCA.get(tokens[0]).containsKey("Clubs & Societies")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Clubs & Societies"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Clubs & Societies", temp);
+                            schCCA.put(tokens[0], ccas);
+                            //ccaType = "Clubs & Societies: ";
+                           // i = 2;
                             break;
                         case "UNIFORMED GROUPS":
-                            ccaType = "Uniformed Groups: ";
-                            i = 3;
+                            if (schCCA.get(tokens[0]).containsKey("Uniformed Groups")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Uniformed Groups"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Uniformed Groups", temp);
+                            schCCA.put(tokens[0], ccas);
+                            //ccaType = "Uniformed Groups: ";
+                           // i = 3;
                             break;
                         case "OTHERS":
-                            ccaType = "Others: ";
-                            i = 4;
+                            if (schCCA.get(tokens[0]).containsKey("Others")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Others"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Others", temp);
+                            schCCA.put(tokens[0], ccas);
+                            //ccaType = "Others: ";
+                            //i = 4;
                             break;
                         default:
                             continue;
                     }
-                    if (schCCA.get(tokens[0]).get(i).equals("")){
+                    /*if (schCCA.get(tokens[0]).get(i).equals("")){
                         cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
                     } else{
                         cca = new String( schCCA.get(tokens[0]).get(i) + ", "+ tokens[3].toLowerCase());
                     }
-                    schCCA.get(tokens[0]).set(i, cca);
+                    schCCA.get(tokens[0]).set(i, cca);*/
                 }
             }
             for (School school: schoolList){

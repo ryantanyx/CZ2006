@@ -325,8 +325,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                                 favIcon.setImageResource(R.drawable.ic_favstar);
                                 favIcon.setTag(R.drawable.ic_favstar);
                                 Toast.makeText(v.getContext(), "School has been added to favourite list", Toast.LENGTH_SHORT).show();
+                                break;
                             case 2:
                                 Toast.makeText(v.getContext(), "School is already in favourite list", Toast.LENGTH_SHORT).show();
+                                break;
                             default:
                                 Toast.makeText(v.getContext(), "You already have more than 3 schools in your favourite list", Toast.LENGTH_SHORT).show();
 
@@ -347,7 +349,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                 private Boolean removeSchoolfromFav(ArrayList<School> favlist, School school) {
                     for (School sch : favlist){
                         if (sch.getSchoolName().equals(school.getSchoolName())){
+                            System.out.println(favlist);
                             favlist.remove(school);
+                            System.out.println(favlist);
                             reference.child(userID).child("favList").setValue(favlist);
                             return true;
                         }
@@ -356,6 +360,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                 }
 
                 private int addSchoolToFav(ArrayList<School> favlist, School school) {
+                    System.out.println(favlist);
                     if (favlist.size() > 3){
                         return 0;
                     }
@@ -368,6 +373,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                         favlist = new ArrayList<School>();
                     }
                     favlist.add(school);
+                    System.out.println(favlist);
                     reference.child(userID).child("favList").setValue(favlist);
                     return 1;
                 }
