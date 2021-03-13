@@ -395,7 +395,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
                 }
 
                 private int addSchoolToFav(ArrayList<School> favlist, School school) {
-                    if (favlist.size() > 3){
+                    if (favlist.size() >= 3){
                         return 0;
                     }
                     for (School sch : favlist){
