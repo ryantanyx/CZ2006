@@ -92,8 +92,11 @@ public class FavListFragment extends Fragment{
 
                 recyclerView = view.findViewById(R.id.recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                adapter = new FavListAdapter(getActivity(), favlist);
-                recyclerView.setAdapter(adapter);
+                if (favlist != null){
+                    adapter = new FavListAdapter(getActivity(), favlist);
+                    recyclerView.setAdapter(adapter);
+                }
+
             }
 
             @Override
