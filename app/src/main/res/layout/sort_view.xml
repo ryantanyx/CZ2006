@@ -1,104 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="200dp"
-    android:layout_height="300dp"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/cardview_light_background"
-    android:orientation="vertical"
-    android:id="@+id/ic_popup"
-    android:padding="5dp"
-    android:layout_gravity="center">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+
+    >
 
     <TextView
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/backbutton"
         android:layout_width="25dp"
         android:layout_height="30dp"
         android:layout_gravity="start"
-        android:gravity="start"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_backarrow"
+        android:gravity="start"
         android:textStyle="bold"
-        android:id="@+id/backbutton"
-        android:background="@drawable/ic_backarrow" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Sort"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
 
     <TextView
-        app:layout_constraintTop_toBottomOf="@id/backbutton"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/textSchoolName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:id="@+id/textSchoolName"
+        android:text="School Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textStyle="bold"
-        android:text="School Name" />
-
-    <TextView
-        android:id="@+id/textPSLEScore"
-        app:layout_constraintTop_toBottomOf="@id/textSchoolName"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="25dp"
-        android:layout_width="wrap_content"
-        android:textStyle="bold"
-        android:layout_height="wrap_content"
-        android:text="PSLE Score" />
+        app:layout_constraintRight_toLeftOf="@id/guidelineMiddle"
+        app:layout_constraintTop_toBottomOf="@id/backbutton" />
 
     <TextView
         android:id="@+id/textRegion"
-        app:layout_constraintTop_toBottomOf="@id/textPSLEScore"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="32dp"
         android:layout_width="wrap_content"
-        android:textStyle="bold"
         android:layout_height="wrap_content"
-        android:text="Region" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="25dp"
+        android:text="Region"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textStyle="bold"
+        app:layout_constraintRight_toLeftOf="@id/guidelineMiddle"
+        app:layout_constraintTop_toBottomOf="@id/textSchoolName" />
+
+    <TextView
+        android:id="@+id/textPSLEScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="PSLE Cut-Off"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textStyle="bold"
+        app:layout_constraintRight_toLeftOf="@id/guidelineMiddle"
+        app:layout_constraintTop_toBottomOf="@id/textRegion" />
 
 
     <RadioGroup
         android:id="@+id/sortRG"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_marginTop="45dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="45dp"
+        android:orientation="vertical"
         app:layout_constraintLeft_toRightOf="@id/textSchoolName"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
+            android:id="@+id/sortSchoolName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <RadioButton
+            android:id="@+id/sortRegion"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
         <RadioButton
+            android:id="@+id/sortPSLECutOff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RadioGroup>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/expressSort"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:text="Express"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPSLEScore" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/normalAcadSort"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:text="Normal (Acad)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintStart_toEndOf="@+id/expressSort"
+        app:layout_constraintTop_toBottomOf="@+id/textPSLEScore" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/normalTechSort"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:text="Normal (Tech)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintStart_toEndOf="@+id/normalAcadSort"
+        app:layout_constraintTop_toBottomOf="@+id/textPSLEScore" />
+
     <Switch
-        android:id="@+id/ascending"
+        android:id="@+id/switchAsc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="125dp"
         android:text="Ascending"
-        app:layout_constraintTop_toBottomOf="@id/textRegion"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="40dp"
-        />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/normalAcadSort" />
 
     <Button
         android:id="@+id/sort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="125dp"
         android:text="Sort"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="250dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/switchAsc" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="150dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
