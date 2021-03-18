@@ -11,11 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +44,6 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.custom_view, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -71,6 +72,7 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
         ImageView schoolImage;
         TextView schoolTitle, schoolDesc;
         ImageButton favIcon;
+        boolean success;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,15 +80,84 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
             schoolTitle = itemView.findViewById(R.id.schoolTitle);
             schoolDesc = itemView.findViewById(R.id.schoolDesc);
             favIcon = itemView.findViewById(R.id.starIcon);
+            favIcon.setTag(R.drawable.ic_favstar);
 
-            itemView.setOnClickListener(new View.OnClickListener(){
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            reference = FirebaseDatabase.getInstance().getReference("Users");
+            userID = user.getUid();
+
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     Intent i = new Intent(v.getContext(), Details.class);
                     School school = favlist.get(getAdapterPosition());
-                    i.putExtra("School", favlist.get(getAdapterPosition()));
+                    i.putExtra("School", school);
                     v.getContext().startActivity(i);
+                }
+            });
+
+            reference.child(userID).addChildEventListener(new ChildEventListener() {
+
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    return;
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    favlist = new ArrayList<School>();
+                    for (DataSnapshot snapchild: snapshot.getChildren()) {
+                        School sch = snapchild.getValue(School.class);
+                        favlist.add(sch);
+                    }
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    return;
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    return;
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    return;
+                }
+
+            });
+
+            favIcon.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    School school = favlist.get(getAdapterPosition());
+                    if (Integer.parseInt(favIcon.getTag().toString()) == R.drawable.ic_favstar){
+                        success = removeSchoolfromFav(favlist, school);
+                        if (success) {
+                            favIcon.setImageResource(R.drawable.ic_normalstar);
+                            favIcon.setTag(R.drawable.ic_normalstar);
+                            Toast.makeText(v.getContext(), "School has been removed from favourite list", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(v.getContext(), "School is not in favourite list", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                private Boolean removeSchoolfromFav(List<School> favlist, School school) {
+                    for (School sch : favlist) {
+                        if (sch.getSchoolName().equals(school.getSchoolName())) {
+                            favlist.remove(sch);
+                            reference.child(userID).child("favList").setValue(favlist);
+                            return true;
+                        }
+                    }
+                    return false;
                 }
             });
         }

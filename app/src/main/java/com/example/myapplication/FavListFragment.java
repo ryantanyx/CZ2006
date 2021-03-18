@@ -89,14 +89,12 @@ public class FavListFragment extends Fragment{
                     School sch = snapchild.getValue(School.class);
                     favlist.add(sch);
                 }
-
                 recyclerView = view.findViewById(R.id.recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 if (favlist != null){
                     adapter = new FavListAdapter(getActivity(), favlist);
                     recyclerView.setAdapter(adapter);
                 }
-
             }
 
             @Override
