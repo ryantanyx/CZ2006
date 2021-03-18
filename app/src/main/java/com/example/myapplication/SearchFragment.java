@@ -39,7 +39,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,6 +80,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     private int black,white,red;
     private ArrayList<String> arrayList_parent, arrayList_sports, arrayList_vpa, arrayList_cs,arrayList_others;
     private ArrayAdapter<String> arrayAdapter_parent, arrayAdapter_child;
+    private Set<String> set_sports = new HashSet<String>();
 
 
     public SearchFragment() {
@@ -119,6 +122,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         getActivity().setTitle("Search");
         setHasOptionsMenu(true);
 
+        schoolList = readSchoolData();
+        schoolList = readCCAData(schoolList);
+        schoolList = readSubjectData(schoolList);
+
         filterButton = view.findViewById(R.id.filter);
         filterButton.setOnClickListener(this);
         resetButton = view.findViewById(R.id.reset);
@@ -159,6 +166,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         arrayList_parent.add("Others");
         arrayAdapter_parent = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_parent);
         cca1.setAdapter(arrayAdapter_parent);
+        arrayList_sports.addAll(set_sports);
+        arrayList_vpa.add("Choir");
+        arrayList_cs.add("Robotics Club");
+        arrayList_others.add("Students' Council");
         cca1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -186,18 +197,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
             }
         });
-        arrayList_sports.add("Badminton");
-        arrayList_vpa.add("Choir");
-        arrayList_cs.add("Robotics Club");
-        arrayList_others.add("Students' Council");
+
 
 
         hideFilter();
         initColors();
-
-        schoolList = readSchoolData();
-        schoolList = readCCAData(schoolList);
-        schoolList = readSubjectData(schoolList);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -345,6 +349,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                             ccas = schCCA.get(tokens[0]);
                             temp.add(tokens[3].toLowerCase());
                             ccas.put("Sports", temp);
+                            set_sports.addAll(temp);
                             schCCA.put(tokens[0], ccas);
                             break;
 
