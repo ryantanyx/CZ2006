@@ -109,74 +109,39 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         return data.size();
     }
 
-//    @Override
-//    public Filter getFilter() {
-//        return filter;
-//    }
-//
-//    Filter filter = new Filter() {
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//
-//            List<School> filteredList = new ArrayList<>();
-//
-//            if(constraint.toString().isEmpty()){
-//                filteredList.addAll(dataset);
-//            }
-//            else{
-//                for (School school: dataset){
-//                    if (school.getSchoolName().toLowerCase().contains(constraint.toString().toLowerCase())){
-//                        filteredList.add(school);
-//                    }
-//                }
-//            }
-//
-//            FilterResults filterResults = new FilterResults();
-//            filterResults.values = filteredList;
-//
-//            return filterResults;
-//        }
-//
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            data.clear();
-//            data.addAll((Collection<? extends School>) results.values);
-//            notifyDataSetChanged();
-//        }
-//    };
 
-    public void searchViewFilter(String newText){
+    public void searchViewFilter(String newText) {
         currentSearchText = newText;
         resetSchoolList();
         filter();
     }
 
-    public void filterRegion(String status){
+    public void filterRegion(String status) {
         resetRegion();
         selectedRegion = status;
         filter();
     }
 
-    public void filterPSLE(int low, int high){
+    public void filterPSLE(int low, int high) {
         resetSchoolList();
         min = low;
         max = high;
         filter();
     }
 
-    public void filterStream(String status){
+    public void filterStream(String status) {
         resetStream();
         selectedStream = status;
         filter();
     }
 
-    public void filterCCA(String status){
+    public void filterCCA(String status) {
         resetCCA();
         selectedCCA = status;
         filter();
     }
 
-    public void filter(){
+    public void filter() {
         List<School> filteredList = new ArrayList<>();
         for(School school:dataset) {
             if (!selectedStream.equals("all")) {
@@ -297,45 +262,45 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         notifyDataSetChanged();
     }
 
-    private void resetSchoolList(){
+    private void resetSchoolList() {
         data.clear();
         data.addAll(dataset);
     }
 
-    public void resetRegion(){
+    public void resetRegion() {
         selectedRegion = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
 
-    public void resetStream(){
+    public void resetStream() {
         selectedStream = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
 
-    public void resetCCA(){
+    public void resetCCA() {
         selectedCCA = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
 
-    public void resetFilter(){
+    public void resetFilter() {
         selectedRegion = "all";
         selectedStream = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
 
-    public String getSelectedRegion(){
+    public String getSelectedRegion() {
         return selectedRegion;
     }
 
-    public String getSelectedStream(){
+    public String getSelectedStream() {
         return selectedStream;
     }
 
-    public void sort(int choice){
+    public void sort(int choice) {
 
         switch(choice){
             case 0:
@@ -388,7 +353,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         }
     }
 
-    public void reverse(){Collections.reverse(data);
+    public void reverse() {Collections.reverse(data);
     }
 
 

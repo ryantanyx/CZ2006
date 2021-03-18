@@ -164,33 +164,26 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         AdapterView.OnItemSelectedListener spinner1 = new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position ==0)
-                {
+                if (position ==0) {
                     arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_all);
                 }
-                if (position ==1)
-                {
+                if (position ==1) {
                     arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_sports);
                 }
-                if (position ==2)
-                {
+                if (position ==2) {
                     arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_vpa);
                 }
-                if (position ==3)
-                {
+                if (position ==3) {
                     arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_cs);
                 }
-                if (position ==4)
-                {
+                if (position ==4) {
                     arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_ug);
                 }
                 cca2.setAdapter(arrayAdapter_child);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         };
         cca1.setOnItemSelectedListener(spinner1);
         AdapterView.OnItemSelectedListener spinner2 = new AdapterView.OnItemSelectedListener(){
@@ -202,9 +195,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                     adapter.filterCCA(arrayAdapter_child.getItem(position));
             }
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         };
         cca2.setOnItemSelectedListener(spinner2);
 
@@ -492,6 +483,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         Collections.sort(arrayList_cs);
         Collections.sort(arrayList_ug);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -567,10 +559,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.setQuery("",false);
             searchView.clearFocus();
         }
-
     }
 
-    private void southFilter(){
+    private void southFilter() {
         if (!adapter.getSelectedRegion().contains("south")) {
             adapter.filterRegion("south");
             unselectAllRegion();
@@ -585,7 +576,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         }
     }
 
-    private void eastFilter(){
+    private void eastFilter() {
         if (!adapter.getSelectedRegion().contains("east"))
         {
             adapter.filterRegion("east");
@@ -601,7 +592,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         }
     }
 
-    private void westFilter(){
+    private void westFilter() {
         if (!adapter.getSelectedRegion().contains("west"))
         {
             adapter.filterRegion("west");
@@ -618,7 +609,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         }
     }
 
-    private void expressFilter(){
+    private void expressFilter() {
         if (!adapter.getSelectedStream().contains("express"))
         {
             adapter.filterStream("express");
@@ -842,12 +833,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         lookUnSelected(normalAcadSort);
         lookUnSelected(normalTechSort);
     }
-    private void nonScoreSelect(){
+    private void nonScoreSelect() {
         expressSort.setVisibility(View.GONE);
         normalAcadSort.setVisibility(View.GONE);
         normalTechSort.setVisibility(View.GONE);
     }
-    private void scoreSelect(){
+    private void scoreSelect() {
         expressSort.setVisibility(View.VISIBLE);
         normalAcadSort.setVisibility(View.VISIBLE);
         normalTechSort.setVisibility(View.VISIBLE);
