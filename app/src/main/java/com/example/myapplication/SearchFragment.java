@@ -77,8 +77,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     private AppCompatButton expressSort, normalAcadSort, normalTechSort;
     private RadioButton sortSchoolName, sortRegion, sortPSLECutOff;
     private RangeSlider psleSlider;
-    private TextView region, streams, pslecutoff;
-    private int black, white, red;
+    private TextView region,streams,pslecutoff;
+    private int black,white,red;
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -131,14 +132,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         eastButton.setOnClickListener(this);
         westButton = view.findViewById(R.id.west);
         westButton.setOnClickListener(this);
-        region = view.findViewById(R.id.region);
+        region =  view.findViewById(R.id.region);
         expressButton = view.findViewById(R.id.express);
         expressButton.setOnClickListener(this);
         normalaButton = view.findViewById(R.id.normala);
         normalaButton.setOnClickListener(this);
         normaltButton = view.findViewById(R.id.normalt);
         normaltButton.setOnClickListener(this);
-        streams = view.findViewById(R.id.streams);
+        streams =  view.findViewById(R.id.streams);
         psleSlider = view.findViewById(R.id.psleslider);
         psleSlider.addOnChangeListener(this::onValueChange);
         pslecutoff = view.findViewById(R.id.pslecutoff);
@@ -159,10 +160,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.background));
         }
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
         dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
 
         TextView back = (TextView) dialog.findViewById(R.id.backbutton);
         back.setOnClickListener(this);
@@ -231,10 +230,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
                 String[] tokens = line.split("\t");
 
-                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))) {
+                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))){
                     ArrayList<String> contact = new ArrayList<String>();
                     ArrayList<String> transport = new ArrayList<String>();
-                    HashMap<String, Integer> cut_off = new HashMap<String, Integer>();
+                    HashMap<String, Integer> cut_off= new HashMap<String, Integer>();
 
                     School school = new School();
                     school.setImageUrl(tokens[0]);
@@ -253,16 +252,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                     school.setCutOffPoint(cut_off);
 
                     contact.add("Tel no: " + tokens[5]);
-                    contact.add("Email address: " + tokens[9].toLowerCase());
+                    contact.add("Email address: "  + tokens[9].toLowerCase());
                     school.setContactInfo(contact);
-                    if (tokens[10].contains("\"")) {
-                        transport.add("By MRT: " + tokens[10].substring(1, tokens[10].length() - 1).toLowerCase());
-                    } else {
+                    if (tokens[10].contains("\"")){
+                        transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1).toLowerCase());
+                    } else{
                         transport.add("By MRT: " + tokens[10].toLowerCase());
                     }
-                    if (tokens[11].contains("\"")) {
-                        transport.add("By bus: " + tokens[11].substring(1, tokens[11].length() - 1));
-                    } else {
+                    if (tokens[11].contains("\"")){
+                        transport.add("By bus: " + tokens[11].substring(1,tokens[11].length() -1));
+                    } else{
                         transport.add("By bus: " + tokens[11]);
                     }
                     school.setTransport(transport);
@@ -277,6 +276,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     }
 
     private List<School> readCCAData(List<School> schoolList) {
+        ArrayList<String> temp;
+        HashMap<String, ArrayList<String>> ccas;
+        HashMap<String, HashMap<String, ArrayList<String>>> schCCA = new HashMap<String, HashMap<String, ArrayList<String>>>();
 
         try {
             InputStream is = getResources().openRawResource(R.raw.co_curricular_activities_ccas);
@@ -286,54 +288,78 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             String line;
             int i;
             reader.readLine();
-            HashMap<String, ArrayList<String>> schCCA = new HashMap<String, ArrayList<String>>();
             while ((line = reader.readLine()) != null) {
                 String cca, ccaType;
                 String[] tokens = line.split("\t");
-                if (tokens[1].equalsIgnoreCase(getString(R.string.sch_level))) {
-                    if (!schCCA.containsKey(tokens[0])) {
-                        ArrayList<String> ccas = new ArrayList<String>();
-                        ccas.add("");
-                        ccas.add("");
-                        ccas.add("");
-                        ccas.add("");
-                        ccas.add("");
+                if (tokens[1].equalsIgnoreCase(getString(R.string.sch_level))){
+                    if (!schCCA.containsKey(tokens[0])){
+                        ccas = new HashMap<String, ArrayList<String>>();
                         schCCA.put(tokens[0], ccas);
                     }
-                    switch (tokens[2]) {
+                    switch(tokens[2]) {
                         case "PHYSICAL SPORTS":
-                            i = 0;
-                            ccaType = "Sports: ";
+                            if (schCCA.get(tokens[0]).containsKey("Sports")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Sports"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Sports", temp);
+                            schCCA.put(tokens[0], ccas);
                             break;
+
                         case "VISUAL AND PERFORMING ARTS":
-                            ccaType = "Performing Arts: ";
-                            i = 1;
+                            if (schCCA.get(tokens[0]).containsKey("Performing Arts")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Performing Arts"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Performing Arts", temp);
+                            schCCA.put(tokens[0], ccas);
                             break;
                         case "CLUBS AND SOCIETIES":
-                            ccaType = "Clubs & Societies: ";
-                            i = 2;
+                            if (schCCA.get(tokens[0]).containsKey("Clubs & Societies")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Clubs & Societies"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Clubs & Societies", temp);
+                            schCCA.put(tokens[0], ccas);
                             break;
                         case "UNIFORMED GROUPS":
-                            ccaType = "Uniformed Groups: ";
-                            i = 3;
+                            if (schCCA.get(tokens[0]).containsKey("Uniformed Groups")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Uniformed Groups"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Uniformed Groups", temp);
+                            schCCA.put(tokens[0], ccas);
                             break;
                         case "OTHERS":
-                            ccaType = "Others: ";
-                            i = 4;
+                            if (schCCA.get(tokens[0]).containsKey("Others")){
+                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Others"));
+                            } else {
+                                temp = new ArrayList<String>();
+                            }
+                            ccas = schCCA.get(tokens[0]);
+                            temp.add(tokens[3].toLowerCase());
+                            ccas.put("Others", temp);
+                            schCCA.put(tokens[0], ccas);
                             break;
                         default:
                             continue;
                     }
-                    if (schCCA.get(tokens[0]).get(i).equals("")) {
-                        cca = new String(ccaType + schCCA.get(tokens[0]).get(i) + tokens[3].toLowerCase());
-                    } else {
-                        cca = new String(schCCA.get(tokens[0]).get(i) + ", " + tokens[3].toLowerCase());
-                    }
-                    schCCA.get(tokens[0]).set(i, cca);
                 }
             }
-            for (School school : schoolList) {
-                if (schCCA.containsKey(school.getSchoolName())) {
+            for (School school: schoolList){
+                if (schCCA.containsKey(school.getSchoolName())){
                     school.setCca(schCCA.get(school.getSchoolName()));
                 }
             }
@@ -359,19 +385,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             while ((line = reader.readLine()) != null) {
                 String subject;
                 String[] tokens = line.split("\t");
-                if (!schSubject.containsKey(tokens[0])) {
+                if (!schSubject.containsKey(tokens[0])){
                     String subjects = new String("");
                     schSubject.put(tokens[0], subjects);
                 }
-                if (schSubject.get(tokens[0]).equals("")) {
+                if (schSubject.get(tokens[0]).equals("")){
                     subject = new String("Subjects: " + schSubject.get(tokens[0]) + tokens[1].toLowerCase());
-                } else {
+                } else{
                     subject = new String(schSubject.get(tokens[0]) + ", " + tokens[1].toLowerCase());
                 }
                 schSubject.put(tokens[0], subject);
             }
-            for (School school : schoolList) {
-                if (schSubject.containsKey(school.getSchoolName())) {
+            for (School school: schoolList){
+                if (schSubject.containsKey(school.getSchoolName())){
                     school.setSubjects(schSubject.get(school.getSchoolName()));
                 }
             }
@@ -421,7 +447,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 sort();
                 dialog.dismiss();
                 break;
-            case R.id.sortSchoolName: sortRegion:
+            case R.id.sortSchoolName:
+            case R.id.sortRegion:
                 nonScoreSelect();
                 break;
             case R.id.sortPSLECutOff:
@@ -436,6 +463,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             case R.id.normalTechSort:
                 normalTechSelect();
                 break;
+            default:
+             break;
         }
     }
 
@@ -660,6 +689,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     }
 
     private void unselectAllSort() {
+        expressSort.setSelected(false);
+        normalAcadSort.setSelected(false);
+        normalTechSort.setSelected(false);
         lookUnSelected(expressSort);
         lookUnSelected(normalAcadSort);
         lookUnSelected(normalTechSort);

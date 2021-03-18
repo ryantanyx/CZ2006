@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class User {
@@ -12,11 +13,12 @@ public class User {
 
     }
 
-    public User(String name, String gender, String date, int imageNo) {
+    public User(String name, String gender, String date, int imageNo, ArrayList<School> favList) {
         this.name = name;
         this.gender = gender;
         this.date = date;
         this.imageNo = imageNo;
+        this.favList = favList;
     }
 
 
@@ -53,7 +55,7 @@ public class User {
     }
 
     public ArrayList<School> getFavList() {
-        return favList;
+        return this.favList;
     }
 
     public void setFavList(ArrayList<School> favList) {
