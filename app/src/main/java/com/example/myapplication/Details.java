@@ -66,7 +66,6 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         type.add("Performing Arts");
         type.add("Clubs & Societies");
         type.add("Uniformed Groups");
-        type.add("Others");
         ArrayList<String> temp = new ArrayList<String>();
         String entry;
         for (String ccatype : type){

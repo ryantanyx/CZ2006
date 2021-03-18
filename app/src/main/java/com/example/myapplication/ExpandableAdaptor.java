@@ -16,11 +16,20 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
     Context context;
     List<String> listGroup;
     HashMap<String, List<String>> listItem;
+    int size;
 
     public ExpandableAdaptor(Context context, List<String> listGroup, HashMap<String, List<String>> listItem){
         this.context = context;
         this.listGroup = listGroup;
         this.listItem = listItem;
+        this.size = 20;
+    }
+
+    public ExpandableAdaptor(Context context, List<String> listGroup, HashMap<String, List<String>> listItem, int size){
+        this.context = context;
+        this.listGroup = listGroup;
+        this.listItem = listItem;
+        this.size = size;
     }
 
 
@@ -69,8 +78,10 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
 
         TextView textView = convertView.findViewById(R.id.list_parent);
         textView.setText(group);
+        textView.setTextSize(size);
         return convertView;
     }
+
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
@@ -82,8 +93,8 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
 
         TextView textView = convertView.findViewById(R.id.list_child);
         textView.setText(child);
+        textView.setTextSize(size);
         return convertView;
-
     }
 
     @Override
