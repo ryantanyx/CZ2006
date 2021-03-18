@@ -326,17 +326,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                             ccas.put("Uniformed Groups", temp);
                             schCCA.put(tokens[0], ccas);
                             break;
-                        case "OTHERS":
-                            if (schCCA.get(tokens[0]).containsKey("Others")){
-                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Others"));
-                            } else {
-                                temp = new ArrayList<String>();
-                            }
-                            ccas = schCCA.get(tokens[0]);
-                            temp.add(tokens[3].toLowerCase());
-                            ccas.put("Others", temp);
-                            schCCA.put(tokens[0], ccas);
-                            break;
                         default:
                             continue;
                     }
