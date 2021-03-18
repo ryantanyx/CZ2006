@@ -32,14 +32,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //implements Filterable{
 
     private LayoutInflater layoutInflater;
     private List<School> data;
     private List<School> dataset;
-    private String selectedFilter = "all";
+    private String selectedRegion = "all";
+    private String selectedStream = "all";
     private String currentSearchText ="";
+    private String selectedCCA = "all";
     private int min = 0,max = 300;
 
     private User userProfile;
@@ -106,110 +109,151 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         return data.size();
     }
 
-//    @Override
-//    public Filter getFilter() {
-//        return filter;
-//    }
-//
-//    Filter filter = new Filter() {
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//
-//            List<School> filteredList = new ArrayList<>();
-//
-//            if(constraint.toString().isEmpty()){
-//                filteredList.addAll(dataset);
-//            }
-//            else{
-//                for (School school: dataset){
-//                    if (school.getSchoolName().toLowerCase().contains(constraint.toString().toLowerCase())){
-//                        filteredList.add(school);
-//                    }
-//                }
-//            }
-//
-//            FilterResults filterResults = new FilterResults();
-//            filterResults.values = filteredList;
-//
-//            return filterResults;
-//        }
-//
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            data.clear();
-//            data.addAll((Collection<? extends School>) results.values);
-//            notifyDataSetChanged();
-//        }
-//    };
 
-    public void searchViewFilter(String newText){
+    public void searchViewFilter(String newText) {
         currentSearchText = newText;
-        ArrayList<School> filteredList = new ArrayList<School>();
         resetSchoolList();
-        for(School school:dataset) {
-            if (school.getSchoolName().toLowerCase().contains(newText.toLowerCase()))
-            {
-                if (school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max){
-                    if (selectedFilter.equals("all"))
-                        filteredList.add(school);
-                    else {
-                        if (school.getRegion().toLowerCase().contains(selectedFilter))
-                            filteredList.add(school);
-                    }
-                }
-            }
-        }
-        data.clear();
-        data.addAll(filteredList);
-        notifyDataSetChanged();
+        filter();
     }
 
-    public void filterRegion(String status){
-        List<School> filteredList = new ArrayList<>();
-        resetFilter();
-        selectedFilter = status;
-        for(School school:dataset)
-        {
-            if(school.getRegion().toLowerCase().contains(status)) {
-                if (school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max){
-                    if (currentSearchText.equals(""))
-                        filteredList.add(school);
-                    else{
-                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-                            filteredList.add(school);
-                    }
-                }
-            }
-        }
-        data.clear();
-        data.addAll(filteredList);
-        notifyDataSetChanged();
+    public void filterRegion(String status) {
+        resetRegion();
+        selectedRegion = status;
+        filter();
     }
 
-    public void filterPSLE(int low, int high){
-        List<School> filteredList = new ArrayList<>();
+    public void filterPSLE(int low, int high) {
         resetSchoolList();
         min = low;
         max = high;
+        filter();
+    }
+
+    public void filterStream(String status) {
+        resetStream();
+        selectedStream = status;
+        filter();
+    }
+
+    public void filterCCA(String status) {
+        resetCCA();
+        selectedCCA = status;
+        filter();
+    }
+
+    public void filter() {
+        List<School> filteredList = new ArrayList<>();
         for(School school:dataset) {
-            if (school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max) {
-                if (!selectedFilter.equals("all")) {
-                    if (school.getRegion().toLowerCase().contains(selectedFilter)) {
-                        if (currentSearchText.equals(""))
-                            filteredList.add(school);
-                        else {
-                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-                                filteredList.add(school);
+            if (!selectedStream.equals("all")) {
+                if (!school.getCutOffPoint().get(selectedStream).equals(0)) {
+                    if (school.getCutOffPoint().get(selectedStream) >= min && school.getCutOffPoint().get(selectedStream) <= max) {
+                        if (!selectedRegion.equals("all")) {
+                            if (school.getRegion().toLowerCase().contains(selectedRegion)) {
+                                if (!selectedCCA.equals("all")) {
+                                    if (school.getCca()!=null) {
+                                        for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
+                                            ArrayList<String> strings = temp.getValue();
+                                            if (strings.contains(selectedCCA)) {
+                                                if (currentSearchText.equals(""))
+                                                    filteredList.add(school);
+                                                else {
+                                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                        filteredList.add(school);
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (currentSearchText.equals(""))
+                                        filteredList.add(school);
+                                    else {
+                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                            filteredList.add(school);
+                                    }
+                                }
+                            }
+                        } else {
+                            if (!selectedCCA.equals("all")) {
+                                if (school.getCca()!=null) {
+                                    for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
+                                        ArrayList<String> strings = temp.getValue();
+                                        if (strings.contains(selectedCCA)) {
+                                            if (currentSearchText.equals(""))
+                                                filteredList.add(school);
+                                            else {
+                                                if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                    filteredList.add(school);
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (currentSearchText.equals(""))
+                                    filteredList.add(school);
+                                else {
+                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                        filteredList.add(school);
+                                }
+                            }
                         }
                     }
                 }
-                else {
-                    if (currentSearchText.equals(""))
-                        filteredList.add(school);
-                    else {
-                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-                            filteredList.add(school);
+            }
+            else {
+                if ((school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max)
+                        || (school.getCutOffPoint().get("na") != 0 && school.getCutOffPoint().get("na") >= min
+                        && school.getCutOffPoint().get("na") <= max) || (school.getCutOffPoint().get("nt") != 0
+                        && school.getCutOffPoint().get("nt") >= min && school.getCutOffPoint().get("nt") <= max)) {
+                    if (!selectedRegion.equals("all")) {
+                        if (school.getRegion().toLowerCase().contains(selectedRegion)) {
+                            if (!selectedCCA.equals("all")) {
+                                if (school.getCca()!=null) {
+                                    for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
+                                        ArrayList<String> strings = temp.getValue();
+                                        if (strings.contains(selectedCCA)) {
+                                            if (currentSearchText.equals(""))
+                                                filteredList.add(school);
+                                            else {
+                                                if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                    filteredList.add(school);
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (currentSearchText.equals(""))
+                                    filteredList.add(school);
+                                else {
+                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                        filteredList.add(school);
+                                }
+                            }
+                        }
+                    } else {
+                        if (!selectedCCA.equals("all")) {
+                            if (school.getCca()!=null) {
+                                for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
+                                    ArrayList<String> strings = temp.getValue();
+                                    if (strings.contains(selectedCCA)) {
+                                        if (currentSearchText.equals(""))
+                                            filteredList.add(school);
+                                        else {
+                                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                filteredList.add(school);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (currentSearchText.equals(""))
+                                filteredList.add(school);
+                            else {
+                                if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                    filteredList.add(school);
+                            }
+                        }
                     }
+
                 }
             }
         }
@@ -218,22 +262,45 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         notifyDataSetChanged();
     }
 
-    private void resetSchoolList(){
+    private void resetSchoolList() {
         data.clear();
         data.addAll(dataset);
     }
 
-    public void resetFilter(){
-        selectedFilter = "all";
+    public void resetRegion() {
+        selectedRegion = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
 
-    public String getSelectedFilter(){
-        return selectedFilter;
+    public void resetStream() {
+        selectedStream = "all";
+        resetSchoolList();
+        notifyDataSetChanged();
     }
 
-    public void sort(int choice){
+    public void resetCCA() {
+        selectedCCA = "all";
+        resetSchoolList();
+        notifyDataSetChanged();
+    }
+
+    public void resetFilter() {
+        selectedRegion = "all";
+        selectedStream = "all";
+        resetSchoolList();
+        notifyDataSetChanged();
+    }
+
+    public String getSelectedRegion() {
+        return selectedRegion;
+    }
+
+    public String getSelectedStream() {
+        return selectedStream;
+    }
+
+    public void sort(int choice) {
 
         switch(choice){
             case 0:
@@ -286,7 +353,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{ //impleme
         }
     }
 
-    public void reverse(){Collections.reverse(data);
+    public void reverse() {Collections.reverse(data);
     }
 
 
