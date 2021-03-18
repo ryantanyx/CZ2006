@@ -167,7 +167,57 @@
         app:layout_constraintStart_toStartOf="@id/pslecutoff"
         app:layout_constraintTop_toBottomOf="@id/pslecutoff"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cca"
+        android:text="CCAs"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/psleslider"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ccatype"
+        android:text="Type:"
+        android:textSize="15dp"
+        app:layout_constraintTop_toBottomOf="@id/cca"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"/>
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/cca1"
+        android:layout_width="250dp"
+        android:layout_height="25dp"
+        app:layout_constraintTop_toBottomOf="@id/cca"
+        app:layout_constraintStart_toEndOf="@id/ccaspecific"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ccaspecific"
+        android:text="Specific CCA:"
+        android:textSize="15dp"
+        app:layout_constraintTop_toBottomOf="@id/ccatype"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"/>
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/cca2"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toBottomOf="@id/ccatype"
+        app:layout_constraintStart_toEndOf="@id/ccaspecific"
+        android:layout_marginTop="15dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -177,7 +227,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/psleslider"
+        app:layout_constraintTop_toBottomOf="@id/cca2"
         app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
