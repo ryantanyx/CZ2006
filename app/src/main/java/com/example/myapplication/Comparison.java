@@ -87,7 +87,7 @@ public class Comparison extends AppCompatActivity implements View.OnClickListene
             entry = new String(ccatype + ": ");
             if (temp != null){
                 for (String s : temp) {
-                    entry = entry + s + ", ";
+                    entry = entry + s.toLowerCase() + ", ";
                 }
             }
             cca1.add(entry.substring(0,entry.length()-1));
@@ -157,7 +157,7 @@ public class Comparison extends AppCompatActivity implements View.OnClickListene
             entry = new String(ccatype + ": ");
             if (temp != null){
                 for (String s : temp) {
-                    entry = entry + s + ", ";
+                    entry = entry + s.toLowerCase() + ", ";
                 }
             }
             cca2.add(entry.substring(0,entry.length()-1));

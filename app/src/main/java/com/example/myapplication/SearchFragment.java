@@ -282,7 +282,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
                 String[] tokens = line.split("\t");
 
-                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level))){
+                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level)) || tokens[27].equalsIgnoreCase("MIXED LEVELS")){
                     ArrayList<String> contact = new ArrayList<String>();
                     ArrayList<String> transport = new ArrayList<String>();
                     HashMap<String, Integer> cut_off= new HashMap<String, Integer>();

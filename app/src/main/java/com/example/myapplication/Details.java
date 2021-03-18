@@ -73,7 +73,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
             entry = new String(ccatype + ": ");
             if (temp != null){
                 for (String s : temp) {
-                    entry = entry + s + ", ";
+                    entry = entry + s.toLowerCase() + ", ";
                 }
             }
             cca.add(entry.substring(0,entry.length()-1));
