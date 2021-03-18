@@ -80,7 +80,6 @@ public class Comparison extends AppCompatActivity implements View.OnClickListene
         type1.add("Performing Arts");
         type1.add("Clubs & Societies");
         type1.add("Uniformed Groups");
-        type1.add("Others");
         ArrayList<String> temp = new ArrayList<String>();
         String entry;
         for (String ccatype : type1){
@@ -153,7 +152,6 @@ public class Comparison extends AppCompatActivity implements View.OnClickListene
         type2.add("Performing Arts");
         type2.add("Clubs & Societies");
         type2.add("Uniformed Groups");
-        type2.add("Others");
         for (String ccatype : type2){
             temp = schoolCCA2.get(ccatype);
             entry = new String(ccatype + ": ");
