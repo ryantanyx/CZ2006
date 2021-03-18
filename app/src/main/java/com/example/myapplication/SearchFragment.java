@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
 
@@ -37,8 +40,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import kotlin.ranges.URangesKt;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,8 +73,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     private AppCompatButton resetButton,northButton,southButton,eastButton,westButton,filterButton;
     private AppCompatButton expressButton,normalaButton,normaltButton;
     private RangeSlider psleSlider;
-    private TextView region,streams,pslecutoff;
+    private TextView region,streams,pslecutoff,cca,ccatype,ccaspecific;
+    private AppCompatSpinner cca1,cca2;
     private int black,white,red;
+    private ArrayList<String> arrayList_parent, arrayList_sports, arrayList_vpa, arrayList_cs,arrayList_others;
+    private ArrayAdapter<String> arrayAdapter_parent, arrayAdapter_child;
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -137,6 +142,56 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         psleSlider = view.findViewById(R.id.psleslider);
         psleSlider.addOnChangeListener(this::onValueChange);
         pslecutoff = view.findViewById(R.id.pslecutoff);
+        cca = view.findViewById(R.id.cca);
+        ccatype = view.findViewById(R.id.ccatype);
+        ccaspecific = view.findViewById(R.id.ccaspecific);
+        cca1 = view.findViewById(R.id.cca1);
+        cca2 = view.findViewById(R.id.cca2);
+
+        arrayList_parent = new ArrayList<>();
+        arrayList_sports = new ArrayList<>();
+        arrayList_vpa = new ArrayList<>();
+        arrayList_cs = new ArrayList<>();
+        arrayList_others = new ArrayList<>();
+        arrayList_parent.add("Sports");
+        arrayList_parent.add("Visual & Performing Arts");
+        arrayList_parent.add("Clubs & Societies");
+        arrayList_parent.add("Others");
+        arrayAdapter_parent = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_parent);
+        cca1.setAdapter(arrayAdapter_parent);
+        cca1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position ==0)
+                {
+                    arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_sports);
+                }
+                if (position ==1)
+                {
+                    arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_vpa);
+                }
+                if (position ==2)
+                {
+                    arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_cs);
+                }
+                if (position ==3)
+                {
+                    arrayAdapter_child = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_others);
+                }
+                cca2.setAdapter(arrayAdapter_child);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        arrayList_sports.add("Badminton");
+        arrayList_vpa.add("Choir");
+        arrayList_cs.add("Robotics Club");
+        arrayList_others.add("Students' Council");
+
+
         hideFilter();
         initColors();
 
@@ -374,6 +429,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             case R.id.reset:
                 adapter.resetFilter();
                 unselectAllRegion();
+                unselectAllStreams();
                 resetSlider();
                 break;
             case R.id.north:
@@ -408,7 +464,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     }
 
     private void northFilter(){
-        if (!adapter.getSelectedFilter().contains("north"))
+        if (!adapter.getSelectedRegion().contains("north"))
         {
             adapter.filterRegion("north");
             unselectAllRegion();
@@ -419,7 +475,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         else {
             lookUnSelected(northButton);
             unselectAllRegion();
-            adapter.resetFilter();
+            adapter.filterRegion("all");
             searchView.setQuery("",false);
             searchView.clearFocus();
         }
@@ -427,7 +483,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     }
 
     private void southFilter(){
-        if (!adapter.getSelectedFilter().contains("south"))
+        if (!adapter.getSelectedRegion().contains("south"))
         {
             adapter.filterRegion("south");
             unselectAllRegion();
@@ -438,14 +494,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         else {
             lookUnSelected(southButton);
             unselectAllRegion();
-            adapter.resetFilter();
+            adapter.filterRegion("all");
             searchView.setQuery("",false);
             searchView.clearFocus();
         }
     }
 
     private void eastFilter(){
-        if (!adapter.getSelectedFilter().contains("east"))
+        if (!adapter.getSelectedRegion().contains("east"))
         {
             adapter.filterRegion("east");
             unselectAllRegion();
@@ -456,35 +512,79 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         else {
             lookUnSelected(eastButton);
             unselectAllRegion();
-            adapter.resetFilter();
+            adapter.filterRegion("all");
             searchView.setQuery("",false);
             searchView.clearFocus();
         }
     }
 
     private void westFilter(){
-        if (!adapter.getSelectedFilter().contains("west"))
+        if (!adapter.getSelectedRegion().contains("west"))
         {
             adapter.filterRegion("west");
             unselectAllRegion();
             lookSelected(westButton);
-
         }
 
         else {
             lookUnSelected(westButton);
             unselectAllRegion();
-            adapter.resetFilter();
+            adapter.filterRegion("all");
             searchView.setQuery("",false);
             searchView.clearFocus();
         }
     }
 
-    private void expressFilter(){}
+    private void expressFilter(){
+        if (!adapter.getSelectedStream().contains("express"))
+        {
+            adapter.filterStream("express");
+            unselectAllStreams();
+            lookSelected(expressButton);
+        }
 
-    private void normalaFilter(){}
+        else {
+            lookUnSelected(expressButton);
+            unselectAllStreams();
+            adapter.filterStream("all");
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+        }
+    }
 
-    private void normaltFilter(){}
+    private void normalaFilter(){
+        if (!adapter.getSelectedStream().contains("na"))
+        {
+            adapter.filterStream("na");
+            unselectAllStreams();
+            lookSelected(normalaButton);
+        }
+
+        else {
+            lookUnSelected(normalaButton);
+            unselectAllStreams();
+            adapter.filterStream("all");
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+        }
+    }
+
+    private void normaltFilter(){
+        if (!adapter.getSelectedStream().contains("nt"))
+        {
+            adapter.filterStream("nt");
+            unselectAllStreams();
+            lookSelected(normaltButton);
+        }
+
+        else {
+            lookUnSelected(normaltButton);
+            unselectAllStreams();
+            adapter.filterStream("all");
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+        }
+    }
 
     private void resetSlider(){
         psleSlider.setValues((float)(0),(float)(300));
@@ -515,6 +615,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         streams.setVisibility(View.GONE);
         psleSlider.setVisibility(View.GONE);
         pslecutoff.setVisibility(View.GONE);
+        cca.setVisibility(View.GONE);
+        ccatype.setVisibility(View.GONE);
+        ccaspecific.setVisibility(View.GONE);
+        cca1.setVisibility(View.GONE);
+        cca2.setVisibility(View.GONE);
         filterButton.setText("FILTER");
     }
 
@@ -531,6 +636,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         streams.setVisibility(View.VISIBLE);
         psleSlider.setVisibility(View.VISIBLE);
         pslecutoff.setVisibility(View.VISIBLE);
+        cca.setVisibility(View.VISIBLE);
+        ccatype.setVisibility(View.VISIBLE);
+        ccaspecific.setVisibility(View.VISIBLE);
+        cca1.setVisibility(View.VISIBLE);
+        cca2.setVisibility(View.VISIBLE);
         filterButton.setText("HIDE");
     }
 
