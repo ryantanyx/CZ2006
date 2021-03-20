@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -160,12 +161,24 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         if (comment.getUsername().equals(name))
                         {
                                     deleteButtonmethod(cid);
-                            Toast.makeText(CommentActivity.this, "Comment has been deleted!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), "Comment deleted!", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Dismiss", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    }).show();
 
                                 }
                         else
                         {
-                            Toast.makeText(CommentActivity.this, "Unable to delete comments of others!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), "You cannot delete the comments of others!", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Dismiss", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    }).show();
                         }
 
                     }
@@ -219,7 +232,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             edittextpostcomment.setError("Comment cannot be empty!");
             edittextpostcomment.setText("");
         }
-
+        else if (edittextpostcomment.length()>30)
+        {
+            Toast.makeText(this, "Message is too long!", Toast.LENGTH_SHORT).show();
+            edittextpostcomment.setText("");
+        }
 
         else
         {
@@ -235,13 +252,25 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             root.setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(CommentActivity.this, "Comment has been added", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Comment added!", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            }).show();
                     edittextpostcomment.setText("");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(CommentActivity.this, "Failed to add comment", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Failed to add comment!", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            }).show();
                     edittextpostcomment.setText("");
                 }
             });
@@ -260,6 +289,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
 
     }
+
+
 
 
 
