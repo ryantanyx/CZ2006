@@ -247,12 +247,24 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                  }
                  else if (createpostinteger ==1)
                  {
-                     Toast.makeText(this, "Message is too long!", Toast.LENGTH_SHORT).show();
+                     Snackbar.make(findViewById(android.R.id.content), "Comment cannot exceed 30 characters!", Snackbar.LENGTH_INDEFINITE)
+                             .setAction("Dismiss", new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+
+                                 }
+                             }).show();
                      edittextpostcomment.setText("");
                  }
                  else
                  {
-                     edittextpostcomment.setError("Comment cannot be empty!");
+                     Snackbar.make(findViewById(android.R.id.content), "Comment must have at least 5 characters!", Snackbar.LENGTH_INDEFINITE)
+                             .setAction("Dismiss", new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+
+                                 }
+                             }).show();
                      edittextpostcomment.setText("");
                  }
                 break;

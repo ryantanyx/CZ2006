@@ -92,7 +92,7 @@ public class ForumController {
         DatabaseReference root;
 
 
-        if (edittextpostcomment.length()== 0)
+        if (edittextpostcomment.length()<= 5)
         {
             return 2;
         }
