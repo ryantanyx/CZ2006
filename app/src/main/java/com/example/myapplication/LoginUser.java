@@ -28,7 +28,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
     private FirebaseAuth mAuth;
     private ProgressBar logProgress;
-    private String test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
