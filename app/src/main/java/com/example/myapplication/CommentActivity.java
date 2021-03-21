@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,11 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.model.stream.QMediaStoreUriLoader;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,16 +27,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import static androidx.appcompat.app.AlertDialog.*;
-
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private TextView CAposttitle, CApostcontent, username;
-    private ImageView CAbackbutton;
+    private TextView CAposttitle, CApostcontent;
+    private ImageView CAbackbutton, deletepostbutton;
     private EditText edittextpostcomment;
     private Button CApostcommentbutton;
-    private String postKey, content, title;
+    private String postKey, content, title, postUsername;
     private FirebaseRecyclerOptions<Comment> options;
     private FirebaseRecyclerAdapter<Comment, CommentViewHolder> adapter;
     private RecyclerView recyclerView;
@@ -64,6 +58,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         CAbackbutton = (ImageView) findViewById(R.id.CAbackbutton);
         CAbackbutton.setOnClickListener(this);
+
+        deletepostbutton = (ImageView) findViewById(R.id.deletepostbuttton);
+        deletepostbutton.setOnClickListener(this);
+
 
         edittextpostcomment = (EditText) findViewById(R.id.edittextpostcomment);
 
@@ -103,6 +101,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             title = extras.getString("title");
             content = extras.getString("content");
             postKey = extras.getString("postKey");
+            postUsername = extras.getString("username");
 
             CAposttitle.setText(title);
             CApostcontent.setText(content);
@@ -142,9 +141,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onClick(View v) {
 
-                        if (comment.getUsername().equals(name))
+                        boolean checkcomment = ForumController.checkComment(comment, name);
+
+                        if (checkcomment)
                         {
-                                    deleteButtonmethod(cid);
+                            ForumController.deleteButtonmethod(cid, postKey);
                             Snackbar.make(findViewById(android.R.id.content), "Comment deleted!", Snackbar.LENGTH_INDEFINITE)
                                     .setAction("Dismiss", new View.OnClickListener() {
                                         @Override
@@ -189,8 +190,83 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.CAbackbutton:
                 CAbackbuttonmethod();
                 break;
+
+            case R.id.deletepostbuttton:
+                boolean checkpost = ForumController.checkPost(postUsername, name);
+
+
+
+                if (checkpost)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CommentActivity.this);
+                    builder.setTitle("WARNING")
+                            .setMessage("Your post and all comments will be deleted. Are you sure you wish to continue?")
+                            .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    ForumController.deletepostmethod(postKey);
+                                    CommentActivity.this.finish();
+
+                                }
+                            })
+                            .setNegativeButton("Cancel", null);
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    break;
+
+                }
+
+                else
+                {
+                    Snackbar.make(findViewById(android.R.id.content), "You cannot delete the posts of others!", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            }).show();
+                }
+                break;
+
+
             case R.id.CApostcommentbutton:
-                CApostcommentbuttonmethod();
+                int createpostinteger = ForumController.CApostcommentbuttonmethod(edittextpostcomment, postKey, name, imageNo);
+
+                 if (createpostinteger == 0)
+                 {
+                     Snackbar.make(findViewById(android.R.id.content), "Comment added!", Snackbar.LENGTH_INDEFINITE)
+                             .setAction("Dismiss", new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+
+                                 }
+                             }).show();
+                     edittextpostcomment.setText("");
+
+                 }
+                 else if (createpostinteger ==1)
+                 {
+                     Snackbar.make(findViewById(android.R.id.content), "Comment cannot exceed 30 characters!", Snackbar.LENGTH_INDEFINITE)
+                             .setAction("Dismiss", new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+
+                                 }
+                             }).show();
+                     edittextpostcomment.setText("");
+                 }
+                 else
+                 {
+                     Snackbar.make(findViewById(android.R.id.content), "Comment must have at least 5 characters!", Snackbar.LENGTH_INDEFINITE)
+                             .setAction("Dismiss", new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+
+                                 }
+                             }).show();
+                     edittextpostcomment.setText("");
+                 }
                 break;
 
             default:
@@ -204,18 +280,19 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public void CApostcommentbuttonmethod(){
+
+
+
+    public int CApostcommentbuttonmethod(EditText edittextpostcomment){
 
 
         if (edittextpostcomment.length()== 0)
         {
-            edittextpostcomment.setError("Comment cannot be empty!");
-            edittextpostcomment.setText("");
+            return 1;
         }
         else if (edittextpostcomment.length()>30)
         {
-            Toast.makeText(this, "Message is too long!", Toast.LENGTH_SHORT).show();
-            edittextpostcomment.setText("");
+            return 2;
         }
 
         else
@@ -228,32 +305,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             //create id for the comment
             String cid = root.getKey();
             comment.setCid(cid);
+            root.setValue(comment);
+            return 3;
 
-            root.setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Snackbar.make(findViewById(android.R.id.content), "Comment added!", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            }).show();
-                    edittextpostcomment.setText("");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Snackbar.make(findViewById(android.R.id.content), "Failed to add comment!", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            }).show();
-                    edittextpostcomment.setText("");
-                }
-            });
 
         }
 
@@ -261,14 +315,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-
-    public void deleteButtonmethod(String cid){
-        DatabaseReference root = db.getReference("Comment").child(postKey).child(cid);
-        root.removeValue();
-
-
-
-    }
 
 
 

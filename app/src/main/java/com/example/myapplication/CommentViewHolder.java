@@ -34,15 +34,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
 
 
 
-
-
-
-
-
     }
-
-
-
 
 
 
