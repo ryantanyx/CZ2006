@@ -101,7 +101,7 @@ public class FavListFragment extends Fragment{
                 }
                 recyclerView = view.findViewById(R.id.recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                if (favlist != null){
+                if (favlist != null || favlist.size() >= 1){
                     adapter = new FavListAdapter(getActivity(), favlist);
                     recyclerView.setAdapter(adapter);
                 }
