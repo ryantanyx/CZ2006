@@ -54,10 +54,8 @@ import static com.example.myapplication.R.id.sortRegion;
 public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener {
 
     RecyclerView recyclerView;
-    Adapter adapter;
+    SearchAdapter adapter;
     ArrayList<School> items;
-
-    private List<School> schoolList = new ArrayList<>();
 
     private Dialog dialog;
     private RadioGroup sortRG;
@@ -127,9 +125,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         getActivity().setTitle("Search");
         setHasOptionsMenu(true);
 
-        schoolList = readSchoolData();
-        schoolList = readCCAData(schoolList);
-        schoolList = readSubjectData(schoolList);
 
         filterButton = view.findViewById(R.id.filter);
         filterButton.setOnClickListener(this);
@@ -204,8 +199,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new Adapter(getActivity(), schoolList);
+        adapter = new SearchAdapter(getActivity());
         recyclerView.setAdapter(adapter);
+
+
 
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.sort_view);
@@ -269,190 +266,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             }
         });
     }
-
-    private List<School> readSchoolData() {
-        try {
-            InputStream is = getResources().openRawResource(R.raw.general_information_of_schools);
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(is, StandardCharsets.UTF_8)
-            );
-            String line;
-            reader.readLine();
-            while ((line = reader.readLine()) != null) {
-
-                String[] tokens = line.split("\t");
-
-                if (tokens[27].equalsIgnoreCase(getString(R.string.sch_level)) || tokens[27].equalsIgnoreCase("MIXED LEVELS")){
-                    ArrayList<String> contact = new ArrayList<String>();
-                    ArrayList<String> transport = new ArrayList<String>();
-                    HashMap<String, Integer> cut_off= new HashMap<String, Integer>();
-
-                    School school = new School();
-                    school.setImageUrl(tokens[0]);
-                    school.setSchoolName(tokens[1]);
-                    school.setAddress(tokens[3]);
-                    school.setMission(tokens[20]);
-                    school.setVision(tokens[19]);
-                    school.setLocation(tokens[22]);
-                    school.setRegion(tokens[23]);
-                    school.setType(tokens[24]);
-                    school.setGender(tokens[25]);
-
-                    cut_off.put("express", Integer.parseInt(tokens[36]));
-                    cut_off.put("na", Integer.parseInt(tokens[37]));
-                    cut_off.put("nt", Integer.parseInt(tokens[38]));
-                    school.setCutOffPoint(cut_off);
-
-                    contact.add("Tel no: " + tokens[5]);
-                    contact.add("Email address: "  + tokens[9].toLowerCase());
-                    school.setContactInfo(contact);
-                    if (tokens[10].contains("\"")){
-                        transport.add("By MRT: " + tokens[10].substring(1,tokens[10].length() -1).toLowerCase());
-                    } else{
-                        transport.add("By MRT: " + tokens[10].toLowerCase());
-                    }
-                    if (tokens[11].contains("\"")){
-                        transport.add("By bus: " + tokens[11].substring(1,tokens[11].length() -1));
-                    } else{
-                        transport.add("By bus: " + tokens[11]);
-                    }
-                    school.setTransport(transport);
-
-                    schoolList.add(school);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return schoolList;
-    }
-
-    private List<School> readCCAData(List<School> schoolList) {
-        ArrayList<String> temp;
-        HashMap<String, ArrayList<String>> ccas;
-        HashMap<String, HashMap<String, ArrayList<String>>> schCCA = new HashMap<String, HashMap<String, ArrayList<String>>>();
-
-        try {
-            InputStream is = getResources().openRawResource(R.raw.co_curricular_activities_ccas);
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(is, StandardCharsets.UTF_8)
-            );
-            String line;
-            int i;
-            reader.readLine();
-            while ((line = reader.readLine()) != null) {
-                String cca, ccaType;
-                String[] tokens = line.split("\t");
-                if (tokens[1].equalsIgnoreCase(getString(R.string.sch_level))){
-                    if (!schCCA.containsKey(tokens[0])){
-                        ccas = new HashMap<String, ArrayList<String>>();
-                        schCCA.put(tokens[0], ccas);
-                    }
-                    switch(tokens[2]) {
-                        case "PHYSICAL SPORTS":
-                            if (schCCA.get(tokens[0]).containsKey("Sports")){
-                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Sports"));
-                            } else {
-                                temp = new ArrayList<String>();
-                            }
-                            ccas = schCCA.get(tokens[0]);
-                            temp.add(tokens[3].toUpperCase());
-                            ccas.put("Sports", temp);
-                            set_sports.addAll(temp);
-                            schCCA.put(tokens[0], ccas);
-                            break;
-
-                        case "VISUAL AND PERFORMING ARTS":
-                            if (schCCA.get(tokens[0]).containsKey("Performing Arts")){
-                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Performing Arts"));
-                            } else {
-                                temp = new ArrayList<String>();
-                            }
-                            ccas = schCCA.get(tokens[0]);
-                            temp.add(tokens[3].toUpperCase());
-                            ccas.put("Performing Arts", temp);
-                            set_vpa.addAll(temp);
-                            schCCA.put(tokens[0], ccas);
-                            break;
-                        case "CLUBS AND SOCIETIES":
-                            if (schCCA.get(tokens[0]).containsKey("Clubs & Societies")){
-                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Clubs & Societies"));
-                            } else {
-                                temp = new ArrayList<String>();
-                            }
-                            ccas = schCCA.get(tokens[0]);
-                            temp.add(tokens[3].toUpperCase());
-                            ccas.put("Clubs & Societies", temp);
-                            set_cs.addAll(temp);
-                            schCCA.put(tokens[0], ccas);
-                            break;
-                        case "UNIFORMED GROUPS":
-                            if (schCCA.get(tokens[0]).containsKey("Uniformed Groups")){
-                                temp = new ArrayList<String>(schCCA.get(tokens[0]).get("Uniformed Groups"));
-                            } else {
-                                temp = new ArrayList<String>();
-                            }
-                            ccas = schCCA.get(tokens[0]);
-                            temp.add(tokens[3].toUpperCase());
-                            ccas.put("Uniformed Groups", temp);
-                            set_ug.addAll(temp);
-                            schCCA.put(tokens[0], ccas);
-                            break;
-                        default:
-                            continue;
-                    }
-                }
-            }
-            for (School school: schoolList){
-                if (schCCA.containsKey(school.getSchoolName())){
-                    school.setCca(schCCA.get(school.getSchoolName()));
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return schoolList;
-    }
-
-    private List<School> readSubjectData(List<School> schoolList) {
-        HashMap<String, String> schSubject = new HashMap<String, String>();
-
-        try {
-            InputStream is = getResources().openRawResource(R.raw.subjects_offered);
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(is, StandardCharsets.UTF_8)
-            );
-            String line;
-            int i;
-            reader.readLine();
-            while ((line = reader.readLine()) != null) {
-                String subject;
-                String[] tokens = line.split("\t");
-                if (!schSubject.containsKey(tokens[0])){
-                    String subjects = new String("");
-                    schSubject.put(tokens[0], subjects);
-                }
-                if (schSubject.get(tokens[0]).equals("")){
-                    subject = new String("Subjects: " + schSubject.get(tokens[0]) + tokens[1].toLowerCase());
-                } else{
-                    subject = new String(schSubject.get(tokens[0]) + ", " + tokens[1].toLowerCase());
-                }
-                schSubject.put(tokens[0], subject);
-            }
-            for (School school: schoolList){
-                if (schSubject.containsKey(school.getSchoolName())){
-                    school.setSubjects(schSubject.get(school.getSchoolName()));
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return schoolList;
-    }
-
 
     private void ccaSpinner(){
         arrayList_parent = new ArrayList<>();
