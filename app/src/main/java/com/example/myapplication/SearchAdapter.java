@@ -553,6 +553,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return schoolList;
     }
 
+    public List<School> getSchoolList() {
+        return dataset;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView schoolImage;

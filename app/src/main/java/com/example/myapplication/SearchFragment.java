@@ -29,17 +29,10 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +49,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
     RecyclerView recyclerView;
     SearchAdapter adapter;
-    ArrayList<School> items;
+    List<School> schoolList;
 
     private Dialog dialog;
     private RadioGroup sortRG;
@@ -126,6 +119,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         getActivity().setTitle("Search");
         setHasOptionsMenu(true);
 
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new SearchAdapter(getActivity());
+        schoolList = adapter.getSchoolList();
+        recyclerView.setAdapter(adapter);
 
         filterButton = view.findViewById(R.id.filter);
         filterButton.setOnClickListener(this);
@@ -197,11 +195,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
         hideFilter();
         initColors();
-
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new SearchAdapter(getActivity());
-        recyclerView.setAdapter(adapter);
 
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.sort_view);
