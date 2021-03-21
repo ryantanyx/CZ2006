@@ -273,7 +273,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                         regProgress.setVisibility(View.GONE);
                                     }
                                     else{
-                                        Snackbar.make(getCurrentFocus(), "User failed to register", Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.make(getCurrentFocus(), "Error. User already exists.", Snackbar.LENGTH_INDEFINITE)
                                                 .setAction("Dismiss", new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
