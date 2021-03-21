@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class Menu extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = LoginUser.class.getSimpleName();
     private AnimatedBottomBar animatedBottomBar;
     private FragmentManager fragmentManager;
 

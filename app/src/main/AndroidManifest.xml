@@ -20,7 +20,7 @@
         <activity android:name=".ForgotPassword">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".LoginUser"/>
         </activity>
         <activity
             android:name=".Menu"
@@ -28,9 +28,9 @@
         <activity android:name=".RegisterUser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".LoginUser"/>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginUser">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
