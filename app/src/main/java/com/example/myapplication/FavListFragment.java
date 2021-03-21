@@ -76,6 +76,16 @@ public class FavListFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_favlist, container, false);
         getActivity().setTitle("Favourite List");
 
+
+
+
+
+
+
+
+
+
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();

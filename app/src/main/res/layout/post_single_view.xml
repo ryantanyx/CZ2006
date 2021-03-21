@@ -58,11 +58,28 @@
                 android:textStyle="italic" />
 
 
+
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-
-
-
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Posted By:"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="200dp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/itemusername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="85dp"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginLeft="280dp"
+        android:text="TextView" />
 
 </androidx.cardview.widget.CardView>

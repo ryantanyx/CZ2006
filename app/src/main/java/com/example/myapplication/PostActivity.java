@@ -18,8 +18,13 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,7 +34,11 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private EditText posttitle, postcontent;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference root;
-
+    private FirebaseUser user;
+    private DatabaseReference reference;
+    private String userID;
+    private int imageNo;
+    private String name;
 
 //Defining objects inside oncreate ----------------
     @Override
@@ -46,6 +55,29 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         posttitle = (EditText) findViewById(R.id.posttitle);
         postcontent = (EditText) findViewById(R.id.postcontent);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
+        //Find the user creating the post
+        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+
+                if (userProfile != null) {
+
+                    name = userProfile.getName();
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(PostActivity.this, "Something went wrong!", Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
@@ -60,11 +92,22 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.postbutton:
                 AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
                 builder.setTitle("WARNING")
-                        .setMessage("Created Posts Cannot Be Deleted!")
+                        .setMessage("Your posts will be viewable by anyone using this application. Are you sure you wish to continue?")
                         .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                postbuttonmethod();
+
+                                boolean postsuccess = ForumController.postbuttonmethod(posttitle, postcontent, name);
+
+
+                                if (!postsuccess)
+                                {
+                                    posttitle.setError("Please enter a title");
+                                }
+                                else
+                                {
+                                    PostActivity.this.finish();
+                                }
 
                             }
                         })
@@ -87,30 +130,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void postbuttonmethod(){
-        if (posttitle.length()== 0)
-        {
-            posttitle.setError("Please enter a title");
-        }
-        else
-        {
-            String title = posttitle.getText().toString();
-            String content = postcontent.getText().toString();
-            Post post = new Post(title, content);
-            root = db.getReference("Posts").push();
-            String postKey = root.getKey();
-            post.setPostKey(postKey);
 
-            root.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    PostActivity.this.finish();
-                }
-            });
-
-        }
-
-    }
 
 
 

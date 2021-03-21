@@ -3,18 +3,28 @@ package com.example.myapplication;
 public class Post {
 
 
-    private String title, content, postKey;
+    private String title, content, postKey, username;
 
 
-    public Post(String title, String content) {
+
+    public Post(String title, String content, String username) {
         this.title = title;
         this.content = content;
+        this.username = username;
+
     }
 
 
     public Post() {
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getPostKey() {
         return postKey;
