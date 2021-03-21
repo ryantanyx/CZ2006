@@ -7,9 +7,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.BreakIterator;
+
 public class PostViewHolder extends RecyclerView.ViewHolder {
 
-    TextView itemcontent, itemtitle;
+
+    TextView itemcontent, itemtitle, itemusername;
     EditText edittextpostcomment;
     View view;
 
@@ -20,6 +23,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
         itemtitle = itemView.findViewById(R.id.itemtitle);
         itemcontent = itemView.findViewById(R.id.itemcontent);
+        itemusername = itemView.findViewById(R.id.itemusername);
         edittextpostcomment = itemView.findViewById(R.id.edittextpostcomment);
 
         view = itemView;

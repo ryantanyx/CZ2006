@@ -72,7 +72,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
                 .into(holder.newsImage);
 
         holder.title.setText(model.getTitle());
-        holder.desc.setText(model.getDescription());
+        if (model.getDescription().length()<=100)
+        {
+            holder.desc.setText(model.getDescription());
+        }
+        else
+        {
+            holder.desc.setText(model.getDescription().substring(0,100) + "...");
+        }
         holder.source.setText(model.getSource().getName());
         holder.date.setText(model.getPublishedAt().substring(0,10));
 
@@ -115,10 +122,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             });
         }
     }
-
-
-
-
 
 
 }

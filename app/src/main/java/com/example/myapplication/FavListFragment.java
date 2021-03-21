@@ -76,6 +76,16 @@ public class FavListFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_favlist, container, false);
         getActivity().setTitle("Favourite List");
 
+
+
+
+
+
+
+
+
+
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
@@ -89,14 +99,12 @@ public class FavListFragment extends Fragment{
                     School sch = snapchild.getValue(School.class);
                     favlist.add(sch);
                 }
-
                 recyclerView = view.findViewById(R.id.recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                if (favlist != null){
+                if (favlist != null || favlist.size() >= 1){
                     adapter = new FavListAdapter(getActivity(), favlist);
                     recyclerView.setAdapter(adapter);
                 }
-
             }
 
             @Override
