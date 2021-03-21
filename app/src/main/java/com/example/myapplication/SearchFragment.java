@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.example.myapplication.R.id.sortRegion;
@@ -202,8 +203,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         adapter = new SearchAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
-
-
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.sort_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -279,6 +278,28 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         arrayList_parent.add("Visual & Performing Arts");
         arrayList_parent.add("Clubs & Societies");
         arrayList_parent.add("Uniformed Groups");
+        for (School school:schoolList) {
+            if (school.getCca() != null) {
+                for (Map.Entry<String, ArrayList<String>> temp : school.getCca().entrySet()) {
+                    if (temp.getKey().equals("Sports")) {
+                        ArrayList<String> strings = temp.getValue();
+                        set_sports.addAll(strings);
+                    }
+                    if (temp.getKey().equals("Performing Arts")) {
+                        ArrayList<String> strings = temp.getValue();
+                        set_vpa.addAll(strings);
+                    }
+                    if (temp.getKey().equals("Clubs & Societies")) {
+                        ArrayList<String> strings = temp.getValue();
+                        set_cs.addAll(strings);
+                    }
+                    if (temp.getKey().equals("Uniformed Groups")) {
+                        ArrayList<String> strings = temp.getValue();
+                        set_ug.addAll(strings);
+                    }
+                }
+            }
+        }
         arrayAdapter_parent = new ArrayAdapter<>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,arrayList_parent);
         cca1.setAdapter(arrayAdapter_parent);
         arrayList_sports.addAll(set_sports);

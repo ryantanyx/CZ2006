@@ -85,12 +85,6 @@ public class HomeFragment extends Fragment {
         LoadJson();
 
 
-
-
-
-
-
-
         return view;
     }
 
