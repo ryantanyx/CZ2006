@@ -92,6 +92,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
         switch(v.getId()) {
             case R.id.reset:
                 resetPassword();
+                break;
             case R.id.forgotLogin:
                 startActivity(new Intent(this, LoginUser.class));
                 break;
