@@ -20,7 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginUser extends AppCompatActivity implements View.OnClickListener{
 
     private TextView register, forgotPassword;
     private EditText logEmail, logPassword;
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if(user.isEmailVerified()) {
-                        startActivity(new Intent(MainActivity.this, Menu.class));
+                        startActivity(new Intent(LoginUser.this, Menu.class));
                         logProgress.setVisibility(View.GONE);
                     }
                     else{
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "Failed to login! Please check your email and password again.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginUser.this, "Failed to login! Please check your email and password again.", Toast.LENGTH_LONG).show();
                     logProgress.setVisibility(View.GONE);
                 }
             }

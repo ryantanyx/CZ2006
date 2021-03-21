@@ -90,6 +90,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 backbuttonmethod();
                 break;
             case R.id.postbutton:
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
                 builder.setTitle("WARNING")
                         .setMessage("Your posts will be viewable by anyone using this application. Are you sure you wish to continue?")
