@@ -208,8 +208,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             }
         });
 
-        MenuItem item2 = menu.findItem(R.id.action_sort);
-        item2.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        MenuItem sort = menu.findItem(R.id.action_sort);
+        sort.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 dialog.show();
