@@ -14,9 +14,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsFragment extends Fragment {
 
@@ -36,14 +39,33 @@ public class MapsFragment extends Fragment {
             SearchAdapter adapter = new SearchAdapter(getActivity());
             List<School> schoolList = adapter.getSchoolList();
 
+            LatLng curLocation = new LatLng(1.3048, 103.8318);
+            HashMap<String, LatLng> latLngList = MapController.getLatLong(schoolList, curLocation);
 
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+            for (School sch : schoolList){
+                googleMap.addMarker(new MarkerOptions().position(sch.getLatLng()).title(sch.getSchoolName()));
+            }
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (LatLng value : latLngList.values()) {
+                builder.include(value);
+            }
+            LatLngBounds bounds = builder.build();
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 25));
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 10));
+            //googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+
+            LatLngBounds sgBounds = new LatLngBounds(
+                    new LatLng(1.264850, 103.622483), // SW bounds
+                    new LatLng(1.475187, 104.016803)  // NE bounds
+            );
+            googleMap.setLatLngBoundsForCameraTarget(sgBounds);
 
             // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(20), 2000, null);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setZoomGesturesEnabled(true);
         }
     };
 

@@ -401,8 +401,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     school.setGender(tokens[25]);
 
                     LatLng latlong = getLocationFromAddress(context, tokens[3]);
-                    school.setLat(latlong.latitude);
-                    school.setLng(latlong.longitude);
+                    school.setLatLng(latlong);
 
                     cut_off.put("express", Integer.parseInt(tokens[36]));
                     cut_off.put("na", Integer.parseInt(tokens[37]));
