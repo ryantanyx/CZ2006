@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class User {
 
-    private String name, gender, date;
+    private String name, address, gender, date;
     private int imageNo;
 
     private ArrayList<School> favList;
@@ -13,8 +13,9 @@ public class User {
 
     }
 
-    public User(String name, String gender, String date, int imageNo, ArrayList<School> favList) {
+    public User(String name, String address, String gender, String date, int imageNo, ArrayList<School> favList) {
         this.name = name;
+        this.address = address;
         this.gender = gender;
         this.date = date;
         this.imageNo = imageNo;
@@ -28,6 +29,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getGender() {
