@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.renderscript.Sampler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -397,6 +400,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     school.setType(tokens[24]);
                     school.setGender(tokens[25]);
 
+                    LatLng latlong = getLocationFromAddress(context, tokens[3]);
+                    school.setLat(latlong.latitude);
+                    school.setLng(latlong.longitude);
+
                     cut_off.put("express", Integer.parseInt(tokens[36]));
                     cut_off.put("na", Integer.parseInt(tokens[37]));
                     cut_off.put("nt", Integer.parseInt(tokens[38]));
@@ -424,6 +431,30 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             e.printStackTrace();
         }
         return schoolList;
+    }
+
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 
     private List<School> readCCAData(List<School> schoolList) {

@@ -1,10 +1,17 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class School implements Parcelable {
 
@@ -25,6 +32,7 @@ public class School implements Parcelable {
             region, type, subjects;
     private ArrayList<String> contactInfo, transport;
     private HashMap<String, Integer> cutOffPoint;
+    private Double lat, lng;
 
     public School() {
     }
@@ -44,6 +52,24 @@ public class School implements Parcelable {
         subjects = in.readString();
         contactInfo = in.readArrayList(null);
         transport = in.readArrayList(null);
+        lat = in.readDouble();
+        lng = in.readDouble();
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 
     public String getMission() {
@@ -179,5 +205,7 @@ public class School implements Parcelable {
         dest.writeString(subjects);
         dest.writeList(contactInfo);
         dest.writeList(transport);
+        dest.writeDouble(lat);
+        dest.writeDouble(lng);
     }
 }

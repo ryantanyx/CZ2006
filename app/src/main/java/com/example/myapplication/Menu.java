@@ -52,6 +52,8 @@ public class Menu extends AppCompatActivity {
                         break;
                     case R.id.favList:
                         fragment = new FavListFragment();
+                    case R.id.map:
+                        fragment = new MapsFragment();
                 }
 
                 if (fragment != null){
