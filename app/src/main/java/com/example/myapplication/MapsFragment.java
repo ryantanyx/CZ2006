@@ -3,11 +3,13 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,14 +18,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MapsFragment extends Fragment {
+    private LatLng userLocation;
+    private SearchAdapter adapter;
+    private List<School> schoolList;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
+
 
         /**
          * Manipulates the map once available.
@@ -36,18 +51,23 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            SearchAdapter adapter = new SearchAdapter(getActivity());
-            List<School> schoolList = adapter.getSchoolList();
+            LatLngBounds sgBounds = new LatLngBounds(
+                    new LatLng(1.264850, 103.622483), // SW bounds
+                    new LatLng(1.475187, 104.016803)  // NE bounds
+            );
 
-            LatLng curLocation = new LatLng(1.3048, 103.8318);
-            HashMap<String, LatLng> latLngList = MapController.getLatLong(schoolList, curLocation);
+            if (userLocation == null) {
+                userLocation = sgBounds.getCenter();
+            }
+            HashMap<String, LatLng> latLngList = MapController.getLatLong(getView().getContext(), schoolList);
+            HashMap<String, LatLng> nearbyList = MapController.getLatLong(getView().getContext(), latLngList, userLocation);
 
-            for (School sch : schoolList){
-                googleMap.addMarker(new MarkerOptions().position(sch.getLatLng()).title(sch.getSchoolName()));
+            for (Map.Entry<String, LatLng> entry : latLngList.entrySet()){
+                googleMap.addMarker(new MarkerOptions().position(entry.getValue()).title(entry.getKey()));
             }
 
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (LatLng value : latLngList.values()) {
+            for (LatLng value : nearbyList.values()) {
                 builder.include(value);
             }
             LatLngBounds bounds = builder.build();
@@ -56,10 +76,6 @@ public class MapsFragment extends Fragment {
             //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 10));
             //googleMap.animateCamera(CameraUpdateFactory.zoomIn());
 
-            LatLngBounds sgBounds = new LatLngBounds(
-                    new LatLng(1.264850, 103.622483), // SW bounds
-                    new LatLng(1.475187, 104.016803)  // NE bounds
-            );
             googleMap.setLatLngBoundsForCameraTarget(sgBounds);
 
             // Zoom out to zoom level 10, animating with a duration of 2 seconds.
@@ -67,6 +83,7 @@ public class MapsFragment extends Fragment {
             googleMap.getUiSettings().setZoomControlsEnabled(true);
             googleMap.getUiSettings().setZoomGesturesEnabled(true);
         }
+
     };
 
     @Nullable
@@ -74,7 +91,68 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        FirebaseUser user;
+        DatabaseReference reference;
+        String userID;
+
+        adapter = new SearchAdapter(getActivity());
+        schoolList = adapter.getSchoolList();
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
+        // getting firebase reference
+        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+                if (userProfile != null){
+                    String address = userProfile.getAddress();
+                    userLocation = MapController.getLocationFromAddress(view.getContext(), address);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(view.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+            }
+        });
+        reference.child(userID).addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                return;
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User userProfile = snapshot.getValue(User.class);
+                if (userProfile != null){
+                    String address = userProfile.getAddress();
+                    userLocation = MapController.getLocationFromAddress(view.getContext(), address);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                return;
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                return;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                return;
+            }
+        });
+
+        return view;
     }
 
     @Override

@@ -400,8 +400,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     school.setType(tokens[24]);
                     school.setGender(tokens[25]);
 
-                    LatLng latlong = getLocationFromAddress(context, tokens[3]);
-                    school.setLatLng(latlong);
 
                     cut_off.put("express", Integer.parseInt(tokens[36]));
                     cut_off.put("na", Integer.parseInt(tokens[37]));
@@ -430,30 +428,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             e.printStackTrace();
         }
         return schoolList;
-    }
-
-    public LatLng getLocationFromAddress(Context context, String strAddress) {
-
-        Geocoder coder = new Geocoder(context);
-        List<Address> address;
-        LatLng p1 = null;
-
-        try {
-            // May throw an IOException
-            address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
-                return null;
-            }
-
-            Address location = address.get(0);
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
-
-        } catch (IOException ex) {
-
-            ex.printStackTrace();
-        }
-
-        return p1;
     }
 
     private List<School> readCCAData(List<School> schoolList) {
@@ -644,8 +618,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                     favlist = new ArrayList<School>();
                     for (DataSnapshot snapchild: snapshot.getChildren()) {
-                        School sch = snapchild.getValue(School.class);
-                        favlist.add(sch);
+                        if (snapchild != null){
+                            School sch = snapchild.getValue(School.class);
+                            favlist.add(sch);
+                        }
                     }
                 }
 

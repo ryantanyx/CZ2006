@@ -32,7 +32,6 @@ public class School implements Parcelable {
             region, type, subjects;
     private ArrayList<String> contactInfo, transport;
     private HashMap<String, Integer> cutOffPoint;
-    private LatLng latLng;
 
     public School() {
     }
@@ -52,15 +51,6 @@ public class School implements Parcelable {
         subjects = in.readString();
         contactInfo = in.readArrayList(null);
         transport = in.readArrayList(null);
-        latLng = in.readParcelable(LatLng.class.getClassLoader());
-    }
-
-    public LatLng getLatLng() {
-        return latLng;
-    }
-
-    public void setLatLng(LatLng latlng) {
-        this.latLng = latlng;
     }
 
     public String getMission() {
@@ -196,6 +186,5 @@ public class School implements Parcelable {
         dest.writeString(subjects);
         dest.writeList(contactInfo);
         dest.writeList(transport);
-        dest.writeParcelable(this.latLng, flags);
     }
 }
