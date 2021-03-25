@@ -21,17 +21,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +51,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private Button logout, updateProfile, changePassword;
     private CardView profileImgbg;
     private ImageView profileImg;
-    private EditText profileName, profileEmail, profileDate;
+    private EditText profileName, profileEmail, profileAddress, profileDate;
     private EditText currentPassword, newPassword, rePassword;
     private ImageView profileGender, edit;
     private int profileImageno;
@@ -119,6 +116,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         profileImg = (ImageView) profileImgbg.findViewById(R.id.profileImg);
         profileName = (EditText) view.findViewById(R.id.profileName);
         profileEmail = (EditText) view.findViewById(R.id.profileEmail);
+        profileAddress = (EditText) view.findViewById(R.id.profileAddress);
         profileGender = (ImageView) view.findViewById(R.id.profileGender);
         profileDate = (EditText) view.findViewById(R.id.profileDate);
         profileDate.setInputType(InputType.TYPE_NULL);
@@ -135,6 +133,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                     int imageNo = userProfile.getImageNo();
                     String name = userProfile.getName();
                     String email = user.getEmail();
+                    String address = userProfile.getAddress();
                     String gender = userProfile.getGender();
                     String date = userProfile.getDate();
 
@@ -154,6 +153,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                     profileName.setSelection(name.length());
                     profileEmail.setText(email);
                     profileEmail.setSelection(email.length());
+                    profileAddress.setText(address);
+                    profileAddress.setSelection(address.length());
 
                     if (gender.equals("Male")){
                         profileGender.setImageResource(R.drawable.ic_male);
@@ -262,7 +263,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getActivity(), MainActivity.class));
+                startActivity(new Intent(getActivity(), LoginUser.class));
                 break;
             case R.id.cancel:
                 dialog2.dismiss();
@@ -297,6 +298,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         String name = profileName.getText().toString();
         String email = profileEmail.getText().toString();
+        String address = profileAddress.getText().toString();
         String date = profileDate.getText().toString();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -321,6 +323,18 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
+        if(address.isEmpty()){
+            profileAddress.setError("Address cannot be 0 characters!");
+            profileAddress.requestFocus();
+            return;
+        }
+
+        if(!MapController.isValidAddress(this.getContext(), address)){
+            profileAddress.setError("Please provide a valid home address!");
+            profileAddress.requestFocus();
+            return;
+        }
+
         if(date.isEmpty()){
             profileDate.setError("Date of Birth cannot be 0 characters!");
             profileDate.requestFocus();
@@ -329,6 +343,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         reference.child(userID).child("name").setValue(name);
         user.updateEmail(email);
+        reference.child(userID).child("address").setValue(address);
         reference.child(userID).child("date").setValue(date);
         reference.child(userID).child("imageNo").setValue(profileImageno);
         Toast.makeText(getActivity(), "Profile Updated Successfully", Toast.LENGTH_SHORT).show();

@@ -44,7 +44,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     private AlertDialog dialog;
     private AlertDialog.Builder builder;
 
-    private EditText regDate, regName, regEmail, regPassword, regReenterPassword;
+    private EditText regDate, regName, regEmail, regAddress, regPassword, regReenterPassword;
     private Button regUser, regCancel, chooseImage;
     private ProgressBar regProgress;
     private CheckBox regAgree;
@@ -108,6 +108,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 
         regName = (EditText) findViewById(R.id.regName);
         regEmail = (EditText) findViewById(R.id.regEmail);
+        regAddress = (EditText) findViewById(R.id.regAddress);
         regPassword = (EditText) findViewById(R.id.regPassword);
         regReenterPassword = (EditText) findViewById(R.id.regReenterPassword);
 
@@ -121,7 +122,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.regBack:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, LoginUser.class));
                 break;
             case R.id.regUser:
                 builder = new AlertDialog.Builder(RegisterUser.this);
@@ -129,7 +130,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        registerUser();
+                        registerUser(v);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -185,10 +186,11 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void registerUser(){
+    public void registerUser(View v){
 
         String name = regName.getText().toString().trim();
         String email = regEmail.getText().toString().trim();
+        String address = regAddress.getText().toString().trim();
         String password = regPassword.getText().toString().trim();
         String reenterPassword = regReenterPassword.getText().toString().trim();
         String gender;
@@ -210,6 +212,18 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             regEmail.setError("Please provide a valid email address!");
             regEmail.requestFocus();
+            return;
+        }
+
+        if(address.isEmpty()){
+            regAddress.setError("Address is not entered!");
+            regAddress.requestFocus();
+            return;
+        }
+
+        if(!MapController.isValidAddress(v.getContext(), address)){
+            regAddress.setError("Please provide a valid home address!");
+            regAddress.requestFocus();
             return;
         }
 
@@ -259,7 +273,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-                            User myUser = new User(name, gender, date, regImageno, favList);
+                            User myUser = new User(name, address, gender, date, regImageno, favList);
 
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -273,7 +287,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                         regProgress.setVisibility(View.GONE);
                                     }
                                     else{
-                                        Snackbar.make(getCurrentFocus(), "User failed to register", Snackbar.LENGTH_INDEFINITE)
+                                        Snackbar.make(getCurrentFocus(), "User failed to register.", Snackbar.LENGTH_INDEFINITE)
                                                 .setAction("Dismiss", new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {

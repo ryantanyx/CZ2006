@@ -68,6 +68,17 @@
         app:layout_constraintTop_toBottomOf="@+id/regName" />
 
     <EditText
+        android:id="@+id/regAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Address"
+        android:inputType="text|textPostalAddress"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/regEmail" />
+
+    <EditText
         android:id="@+id/regPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,7 +87,7 @@
         android:hint="Enter Password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/regEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/regAddress" />
 
     <EditText
         android:id="@+id/regReenterPassword"
