@@ -329,6 +329,12 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
+        if(!MapController.isValidAddress(this.getContext(), address)){
+            profileAddress.setError("Please provide a valid home address!");
+            profileAddress.requestFocus();
+            return;
+        }
+
         if(date.isEmpty()){
             profileDate.setError("Date of Birth cannot be 0 characters!");
             profileDate.requestFocus();

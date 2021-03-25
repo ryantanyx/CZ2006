@@ -130,7 +130,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        registerUser();
+                        registerUser(v);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -186,7 +186,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void registerUser(){
+    public void registerUser(View v){
 
         String name = regName.getText().toString().trim();
         String email = regEmail.getText().toString().trim();
@@ -217,6 +217,12 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 
         if(address.isEmpty()){
             regAddress.setError("Address is not entered!");
+            regAddress.requestFocus();
+            return;
+        }
+
+        if(!MapController.isValidAddress(v.getContext(), address)){
+            regAddress.setError("Please provide a valid home address!");
             regAddress.requestFocus();
             return;
         }

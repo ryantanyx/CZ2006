@@ -94,4 +94,24 @@ public class MapController {
         }
         return nearbySch;
     }
+
+    public static boolean isValidAddress(Context context, String strAddress) {
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5, 1.225709, 103.602018, 1.473700, 104.025147);
+            if (address == null || address.size() < 1) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
 }
