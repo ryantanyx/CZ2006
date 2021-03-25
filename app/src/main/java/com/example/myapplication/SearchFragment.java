@@ -600,18 +600,28 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             switch (index) {
                 case 0:
                     adapter.sort(0);
+                    Toast.makeText(getActivity(), "Sorted by School Name!", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
                     adapter.sort(1);
+                    Toast.makeText(getActivity(), "Sorted by Region(ENSW)!", Toast.LENGTH_SHORT).show();
                     break;
                 case 2:
-                    if (expressSort.isSelected())
+                    if (expressSort.isSelected()) {
                         adapter.sort(2);
-                    else if(normalAcadSort.isSelected())
+                        Toast.makeText(getActivity(), "Sorted by Cut-Off Point (Express)!", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    else if(normalAcadSort.isSelected()) {
                         adapter.sort(3);
-                    else if (normalTechSort.isSelected())
+                        Toast.makeText(getActivity(), "Sorted by Cut-Off Point (NA)!", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    else if (normalTechSort.isSelected()) {
                         adapter.sort(4);
-                    break;
+                        Toast.makeText(getActivity(), "Sorted by Cut-Off Point (NA)!", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
             }
         if (!ascending.isChecked()) {
             adapter.reverse();
