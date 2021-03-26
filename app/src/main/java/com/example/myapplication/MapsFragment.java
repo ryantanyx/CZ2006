@@ -3,8 +3,6 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +59,11 @@ public class MapsFragment extends Fragment {
             HashMap<String, LatLng> latLngList = MapController.getLatLong(getView().getContext(), schoolList);
             HashMap<String, LatLng> nearbyList = MapController.getLatLong(getView().getContext(), latLngList, userLocation);
 
+            googleMap.addMarker(new MarkerOptions()
+                    .position(userLocation)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                    .title("Current Location"));
+
             for (Map.Entry<String, LatLng> entry : latLngList.entrySet()){
                 googleMap.addMarker(new MarkerOptions().position(entry.getValue()).title(entry.getKey()));
             }
@@ -72,13 +75,7 @@ public class MapsFragment extends Fragment {
             LatLngBounds bounds = builder.build();
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 25));
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 10));
-            //googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-
             googleMap.setLatLngBoundsForCameraTarget(sgBounds);
-
-            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(20), 2000, null);
             googleMap.getUiSettings().setZoomControlsEnabled(true);
             googleMap.getUiSettings().setZoomGesturesEnabled(true);
         }
