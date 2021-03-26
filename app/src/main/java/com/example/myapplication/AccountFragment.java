@@ -51,7 +51,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private Button logout, updateProfile, changePassword;
     private CardView profileImgbg;
     private ImageView profileImg;
-    private EditText profileName, profileEmail, profileDate;
+    private EditText profileName, profileEmail, profileAddress, profileDate;
     private EditText currentPassword, newPassword, rePassword;
     private ImageView profileGender, edit;
     private int profileImageno;
@@ -116,6 +116,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         profileImg = (ImageView) profileImgbg.findViewById(R.id.profileImg);
         profileName = (EditText) view.findViewById(R.id.profileName);
         profileEmail = (EditText) view.findViewById(R.id.profileEmail);
+        profileAddress = (EditText) view.findViewById(R.id.profileAddress);
         profileGender = (ImageView) view.findViewById(R.id.profileGender);
         profileDate = (EditText) view.findViewById(R.id.profileDate);
         profileDate.setInputType(InputType.TYPE_NULL);
@@ -132,6 +133,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                     int imageNo = userProfile.getImageNo();
                     String name = userProfile.getName();
                     String email = user.getEmail();
+                    String address = userProfile.getAddress();
                     String gender = userProfile.getGender();
                     String date = userProfile.getDate();
 
@@ -151,6 +153,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                     profileName.setSelection(name.length());
                     profileEmail.setText(email);
                     profileEmail.setSelection(email.length());
+                    profileAddress.setText(address);
+                    profileAddress.setSelection(address.length());
 
                     if (gender.equals("Male")){
                         profileGender.setImageResource(R.drawable.ic_male);
@@ -294,6 +298,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         String name = profileName.getText().toString();
         String email = profileEmail.getText().toString();
+        String address = profileAddress.getText().toString();
         String date = profileDate.getText().toString();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -318,6 +323,18 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
+        if(address.isEmpty()){
+            profileAddress.setError("Address cannot be 0 characters!");
+            profileAddress.requestFocus();
+            return;
+        }
+
+        if(!MapController.isValidAddress(this.getContext(), address)){
+            profileAddress.setError("Please provide a valid home address!");
+            profileAddress.requestFocus();
+            return;
+        }
+
         if(date.isEmpty()){
             profileDate.setError("Date of Birth cannot be 0 characters!");
             profileDate.requestFocus();
@@ -326,6 +343,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         reference.child(userID).child("name").setValue(name);
         user.updateEmail(email);
+        reference.child(userID).child("address").setValue(address);
         reference.child(userID).child("date").setValue(date);
         reference.child(userID).child("imageNo").setValue(profileImageno);
         Toast.makeText(getActivity(), "Profile Updated Successfully", Toast.LENGTH_SHORT).show();

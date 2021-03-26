@@ -32,7 +32,6 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
-    private User userProfile;
     private List<School> favlist;
 
     FavListAdapter(Context context, List<School> favlist){

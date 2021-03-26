@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.renderscript.Sampler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -397,6 +400,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     school.setType(tokens[24]);
                     school.setGender(tokens[25]);
 
+
                     cut_off.put("express", Integer.parseInt(tokens[36]));
                     cut_off.put("na", Integer.parseInt(tokens[37]));
                     cut_off.put("nt", Integer.parseInt(tokens[38]));
@@ -614,8 +618,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                     favlist = new ArrayList<School>();
                     for (DataSnapshot snapchild: snapshot.getChildren()) {
-                        School sch = snapchild.getValue(School.class);
-                        favlist.add(sch);
+                        if (snapchild != null){
+                            School sch = snapchild.getValue(School.class);
+                            favlist.add(sch);
+                        }
                     }
                 }
 
