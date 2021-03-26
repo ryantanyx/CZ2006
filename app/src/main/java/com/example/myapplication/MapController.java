@@ -18,11 +18,7 @@ public class MapController {
         HashMap<String, LatLng> nearbySch = new HashMap<>();
         for (School sch : schoolList){
             LatLng latLng = getLocationFromAddress(context, sch.getAddress());
-            // Filtering schools based on distance
             nearbySch.put(sch.getSchoolName(), latLng);
-            //if (distance(userPosition.latitude, userPosition.longitude, latLng.latitude, latLng.longitude) <= 5){
-
-            //}
         }
 
         return nearbySch;
