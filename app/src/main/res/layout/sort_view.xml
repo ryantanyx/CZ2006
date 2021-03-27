@@ -66,8 +66,18 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textStyle="bold"
         app:layout_constraintRight_toLeftOf="@id/guidelineMiddle"
-        app:layout_constraintTop_toBottomOf="@id/textRegion" />
+        app:layout_constraintTop_toBottomOf="@id/textDistance" />
 
+    <TextView
+        android:id="@+id/textDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Distance"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textStyle="bold"
+        app:layout_constraintRight_toLeftOf="@id/guidelineMiddle"
+        app:layout_constraintTop_toBottomOf="@id/textRegion" />
 
     <RadioGroup
         android:id="@+id/sortRG"
@@ -89,6 +99,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <RadioButton
+            android:id="@+id/sortDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/sortPSLECutOff"
             android:layout_width="wrap_content"

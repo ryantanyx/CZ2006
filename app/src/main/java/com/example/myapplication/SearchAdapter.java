@@ -2,14 +2,11 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.renderscript.Sampler;
+import android.os.Build;
+import android.service.autofill.Dataset;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,10 +14,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -28,25 +27,31 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpCookie;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.Inflater;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{ //implements Filterable{
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
 
+    private static double schDistance;
+    private static MapController MapController;
+    private static User User;
     private LayoutInflater layoutInflater;
     private List<School> data;
     private List<School> dataset;
@@ -56,13 +61,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private String selectedCCA = "all";
     private int pslemin = 0,pslemax = 300,distmin=0,distmax=60;
 
-    private Context context;
+
+    private static Context context;
     private User userProfile;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
     boolean flag = true;
-    private HashMap<String, Double> distances;
+    private LatLng userLocation;
+    private HashMap<String, Double> schDistList;
+    private HashMap<String, Double> schOrderedDistList;
+    private DataSnapshot snapshot;
+
 
     SearchAdapter(Context context){
         this.context = context;
@@ -78,7 +88,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = layoutInflater.inflate(R.layout.custom_view, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -94,6 +103,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.schoolDesc.setText(schoolAddress);
         ArrayList<School> favlist = new ArrayList<School>();
         // getting firebase reference
+        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+                if (userProfile != null) {
+                    String address = userProfile.getAddress();
+                    userLocation = MapController.getLocationFromAddress(context, address);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }});
         reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -339,8 +361,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return selectedStream;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void sort(int choice) {
-
         switch(choice){
             case 0:
                 Collections.sort(data, new Comparator<School>() {
@@ -387,13 +409,54 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 });
                 notifyDataSetChanged();
                 return;
+            case 5:
+                LatLngBounds sgBounds = new LatLngBounds(
+                        new LatLng(1.264850, 103.622483), // SW bounds
+                        new LatLng(1.475187, 104.016803)  // NE bounds
+                );
 
+                if (userLocation == null) {
+                    userLocation = sgBounds.getCenter();
+                }
+                 user = FirebaseAuth.getInstance().getCurrentUser();
+                 reference = FirebaseDatabase.getInstance().getReference("Users");
+                 userID = user.getUid();
+                 schDistList = new HashMap<>();
+                schDistList = getSchDist(data, userLocation);
+                List<Map.Entry<String,Double>> list = new LinkedList<Map.Entry<String, Double> >(schDistList.entrySet());
+                Collections.sort(list, new Comparator<Map.Entry<String, Double> >() {
+                    public int compare(Map.Entry<String, Double> o1,
+                                       Map.Entry<String, Double> o2)
+                    {
+                        return (o1.getValue()).compareTo(o2.getValue());
+                    }
+                });
+                HashMap<String, Double> schOrderedDistList = new LinkedHashMap<String, Double>();
+                for (Map.Entry<String, Double> aa : list) {
+                    schOrderedDistList.put(aa.getKey(), aa.getValue());
+                }
+                ArrayList<String> schools = new ArrayList<>(schOrderedDistList.keySet());
+                data.sort(Comparator.comparing(v->schools.indexOf(v.getSchoolName())));
+                notifyDataSetChanged();
+                return;
+        };
 
-        }
     }
-
     public void reverse() {Collections.reverse(data);
     }
+
+    public static HashMap<String, Double> getSchDist(List<School> schoolList, LatLng userPosition) {
+        HashMap<String, Double> schDist = new HashMap<>();
+        HashMap<String, LatLng> schLocation = new HashMap<>();
+        schLocation = MapController.getLatLong(context, schoolList);
+        for (Map.Entry<String, LatLng> entry : schLocation.entrySet()) {
+            schDistance = MapController.distance(userPosition.latitude, userPosition.longitude, entry.getValue().latitude, entry.getValue().longitude);
+            schDist.put(entry.getKey(), schDistance);
+        }
+            return schDist;
+
+    }
+
 
     private List<School> readSchoolData() {
         List<School> schoolList = new ArrayList<>();
@@ -632,6 +695,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     Toast.makeText(itemView.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
                 }
             });
+
+
             reference.child(userID).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
