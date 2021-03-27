@@ -101,13 +101,12 @@ public class MapsFragment extends Fragment {
         userID = user.getUid();
 
         // getting firebase reference
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child(userID).child("address").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User userProfile = snapshot.getValue(User.class);
-                if (userProfile != null){
-                    String address = userProfile.getAddress();
-                    userLocation = MapController.getLocationFromAddress(view.getContext(), address);
+                String userAddress = snapshot.getValue(String.class);
+                if (userAddress != null){
+                    userLocation = MapController.getLocationFromAddress(view.getContext(), userAddress);
                 }
             }
 
@@ -116,7 +115,7 @@ public class MapsFragment extends Fragment {
                 Toast.makeText(view.getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
             }
         });
-        reference.child(userID).addChildEventListener(new ChildEventListener() {
+        reference.child(userID).child("address").addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -125,10 +124,9 @@ public class MapsFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                User userProfile = snapshot.getValue(User.class);
-                if (userProfile != null){
-                    String address = userProfile.getAddress();
-                    userLocation = MapController.getLocationFromAddress(view.getContext(), address);
+                String userAddress = snapshot.getValue(String.class);
+                if (userAddress != null){
+                    userLocation = MapController.getLocationFromAddress(view.getContext(), userAddress);
                 }
             }
 

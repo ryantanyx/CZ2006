@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.service.autofill.Dataset;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -33,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpCookie;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +42,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.Inflater;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
 
@@ -77,9 +73,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     SearchAdapter(Context context){
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
-        data = readSchoolData();
-        data = readCCAData(data);
-        data = readSubjectData(data);
+        secondThread runnable = new secondThread();
+        runnable.run();
         this.dataset = new ArrayList<School>(data);
     }
 
@@ -102,20 +97,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.schoolTitle.setText(schoolName);
         holder.schoolDesc.setText(schoolAddress);
         ArrayList<School> favlist = new ArrayList<School>();
-        // getting firebase reference
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User userProfile = snapshot.getValue(User.class);
-                if (userProfile != null) {
-                    String address = userProfile.getAddress();
-                    userLocation = MapController.getLocationFromAddress(context, address);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }});
+        // getting firebase reference
+
         reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -146,7 +130,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public int getItemCount() {
         return data.size();
     }
-
 
     public void searchViewFilter(String newText) {
         currentSearchText = newText;
@@ -387,19 +370,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 notifyDataSetChanged();
                 return;
             case 5:
-                LatLngBounds sgBounds = new LatLngBounds(
+                /*LatLngBounds sgBounds = new LatLngBounds(
                         new LatLng(1.264850, 103.622483), // SW bounds
                         new LatLng(1.475187, 104.016803)  // NE bounds
                 );
 
                 if (userLocation == null) {
                     userLocation = sgBounds.getCenter();
-                }
-                 user = FirebaseAuth.getInstance().getCurrentUser();
-                 reference = FirebaseDatabase.getInstance().getReference("Users");
-                 userID = user.getUid();
-                 schDistList = new HashMap<>();
-                schDistList = getSchDist(data, userLocation);
+                }*/
+
+                secondThread runnable = new secondThread();
+                runnable.run(data, userLocation);
+
                 List<Map.Entry<String,Double>> list = new LinkedList<Map.Entry<String, Double> >(schDistList.entrySet());
                 Collections.sort(list, new Comparator<Map.Entry<String, Double> >() {
                     public int compare(Map.Entry<String, Double> o1,
@@ -779,6 +761,50 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     return 1;
                 }
             });
+        }
+    }
+
+    class secondThread implements Runnable {
+
+        secondThread(){
+
+        }
+
+        @Override
+        public void run() {
+            data = readSchoolData();
+            data = readCCAData(data);
+            data = readSubjectData(data);
+
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            reference = FirebaseDatabase.getInstance().getReference("Users");
+            userID = user.getUid();
+
+            reference.child(userID).child("address").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String userAddress = snapshot.getValue(String.class);
+                    if (userAddress != null){
+                        userLocation = MapController.getLocationFromAddress(context, userAddress);
+                        schDistList = new HashMap<>();
+                        schDistList = getSchDist(data, userLocation);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
+        public void run(List<School> data, LatLng userLocation){
+            if (schDistList == null){
+                schDistList = new HashMap<>();
+                schDistList = getSchDist(data, userLocation);
+            }
+
         }
     }
 
