@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -71,12 +72,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     private AppCompatButton expressButton, normalaButton, normaltButton;
     private AppCompatButton expressSort, normalAcadSort, normalTechSort;
     private RadioButton sortSchoolName, sortRegion, sortPSLECutOff;
-    private RangeSlider psleSlider;
-    private TextView region,streams,pslecutoff,cca,ccatype,ccaspecific;
+    private RangeSlider psleSlider,distSlider;
+    private TextView region,streams,pslecutoff,cca,ccatype,ccaspecific,distText;
     private AppCompatSpinner cca1,cca2;
     private int black,white,red;
     private ArrayList<String> arrayList_parent, arrayList_all, arrayList_sports, arrayList_vpa, arrayList_cs,arrayList_ug;
     private ArrayAdapter<String> arrayAdapter_parent, arrayAdapter_child;
+    private HashMap<String, Double> distances;
     private Set<String> set_sports = new HashSet<String>(), set_vpa = new HashSet<String>(), set_cs = new HashSet<String>(), set_ug = new HashSet<String>();
 
 
@@ -148,6 +150,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         psleSlider = view.findViewById(R.id.psleslider);
         psleSlider.addOnChangeListener(this::onValueChange);
         pslecutoff = view.findViewById(R.id.pslecutoff);
+        distSlider = view.findViewById(R.id.distslider);
+        distSlider.addOnChangeListener(this::onValueChange);
+        distText = view.findViewById(R.id.distance);
         cca = view.findViewById(R.id.cca);
         ccatype = view.findViewById(R.id.ccatype);
         ccaspecific = view.findViewById(R.id.ccaspecific);
@@ -494,6 +499,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
     private void resetSlider() {
         psleSlider.setValues((float)(0),(float)(300));
+        distSlider.setValues((float)(0),(float)(60));
     }
 
     private void showFilterTapped() {
@@ -519,6 +525,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         streams.setVisibility(View.GONE);
         psleSlider.setVisibility(View.GONE);
         pslecutoff.setVisibility(View.GONE);
+        distSlider.setVisibility(View.GONE);
+        distText.setVisibility(View.GONE);
         cca.setVisibility(View.GONE);
         ccatype.setVisibility(View.GONE);
         ccaspecific.setVisibility(View.GONE);
@@ -540,6 +548,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         streams.setVisibility(View.VISIBLE);
         psleSlider.setVisibility(View.VISIBLE);
         pslecutoff.setVisibility(View.VISIBLE);
+        distSlider.setVisibility(View.VISIBLE);
+        distText.setVisibility(View.VISIBLE);
         cca.setVisibility(View.VISIBLE);
         ccatype.setVisibility(View.VISIBLE);
         ccaspecific.setVisibility(View.VISIBLE);
@@ -579,9 +589,18 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
     @Override
     public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
-        int low = (int) (float) psleSlider.getValues().get(0);
-        int high = (int) (float) psleSlider.getValues().get(1);
-        adapter.filterPSLE(low, high);
+        switch (slider.getId()) {
+            case R.id.psleslider:
+                int low = (int) (float) psleSlider.getValues().get(0);
+                int high = (int) (float) psleSlider.getValues().get(1);
+                adapter.filterPSLE(low, high);
+                break;
+            case R.id.distslider:
+                low = (int) (float) distSlider.getValues().get(0);
+                high = (int) (float) distSlider.getValues().get(1);
+                adapter.filterDist(low, high,distances);
+                break;
+        }
     }
 
     public void sort() {
