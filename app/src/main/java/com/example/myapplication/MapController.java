@@ -28,7 +28,8 @@ public class MapController {
         return nearbySch;
     };
 
-    private static double distance(double lat1, double lng1, double lat2, double lng2) {
+
+    public static double distance(double lat1, double lng1, double lat2, double lng2) {
 
         double earthRadius = 6371; // in miles, change to 6371 for kilometer output
 
@@ -68,7 +69,6 @@ public class MapController {
 
             ex.printStackTrace();
         }
-
         return p1;
     }
 
@@ -80,6 +80,7 @@ public class MapController {
                 nearbySch.put(entry.getKey(), entry.getValue());
             }
         }
+        System.out.println("getLatLong");
         return nearbySch;
     }
 
