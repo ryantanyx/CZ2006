@@ -163,7 +163,32 @@
         android:valueTo="300"
         app:layout_constraintStart_toStartOf="@id/pslecutoff"
         app:layout_constraintTop_toBottomOf="@id/pslecutoff"
-        app:values="@array/rangeSliderValues" />
+        app:values="@array/psleSliderValues" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:text="Distance From Home (km)"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/psleslider" />
+
+    <com.google.android.material.slider.RangeSlider
+        android:id="@+id/distslider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stepSize="1"
+        android:value="0"
+        android:valueFrom="0"
+        android:valueTo="60"
+        app:layout_constraintStart_toStartOf="@id/distance"
+        app:layout_constraintTop_toBottomOf="@id/distance"
+        app:values="@array/distSliderValues" />
 
     <TextView
         android:id="@+id/cca"
@@ -174,7 +199,7 @@
         android:textStyle="bold"
         android:textSize="20dp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/psleslider"
+        app:layout_constraintTop_toBottomOf="@id/distslider"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
