@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.ContextCompat;
@@ -70,7 +71,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     private AppCompatButton resetButton, northButton, southButton, eastButton, westButton, filterButton;
     private AppCompatButton expressButton, normalaButton, normaltButton;
     private AppCompatButton expressSort, normalAcadSort, normalTechSort;
-    private RadioButton sortSchoolName, sortRegion, sortPSLECutOff;
+    private RadioButton sortSchoolName, sortRegion, sortPSLECutOff,sortDistance;
     private RangeSlider psleSlider;
     private TextView region,streams,pslecutoff,cca,ccatype,ccaspecific;
     private AppCompatSpinner cca1,cca2;
@@ -224,6 +225,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         sortRegion.setOnClickListener(this);
         sortPSLECutOff = dialog.findViewById(R.id.sortPSLECutOff);
         sortPSLECutOff.setOnClickListener(this);
+        sortDistance = dialog.findViewById(R.id.sortDistance);
+        sortDistance.setOnClickListener(this);
         return view;
     }
 
@@ -249,8 +252,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             }
         });
 
-        MenuItem item2 = menu.findItem(R.id.action_sort);
-        item2.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        MenuItem sort = menu.findItem(R.id.action_sort);
+        sort.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 dialog.show();
@@ -311,6 +314,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         Collections.sort(arrayList_ug);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -354,6 +358,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 break;
             case R.id.sortSchoolName:
             case R.id.sortRegion:
+            case R.id.sortDistance:
                 nonScoreSelect();
                 break;
             case R.id.sortPSLECutOff:
@@ -584,6 +589,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         adapter.filterPSLE(low, high);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void sort() {
 
         int index;
@@ -600,18 +606,33 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             switch (index) {
                 case 0:
                     adapter.sort(0);
+                    Toast.makeText(getActivity(), "Sorted by School Name!", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
                     adapter.sort(1);
+                    Toast.makeText(getActivity(), "Sorted by Region(ENSW)!", Toast.LENGTH_SHORT).show();
                     break;
                 case 2:
-                    if (expressSort.isSelected())
-                        adapter.sort(2);
-                    else if(normalAcadSort.isSelected())
-                        adapter.sort(3);
-                    else if (normalTechSort.isSelected())
-                        adapter.sort(4);
+                    adapter.sort(5);
+                    Toast.makeText(getActivity(), "Sorted by Distance from Address!", Toast.LENGTH_SHORT).show();
                     break;
+                case 3:
+                    if (expressSort.isSelected()) {
+                        adapter.sort(2);
+                        Toast.makeText(getActivity(), "Sorted by Cut-Off Point (Express)!", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    else if(normalAcadSort.isSelected()) {
+                        adapter.sort(3);
+                        Toast.makeText(getActivity(), "Sorted by Cut-Off Point (NA)!", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    else if (normalTechSort.isSelected()) {
+                        adapter.sort(4);
+                        Toast.makeText(getActivity(), "Sorted by Cut-Off Point (NA)!", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
             }
         if (!ascending.isChecked()) {
             adapter.reverse();
