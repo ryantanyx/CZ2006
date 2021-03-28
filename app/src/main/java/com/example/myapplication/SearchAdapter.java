@@ -69,7 +69,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private String userID;
     boolean flag = true;
     private LatLng userLocation;
-    private HashMap<String, Double> schDistList;
+    private HashMap<String, Double> schDistList = new HashMap<>();
     private HashMap<String, Double> schOrderedDistList;
     private DataSnapshot snapshot;
 
@@ -166,11 +166,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         filter();
     }
 
-    public void filterDist(int low, int high,HashMap<String,Double> distances) {
-        this.distances = distances;
+    public void filterDist(int low, int high) {
         resetSchoolList();
         distmin = low;
         distmax = high;
+        if (schDistList.isEmpty())
+            schDistList = getSchDist(data, userLocation);
         filter();
     }
 
@@ -199,19 +200,37 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                         for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
                                             ArrayList<String> strings = temp.getValue();
                                             if (strings.contains(selectedCCA)) {
-                                                if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
-                                                    if (currentSearchText.equals(""))
-                                                        filteredList.add(school);
-                                                    else {
-                                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                if (schDistList.get(school.getSchoolName())!= null) {
+                                                    if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                        if (currentSearchText.equals(""))
                                                             filteredList.add(school);
+                                                        else {
+                                                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                                filteredList.add(school);
+                                                        }
+                                                    }
+                                                }else {
+                                                    if (currentSearchText.equals(""))
+                                                    filteredList.add(school);
+                                                else {
+                                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                        filteredList.add(school);
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                 } else {
-                                    if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
+                                    if (schDistList.get(school.getSchoolName())!= null) {
+                                        if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                            if (currentSearchText.equals(""))
+                                                filteredList.add(school);
+                                            else {
+                                                if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                    filteredList.add(school);
+                                            }
+                                        }
+                                    }else {
                                         if (currentSearchText.equals(""))
                                             filteredList.add(school);
                                         else {
@@ -227,7 +246,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                     for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
                                         ArrayList<String> strings = temp.getValue();
                                         if (strings.contains(selectedCCA)) {
-                                            if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
+                                            if (schDistList.get(school.getSchoolName())!= null) {
+                                                if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                    if (currentSearchText.equals(""))
+                                                        filteredList.add(school);
+                                                    else {
+                                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                            filteredList.add(school);
+                                                    }
+                                                }
+                                            }else {
                                                 if (currentSearchText.equals(""))
                                                     filteredList.add(school);
                                                 else {
@@ -239,7 +267,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                     }
                                 }
                             } else {
-                                if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
+                                if (schDistList.get(school.getSchoolName())!= null) {
+                                    if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                        if (currentSearchText.equals(""))
+                                            filteredList.add(school);
+                                        else {
+                                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                filteredList.add(school);
+                                        }
+                                    }
+                                }else {
                                     if (currentSearchText.equals(""))
                                         filteredList.add(school);
                                     else {
@@ -264,7 +301,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                     for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
                                         ArrayList<String> strings = temp.getValue();
                                         if (strings.contains(selectedCCA)) {
-                                            if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
+                                            if (schDistList.get(school.getSchoolName())!= null) {
+                                                if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                    if (currentSearchText.equals(""))
+                                                        filteredList.add(school);
+                                                    else {
+                                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                            filteredList.add(school);
+                                                    }
+                                                }
+                                            }else {
                                                 if (currentSearchText.equals(""))
                                                     filteredList.add(school);
                                                 else {
@@ -276,7 +322,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                     }
                                 }
                             } else {
-                                if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
+                                if (schDistList.get(school.getSchoolName())!= null) {
+                                    if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                        if (currentSearchText.equals(""))
+                                            filteredList.add(school);
+                                        else {
+                                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                filteredList.add(school);
+                                        }
+                                    }
+                                }else {
                                     if (currentSearchText.equals(""))
                                         filteredList.add(school);
                                     else {
@@ -292,7 +347,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
                                     ArrayList<String> strings = temp.getValue();
                                     if (strings.contains(selectedCCA)) {
-                                        if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
+                                        if (schDistList.get(school.getSchoolName())!= null) {
+                                            if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                if (currentSearchText.equals(""))
+                                                    filteredList.add(school);
+                                                else {
+                                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                        filteredList.add(school);
+                                                }
+                                            }
+                                        }else {
                                             if (currentSearchText.equals(""))
                                                 filteredList.add(school);
                                             else {
@@ -304,7 +368,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 }
                             }
                         } else {
-                            if (distances.get(school.getSchoolName())>=distmin && distances.get(school.getSchoolName())<=distmax){
+                            if (schDistList.get(school.getSchoolName())!= null) {
+                                if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                    if (currentSearchText.equals(""))
+                                        filteredList.add(school);
+                                    else {
+                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                            filteredList.add(school);
+                                    }
+                                }
+                            }else {
                                 if (currentSearchText.equals(""))
                                     filteredList.add(school);
                                 else {
@@ -421,7 +494,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                  user = FirebaseAuth.getInstance().getCurrentUser();
                  reference = FirebaseDatabase.getInstance().getReference("Users");
                  userID = user.getUid();
-                 schDistList = new HashMap<>();
+                 //schDistList = new HashMap<>();
                 schDistList = getSchDist(data, userLocation);
                 List<Map.Entry<String,Double>> list = new LinkedList<Map.Entry<String, Double> >(schDistList.entrySet());
                 Collections.sort(list, new Comparator<Map.Entry<String, Double> >() {

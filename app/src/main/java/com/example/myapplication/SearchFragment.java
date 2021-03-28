@@ -601,7 +601,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             case R.id.distslider:
                 low = (int) (float) distSlider.getValues().get(0);
                 high = (int) (float) distSlider.getValues().get(1);
-                adapter.filterDist(low, high,distances);
+                adapter.filterDist(low, high);
                 break;
         }
     }
