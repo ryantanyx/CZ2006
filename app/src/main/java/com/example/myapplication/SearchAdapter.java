@@ -55,7 +55,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private String selectedStream = "all";
     private String currentSearchText ="";
     private String selectedCCA = "all";
-    private int pslemin = 0,pslemax = 300,distmin=0,distmax=60;
+    private int pslemin = 0,pslemax = 300,distmin=0,distmax=50;
 
 
     private static Context context;

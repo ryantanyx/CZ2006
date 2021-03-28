@@ -185,7 +185,7 @@
         android:stepSize="1"
         android:value="0"
         android:valueFrom="0"
-        android:valueTo="60"
+        android:valueTo="50"
         app:layout_constraintStart_toStartOf="@id/distance"
         app:layout_constraintTop_toBottomOf="@id/distance"
         app:values="@array/distSliderValues" />

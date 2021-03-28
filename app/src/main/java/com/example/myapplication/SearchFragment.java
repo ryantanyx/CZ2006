@@ -502,7 +502,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
     private void resetSlider() {
         psleSlider.setValues((float)(0),(float)(300));
-        distSlider.setValues((float)(0),(float)(60));
+        distSlider.setValues((float)(0),(float)(50));
     }
 
     private void showFilterTapped() {
