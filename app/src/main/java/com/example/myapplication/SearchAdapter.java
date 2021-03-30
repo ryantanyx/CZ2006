@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.service.autofill.Dataset;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -33,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpCookie;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +42,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.Inflater;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
 
-    private static double schDistance; //implements Filterable{
+    private static double schDistance;
     private static MapController MapController;
     private static User User;
     private LayoutInflater layoutInflater;
@@ -59,7 +55,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private String selectedStream = "all";
     private String currentSearchText ="";
     private String selectedCCA = "all";
-    private int min = 0,max = 300;
+    private int pslemin = 0,pslemax = 300,distmin=0,distmax=50;
 
 
     private static Context context;
@@ -69,7 +65,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private String userID;
     boolean flag = true;
     private LatLng userLocation;
-    private HashMap<String, Double> schDistList;
+    private HashMap<String, Double> schDistList = new HashMap<>();
     private HashMap<String, Double> schOrderedDistList;
     private DataSnapshot snapshot;
 
@@ -77,9 +73,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     SearchAdapter(Context context){
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
-        data = readSchoolData();
-        data = readCCAData(data);
-        data = readSubjectData(data);
+        secondThread runnable = new secondThread();
+        runnable.run();
         this.dataset = new ArrayList<School>(data);
     }
 
@@ -102,20 +97,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.schoolTitle.setText(schoolName);
         holder.schoolDesc.setText(schoolAddress);
         ArrayList<School> favlist = new ArrayList<School>();
-        // getting firebase reference
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User userProfile = snapshot.getValue(User.class);
-                if (userProfile != null) {
-                    String address = userProfile.getAddress();
-                    userLocation = MapController.getLocationFromAddress(context, address);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }});
+        // getting firebase reference
+
         reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -147,7 +131,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return data.size();
     }
 
-
     public void searchViewFilter(String newText) {
         currentSearchText = newText;
         resetSchoolList();
@@ -162,8 +145,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     public void filterPSLE(int low, int high) {
         resetSchoolList();
-        min = low;
-        max = high;
+        pslemin = low;
+        pslemax = high;
+        filter();
+    }
+
+    public void filterDist(int low, int high) {
+        resetSchoolList();
+        distmin = low;
+        distmax = high;
+        if (schDistList.isEmpty())
+            schDistList = getSchDist(data, userLocation);
         filter();
     }
 
@@ -184,7 +176,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         for(School school:dataset) {
             if (!selectedStream.equals("all")) {
                 if (!school.getCutOffPoint().get(selectedStream).equals(0)) {
-                    if (school.getCutOffPoint().get(selectedStream) >= min && school.getCutOffPoint().get(selectedStream) <= max) {
+                    if (school.getCutOffPoint().get(selectedStream) >= pslemin && school.getCutOffPoint().get(selectedStream) <= pslemax) {
                         if (!selectedRegion.equals("all")) {
                             if (school.getRegion().toLowerCase().contains(selectedRegion)) {
                                 if (!selectedCCA.equals("all")) {
@@ -192,30 +184,29 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                         for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
                                             ArrayList<String> strings = temp.getValue();
                                             if (strings.contains(selectedCCA)) {
-                                                if (currentSearchText.equals(""))
+                                                if (schDistList.get(school.getSchoolName())!= null) {
+                                                    if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                        if (currentSearchText.equals(""))
+                                                            filteredList.add(school);
+                                                        else {
+                                                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                                filteredList.add(school);
+                                                        }
+                                                    }
+                                                }else {
+                                                    if (currentSearchText.equals(""))
                                                     filteredList.add(school);
                                                 else {
                                                     if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
                                                         filteredList.add(school);
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 } else {
-                                    if (currentSearchText.equals(""))
-                                        filteredList.add(school);
-                                    else {
-                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-                                            filteredList.add(school);
-                                    }
-                                }
-                            }
-                        } else {
-                            if (!selectedCCA.equals("all")) {
-                                if (school.getCca()!=null) {
-                                    for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
-                                        ArrayList<String> strings = temp.getValue();
-                                        if (strings.contains(selectedCCA)) {
+                                    if (schDistList.get(school.getSchoolName())!= null) {
+                                        if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
                                             if (currentSearchText.equals(""))
                                                 filteredList.add(school);
                                             else {
@@ -223,56 +214,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                                     filteredList.add(school);
                                             }
                                         }
-                                    }
-                                }
-                            } else {
-                                if (currentSearchText.equals(""))
-                                    filteredList.add(school);
-                                else {
-                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-                                        filteredList.add(school);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                if ((school.getCutOffPoint().get("express") >= min && school.getCutOffPoint().get("express") <= max)
-                        || (school.getCutOffPoint().get("na") != 0 && school.getCutOffPoint().get("na") >= min
-                        && school.getCutOffPoint().get("na") <= max) || (school.getCutOffPoint().get("nt") != 0
-                        && school.getCutOffPoint().get("nt") >= min && school.getCutOffPoint().get("nt") <= max)) {
-                    if (!selectedRegion.equals("all")) {
-                        if (school.getRegion().toLowerCase().contains(selectedRegion)) {
-                            if (!selectedCCA.equals("all")) {
-                                if (school.getCca()!=null) {
-                                    for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
-                                        ArrayList<String> strings = temp.getValue();
-                                        if (strings.contains(selectedCCA)) {
-                                            if (currentSearchText.equals(""))
-                                                filteredList.add(school);
-                                            else {
-                                                if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-                                                    filteredList.add(school);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                if (currentSearchText.equals(""))
-                                    filteredList.add(school);
-                                else {
-                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
-                                        filteredList.add(school);
-                                }
-                            }
-                        }
-                    } else {
-                        if (!selectedCCA.equals("all")) {
-                            if (school.getCca()!=null) {
-                                for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
-                                    ArrayList<String> strings = temp.getValue();
-                                    if (strings.contains(selectedCCA)) {
+                                    }else {
                                         if (currentSearchText.equals(""))
                                             filteredList.add(school);
                                         else {
@@ -283,11 +225,149 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 }
                             }
                         } else {
-                            if (currentSearchText.equals(""))
-                                filteredList.add(school);
-                            else {
-                                if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                            if (!selectedCCA.equals("all")) {
+                                if (school.getCca()!=null) {
+                                    for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
+                                        ArrayList<String> strings = temp.getValue();
+                                        if (strings.contains(selectedCCA)) {
+                                            if (schDistList.get(school.getSchoolName())!= null) {
+                                                if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                    if (currentSearchText.equals(""))
+                                                        filteredList.add(school);
+                                                    else {
+                                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                            filteredList.add(school);
+                                                    }
+                                                }
+                                            }else {
+                                                if (currentSearchText.equals(""))
+                                                    filteredList.add(school);
+                                                else {
+                                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                        filteredList.add(school);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (schDistList.get(school.getSchoolName())!= null) {
+                                    if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                        if (currentSearchText.equals(""))
+                                            filteredList.add(school);
+                                        else {
+                                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                filteredList.add(school);
+                                        }
+                                    }
+                                }else {
+                                    if (currentSearchText.equals(""))
+                                        filteredList.add(school);
+                                    else {
+                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                            filteredList.add(school);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if ((school.getCutOffPoint().get("express") >= pslemin && school.getCutOffPoint().get("express") <= pslemax)
+                        || (school.getCutOffPoint().get("na") != 0 && school.getCutOffPoint().get("na") >= pslemin
+                        && school.getCutOffPoint().get("na") <= pslemax) || (school.getCutOffPoint().get("nt") != 0
+                        && school.getCutOffPoint().get("nt") >= pslemin && school.getCutOffPoint().get("nt") <= pslemax)) {
+                    if (!selectedRegion.equals("all")) {
+                        if (school.getRegion().toLowerCase().contains(selectedRegion)) {
+                            if (!selectedCCA.equals("all")) {
+                                if (school.getCca()!=null) {
+                                    for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
+                                        ArrayList<String> strings = temp.getValue();
+                                        if (strings.contains(selectedCCA)) {
+                                            if (schDistList.get(school.getSchoolName())!= null) {
+                                                if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                    if (currentSearchText.equals(""))
+                                                        filteredList.add(school);
+                                                    else {
+                                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                            filteredList.add(school);
+                                                    }
+                                                }
+                                            }else {
+                                                if (currentSearchText.equals(""))
+                                                    filteredList.add(school);
+                                                else {
+                                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                        filteredList.add(school);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (schDistList.get(school.getSchoolName())!= null) {
+                                    if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                        if (currentSearchText.equals(""))
+                                            filteredList.add(school);
+                                        else {
+                                            if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                filteredList.add(school);
+                                        }
+                                    }
+                                }else {
+                                    if (currentSearchText.equals(""))
+                                        filteredList.add(school);
+                                    else {
+                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                            filteredList.add(school);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (!selectedCCA.equals("all")) {
+                            if (school.getCca()!=null) {
+                                for (Map.Entry<String,ArrayList<String>> temp : school.getCca().entrySet()) {
+                                    ArrayList<String> strings = temp.getValue();
+                                    if (strings.contains(selectedCCA)) {
+                                        if (schDistList.get(school.getSchoolName())!= null) {
+                                            if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                                if (currentSearchText.equals(""))
+                                                    filteredList.add(school);
+                                                else {
+                                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                        filteredList.add(school);
+                                                }
+                                            }
+                                        }else {
+                                            if (currentSearchText.equals(""))
+                                                filteredList.add(school);
+                                            else {
+                                                if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                                    filteredList.add(school);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (schDistList.get(school.getSchoolName())!= null) {
+                                if (schDistList.get(school.getSchoolName()) >= distmin && schDistList.get(school.getSchoolName()) <= distmax) {
+                                    if (currentSearchText.equals(""))
+                                        filteredList.add(school);
+                                    else {
+                                        if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                            filteredList.add(school);
+                                    }
+                                }
+                            }else {
+                                if (currentSearchText.equals(""))
                                     filteredList.add(school);
+                                else {
+                                    if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
+                                        filteredList.add(school);
+                                }
                             }
                         }
                     }
@@ -387,19 +467,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 notifyDataSetChanged();
                 return;
             case 5:
-                LatLngBounds sgBounds = new LatLngBounds(
+                /*LatLngBounds sgBounds = new LatLngBounds(
                         new LatLng(1.264850, 103.622483), // SW bounds
                         new LatLng(1.475187, 104.016803)  // NE bounds
                 );
 
                 if (userLocation == null) {
                     userLocation = sgBounds.getCenter();
-                }
-                 user = FirebaseAuth.getInstance().getCurrentUser();
-                 reference = FirebaseDatabase.getInstance().getReference("Users");
-                 userID = user.getUid();
-                 schDistList = new HashMap<>();
-                schDistList = getSchDist(data, userLocation);
+                }*/
+
+                secondThread runnable = new secondThread();
+                runnable.run(data, userLocation);
+
                 List<Map.Entry<String,Double>> list = new LinkedList<Map.Entry<String, Double> >(schDistList.entrySet());
                 Collections.sort(list, new Comparator<Map.Entry<String, Double> >() {
                     public int compare(Map.Entry<String, Double> o1,
@@ -779,6 +858,50 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     return 1;
                 }
             });
+        }
+    }
+
+    class secondThread implements Runnable {
+
+        secondThread(){
+
+        }
+
+        @Override
+        public void run() {
+            data = readSchoolData();
+            data = readCCAData(data);
+            data = readSubjectData(data);
+
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            reference = FirebaseDatabase.getInstance().getReference("Users");
+            userID = user.getUid();
+
+            reference.child(userID).child("address").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String userAddress = snapshot.getValue(String.class);
+                    if (userAddress != null){
+                        userLocation = MapController.getLocationFromAddress(context, userAddress);
+                        schDistList = new HashMap<>();
+                        schDistList = getSchDist(data, userLocation);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
+        public void run(List<School> data, LatLng userLocation){
+            if (schDistList == null){
+                schDistList = new HashMap<>();
+                schDistList = getSchDist(data, userLocation);
+            }
+
         }
     }
 
