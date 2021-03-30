@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView CAbackbutton, deletepostbutton;
     private EditText edittextpostcomment;
     private Button CApostcommentbutton;
+    private ImageView deletecommentbutton;
     private String postKey, content, title, postUsername;
     private FirebaseRecyclerOptions<Comment> options;
     private FirebaseRecyclerAdapter<Comment, CommentViewHolder> adapter;
@@ -58,6 +60,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         CAbackbutton = (ImageView) findViewById(R.id.CAbackbutton);
         CAbackbutton.setOnClickListener(this);
+
 
         deletepostbutton = (ImageView) findViewById(R.id.deletepostbuttton);
         deletepostbutton.setOnClickListener(this);
@@ -120,7 +123,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                 final String cid = comment.getCid();
 
-
                 holder.username.setText(comment.getUsername());
                 holder.usercomment.setText(comment.getUsercomment());
                 if (comment.getImageNo() == 1){
@@ -137,10 +139,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
 
-                holder.view.setOnClickListener(new View.OnClickListener() {
+                holder.deletecommentbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         boolean checkcomment = ForumController.checkComment(comment, name);
 
                         if (checkcomment)
@@ -154,7 +155,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         }
                                     }).show();
 
-                                }
+                        }
                         else
                         {
                             Snackbar.make(findViewById(android.R.id.content), "You cannot delete the comments of others!", Snackbar.LENGTH_INDEFINITE)
@@ -165,9 +166,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         }
                                     }).show();
                         }
-
                     }
                 });
+
+
             }
 
 
@@ -193,8 +195,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.deletepostbuttton:
                 boolean checkpost = ForumController.checkPost(postUsername, name);
-
-
 
                 if (checkpost)
                 {

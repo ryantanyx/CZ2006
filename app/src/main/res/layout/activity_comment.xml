@@ -4,145 +4,118 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F3EB"
+    android:background="@drawable/yellowgradient"
     tools:context=".CommentActivity">
 
 
-    <TextView
-        android:id="@+id/CAposttitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="28dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
-
-    <ImageView
-        android:id="@+id/imageView4"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5"
-        app:srcCompat="@color/colorPrimary" />
-
-    <TextView
-        android:id="@+id/CApostcontent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="9dp"
-        android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        android:textStyle="italic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CAposttitle" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="69dp" />
+        <ImageView
+            android:id="@+id/CAbackbutton"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_backarrow"></ImageView>
 
-    <ImageView
-        android:id="@+id/CAbackbutton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="25dp"
-        android:src="@drawable/ic_backarrow"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="130dp"
+            android:layout_marginTop="20dp"
+            android:text="Post Thread"
+            android:textSize="25dp"
+            android:textStyle="bold"></TextView>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="84dp" />
+        <TextView
+            android:id="@+id/CAposttitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="28dp"
+            android:layout_marginTop="80dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
-    <EditText
-        android:id="@+id/edittextpostcomment"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Type your comment here"
-        android:inputType="textMultiLine"
-        android:textColor="#000000"
-        android:textColorHint="#A5A4A4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/CApostcommentbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:elevation="3dp"
-        android:text="POST"
-        android:textColor="#000000"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/edittextpostcomment" />
+            <TextView
+                android:id="@+id/CApostcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:ems="15"
+                android:layout_below="@id/CAposttitle"
+                android:layout_alignParentLeft="true"
+                android:text="TextView"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="italic" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/commentRecyclerView"
-        android:layout_width="400dp"
-        android:layout_height="447dp"
-        app:layout_constraintBottom_toTopOf="@+id/edittextpostcomment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline14" />
+        <ImageView
+            android:id="@+id/deletepostbuttton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/CAposttitle"
+            android:layout_toRightOf="@id/CApostcontent"
+            app:srcCompat="@drawable/ic_delete" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="546dp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Post Comments"
-        android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorPrimary"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="231dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/commentRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/CApostcontent"
+            android:layout_above="@id/edittextpostcomment"
+            />
 
-    <ImageView
-        android:id="@+id/deletepostbuttton"
-        android:layout_width="29dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        app:srcCompat="@drawable/ic_delete" />
+        <EditText
+            android:id="@+id/edittextpostcomment"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:ems="15"
+            android:hint="Type your comment here"
+            android:inputType="textMultiLine"
+            android:textColor="#000000"
+            android:textColorHint="#A5A4A4"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+
+
+        <Button
+            android:id="@+id/CApostcommentbutton"
+            android:layout_height="45dp"
+            android:layout_width="100dp"
+            android:text="POST"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/edittextpostcomment"
+            android:layout_alignParentBottom="true">
+
+        </Button>
+
+
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

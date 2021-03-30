@@ -120,10 +120,23 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
                     }
                 });
 
+                if (post.getTitle().length()>60)
+                {
+                    holder.itemtitle.setText("" + post.getTitle().substring(0,60) + "...");
+                }
+                else
+                {
+                    holder.itemtitle.setText("" + post.getTitle());
+                }
+                if (post.getContent().length()>100)
+                {
+                    holder.itemcontent.setText(post.getContent().substring(0,100) + "...");
+                }
+                else
+                {
+                    holder.itemusername.setText(post.getUsername());
+                }
 
-                holder.itemtitle.setText("" + post.getTitle());
-                holder.itemcontent.setText(post.getContent());
-                holder.itemusername.setText(post.getUsername());
 
 
             }
