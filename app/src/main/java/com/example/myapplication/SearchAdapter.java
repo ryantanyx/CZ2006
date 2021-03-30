@@ -195,7 +195,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                                     }
                                                 }else {
                                                     if (currentSearchText.equals(""))
-                                                    filteredList.add(school);
+                                                        filteredList.add(school);
                                                 else {
                                                     if (school.getSchoolName().toLowerCase().contains(currentSearchText.toLowerCase()))
                                                         filteredList.add(school);
