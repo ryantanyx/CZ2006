@@ -53,6 +53,11 @@ public class ForumController {
         DatabaseReference root = db.getReference("Posts").child(postKey);
         root.removeValue();
 
+        db.getReference("Comment").child(postKey).removeValue();
+
+
+
+
 
 
     }
