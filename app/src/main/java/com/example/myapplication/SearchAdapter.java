@@ -814,7 +814,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                                 Toast.makeText(v.getContext(), "School is already in favourite list", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
-                                Toast.makeText(v.getContext(), "You already have more than 3 schools in your favourite list", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), "You already have 3 schools in your favourite list", Toast.LENGTH_SHORT).show();
 
                         }
                     }
