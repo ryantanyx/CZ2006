@@ -107,69 +107,75 @@ public class FavListFragment extends Fragment{
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                String[] schools = new String[favlist.size()];
-                boolean[] checkedSchs = new boolean[favlist.size()];
+                if (favlist != null && favlist.size() != 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    String[] schools = new String[favlist.size()];
+                    boolean[] checkedSchs = new boolean[favlist.size()];
 
-                for (int i = 0; i < favlist.size(); i++){
-                    schools[i] = favlist.get(i).getSchoolName();
-                    checkedSchs[i] = false;
-                }
-                List<String> schList = Arrays.asList(schools);
-                builder.setMultiChoiceItems(schools, checkedSchs, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        checkedSchs[which] = isChecked;
+                    for (int i = 0; i < favlist.size(); i++) {
+                        schools[i] = favlist.get(i).getSchoolName();
+                        checkedSchs[i] = false;
                     }
-                });
-                builder.setCancelable(false);
-
-                // Set a title for alert dialog
-                builder.setTitle("Select your schools for comparison");
-
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int count = 0;
-                        for (int k = 0; k< checkedSchs.length; k++){
-                            if (checkedSchs[k]) count++;
+                    List<String> schList = Arrays.asList(schools);
+                    builder.setMultiChoiceItems(schools, checkedSchs, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                            checkedSchs[which] = isChecked;
                         }
-                        if (count == 2){
-                            //Supposed to bring up another page
-                            ArrayList<School> selectedSchs = new ArrayList<School>();
-                            for (int j = 0; j< checkedSchs.length; j++){
-                                boolean checked = checkedSchs[j];
-                                if (checked) {
-                                    for (School sch : favlist){
-                                        if (schList.get(j).equals(sch.getSchoolName())){
-                                            selectedSchs.add(sch);
+                    });
+                    builder.setCancelable(false);
+
+                    // Set a title for alert dialog
+                    builder.setTitle("Select your schools for comparison");
+
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int count = 0;
+                            for (int k = 0; k < checkedSchs.length; k++) {
+                                if (checkedSchs[k]) count++;
+                            }
+                            if (count == 2) {
+                                //Supposed to bring up another page
+                                ArrayList<School> selectedSchs = new ArrayList<School>();
+                                for (int j = 0; j < checkedSchs.length; j++) {
+                                    boolean checked = checkedSchs[j];
+                                    if (checked) {
+                                        for (School sch : favlist) {
+                                            if (schList.get(j).equals(sch.getSchoolName())) {
+                                                selectedSchs.add(sch);
+                                            }
                                         }
                                     }
                                 }
+                                Intent i = new Intent(v.getContext(), Comparison.class);
+                                i.putExtra("Selected", selectedSchs);
+                                v.getContext().startActivity(i);
+                            } else {
+                                Toast.makeText(view.getContext(), "Choose exactly 2 schools!", Toast.LENGTH_LONG).show();
                             }
-                            Intent i = new Intent(v.getContext(), Comparison.class);
-                            i.putExtra("Selected", selectedSchs);
-                            v.getContext().startActivity(i);
-                        } else {
-                            Toast.makeText(view.getContext(), "Choose exactly 2 schools!", Toast.LENGTH_LONG).show();
                         }
-                    }
-                });
+                    });
 
-                // Set the negative/no button click listener
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do something when click the negative button
-                        dialog.cancel();
-                    }
-                });
+                    // Set the negative/no button click listener
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do something when click the negative button
+                            dialog.cancel();
+                        }
+                    });
 
-                AlertDialog dialog = builder.create();
-                // Display the alert dialog on interface
-                dialog.show();
+                    AlertDialog dialog = builder.create();
+                    // Display the alert dialog on interface
+                    dialog.show();
+                }
+                else {
+                    Toast.makeText(view.getContext(), "Please add a school to your favourite list", Toast.LENGTH_LONG).show();
+                }
             }
         });
+
 
         return view;
     }
