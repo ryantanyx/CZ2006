@@ -147,14 +147,29 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                         if (checkcomment)
                         {
-                            ForumController.deleteButtonmethod(cid, postKey);
-                            Snackbar.make(findViewById(android.R.id.content), "Comment deleted!", Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("Dismiss", new View.OnClickListener() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(CommentActivity.this);
+                            builder.setTitle("WARNING")
+                                    .setMessage("Are you sure you wish to delete your comment?")
+                                    .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                                         @Override
-                                        public void onClick(View v) {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            ForumController.deleteButtonmethod(cid, postKey);
+                                            Snackbar.make(findViewById(android.R.id.content), "Comment deleted!", Snackbar.LENGTH_INDEFINITE)
+                                                    .setAction("Dismiss", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+
+                                                        }
+                                                    }).show();
+
 
                                         }
-                                    }).show();
+                                    })
+                                    .setNegativeButton("Cancel", null);
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
 
                         }
                         else
@@ -251,7 +266,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                  }
                  else if (createpostinteger ==1)
                  {
-                     Snackbar.make(findViewById(android.R.id.content), "Comment cannot exceed 30 characters!", Snackbar.LENGTH_INDEFINITE)
+                     Snackbar.make(findViewById(android.R.id.content), "Comment cannot exceed 100 characters!", Snackbar.LENGTH_INDEFINITE)
                              .setAction("Dismiss", new View.OnClickListener() {
                                  @Override
                                  public void onClick(View v) {
@@ -260,7 +275,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                              }).show();
                      edittextpostcomment.setText("");
                  }
-                 else
+                 else if (createpostinteger == 2)
                  {
                      Snackbar.make(findViewById(android.R.id.content), "Comment must have at least 5 characters!", Snackbar.LENGTH_INDEFINITE)
                              .setAction("Dismiss", new View.OnClickListener() {
