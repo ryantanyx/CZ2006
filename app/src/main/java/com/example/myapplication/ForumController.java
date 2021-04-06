@@ -101,7 +101,7 @@ public class ForumController {
         {
             return 2;
         }
-        else if (edittextpostcomment.length()>30)
+        else if (edittextpostcomment.length()>100)
         {
             return 1;
         }
