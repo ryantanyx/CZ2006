@@ -54,7 +54,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     private Dialog dialog2, dialog3;
     private CardView regImagebg;
     private ImageView regImage;
-    int regImageno = 1;
+    private int regImageno = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,11 +221,11 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        if(!MapController.isValidAddress(v.getContext(), address)){
+        /*if(!MapController.isValidAddress(v.getContext(), address)){
             regAddress.setError("Please provide a valid home address!");
             regAddress.requestFocus();
             return;
-        }
+        }*/
 
         if(password.isEmpty()){
             regPassword.setError("Password is not entered!");

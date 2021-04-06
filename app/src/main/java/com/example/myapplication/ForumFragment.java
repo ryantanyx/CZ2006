@@ -106,6 +106,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
                 final String content = post.getContent();
                 final String postKey = post.getPostKey();
                 final String username = post.getUsername();
+                final String email = post.getEmail();
 
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -115,29 +116,33 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
                         intent.putExtra("content", content);
                         intent.putExtra("username", username);
                         intent.putExtra("postKey", postKey);
+                        intent.putExtra("email", email);
                         startActivity(intent);
 
                     }
                 });
 
-                if (title.length()>60)
+                if (post.getTitle().length()>60)
                 {
-                    holder.itemtitle.setText("" + title.substring(0,60) + "...");
+                    holder.itemtitle.setText("" + post.getTitle().substring(0,60) + "...");
                 }
                 else
                 {
-                    holder.itemtitle.setText("" + title);
+                    holder.itemtitle.setText("" + post.getTitle());
                 }
-                if (content.length()>100)
+
+                if (post.getContent().length()>100)
                 {
-                    holder.itemcontent.setText(content.substring(0,100) + "...");
+                    holder.itemcontent.setText(post.getContent().substring(0,100) + "...");
                 }
                 else
                 {
-                    holder.itemcontent.setText(content);
+                    holder.itemcontent.setText(post.getContent());
                 }
 
                 holder.itemusername.setText(post.getUsername());
+
+
 
             }
 

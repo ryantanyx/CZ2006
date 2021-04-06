@@ -45,6 +45,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private String userID;
     private int imageNo;
     private String name;
+    private String postEmail;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference root = db.getReference().child("Comment");
 
@@ -87,7 +88,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     imageNo = userProfile.getImageNo();
                     name = userProfile.getName();
 
-
                 }
             }
 
@@ -105,6 +105,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             content = extras.getString("content");
             postKey = extras.getString("postKey");
             postUsername = extras.getString("username");
+            postEmail = extras.getString("email");
 
             CAposttitle.setText(title);
             CApostcontent.setText(content);
@@ -247,9 +248,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.CApostcommentbutton:
                 int createpostinteger = ForumController.CApostcommentbuttonmethod(edittextpostcomment, postKey, name, imageNo);
+                String emailContent = name + " commented on your post '" + title + "' : '" + edittextpostcomment.getText().toString() + "'";
 
                  if (createpostinteger == 0)
                  {
+                     JavaMailAPI javaMailAPI = new JavaMailAPI(CommentActivity.this, postEmail, "New Comment", emailContent);
+                     javaMailAPI.execute();
                      Snackbar.make(findViewById(android.R.id.content), "Comment added!", Snackbar.LENGTH_INDEFINITE)
                              .setAction("Dismiss", new View.OnClickListener() {
                                  @Override

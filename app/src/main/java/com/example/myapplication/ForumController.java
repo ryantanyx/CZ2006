@@ -10,7 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class ForumController {
 
 
-    public static boolean postbuttonmethod(EditText posttitle, EditText postcontent, String name){
+    public static boolean postbuttonmethod(EditText posttitle, EditText postcontent, String name, String email){
 
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference root;
@@ -23,7 +23,7 @@ public class ForumController {
         {
             String title = posttitle.getText().toString();
             String content = postcontent.getText().toString();
-            Post post = new Post(title, content, name);
+            Post post = new Post(title, content, name, email);
             root = db.getReference("Posts").push();
             String postKey = root.getKey();
             post.setPostKey(postKey);
