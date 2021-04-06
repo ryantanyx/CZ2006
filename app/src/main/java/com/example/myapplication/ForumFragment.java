@@ -106,6 +106,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
                 final String content = post.getContent();
                 final String postKey = post.getPostKey();
                 final String username = post.getUsername();
+                final String email = post.getEmail();
 
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -115,6 +116,7 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
                         intent.putExtra("content", content);
                         intent.putExtra("username", username);
                         intent.putExtra("postKey", postKey);
+                        intent.putExtra("email", email);
                         startActivity(intent);
 
                     }
