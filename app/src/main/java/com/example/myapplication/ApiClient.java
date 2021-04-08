@@ -13,11 +13,23 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Represents the API for retrieval of news articles
+ */
 public class ApiClient {
-
+    /**
+     * Contains the URL to News API
+     */
     public static final String BASE_URL = "https://newsapi.org/v2/";
+    /**
+     * Retrofit to convert HTTP API into Java Interface
+     */
     public static Retrofit retrofit;
 
+    /**
+     * Converts HTTP API from URL into Java Interface
+     * @return retrofit
+     */
     public static Retrofit getApiClient(){
 
         if (retrofit == null){
@@ -29,6 +41,10 @@ public class ApiClient {
         return retrofit;
     }
 
+    /**
+     * Get unsafe HTTP Client from URLs
+     * @return OkHttpClient.Builder
+     */
     public static OkHttpClient.Builder getUnsafeHttpClient(){
         try {
             // Create a trust manager that does not validate certificate chains

@@ -38,27 +38,68 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 
 /**
+ * Represents the Settings Page where users can update their profiles.
  * A simple {@link Fragment} subclass.
  * Use the {@link AccountFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
+    /**
+     * User stored in Firebase
+     */
     private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
     private String userID;
-
+    /**
+     * Buttons for logout, update profile, and change password
+     */
     private Button logout, updateProfile, changePassword;
+    /**
+     * CardView for user's profile background
+     */
     private CardView profileImgbg;
+    /**
+     * ImageView for user's profile picture
+     */
     private ImageView profileImg;
+    /**
+     * EditText to display user's information and for user to edit
+     */
     private EditText profileName, profileEmail, profileAddress, profileDate;
+    /**
+     * EditText field for when user decides to change password
+     */
     private EditText currentPassword, newPassword, rePassword;
+    /**
+     * ImageView icons for gender and edit button
+     */
     private ImageView profileGender, edit;
+    /**
+     * Stores user's profile image number to display the correct image
+     */
     private int profileImageno;
-
+    /**
+     * DatePickerDialog for users to edit their birthday
+     */
     private DatePickerDialog picker;
+    /**
+     * Dialogs for changing profile picture and password
+     */
     private Dialog dialog2, dialog3;
+    /**
+     * Dialog for confirming changes to profile
+     */
     private AlertDialog dialog;
+    /**
+     * Builder to build the required dialogs
+     */
     private AlertDialog.Builder builder;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -70,6 +111,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private String mParam1;
     private String mParam2;
 
+    /**
+     * Required public empty constructor
+     */
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -92,6 +136,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         return fragment;
     }
 
+    /**
+     * Initial creation of fragment from savedInstanceState
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +149,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Graphical Initialisation of the fragment and inflates the layout of the fragment onto a container
+     * @param inflater Inflate the layout of the fragment
+     * @param container Container for the layout
+     * @param savedInstanceState
+     * @return The account settings page
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -219,6 +274,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param view
+     */
     public void onClick(View view){
         switch(view.getId()){
             case R.id.edit:
@@ -294,6 +353,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Verify information entered by user is valid and updates the profile of the user
+     */
     public void updateProfile() {
 
         String name = profileName.getText().toString();
@@ -349,6 +411,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         Toast.makeText(getActivity(), "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Verify new password is valid and change the password of the user
+     */
     public void changePassword() {
 
         String currentPw = currentPassword.getText().toString();

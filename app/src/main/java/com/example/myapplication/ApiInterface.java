@@ -3,6 +3,9 @@ package com.example.myapplication;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
+/**
+ * Represents the Interface for News API to specify news topics to display
+ */
 public interface ApiInterface {
     static final String NEWS_API_KEY = BuildConfig.NewsApiKey;
 
