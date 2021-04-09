@@ -38,19 +38,16 @@ public class FavListFragment extends Fragment{
     private static final String ARG_PARAM2 = "param2";
     RecyclerView recyclerView;
     FavListAdapter adapter;
-    ArrayList<School> items;
     Button btn;
-    private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String mParam1;
     private String mParam2;
-    private Dialog dialog;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
-    private User userProfile;
     private ArrayList<School> favlist;
+
+    // Required empty public constructor
     public FavListFragment() {
-        // Required empty public constructor
     }
 
     public static FavListFragment newInstance(String param1, String param2) {
