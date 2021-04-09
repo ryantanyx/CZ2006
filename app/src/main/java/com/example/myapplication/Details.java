@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Details extends AppCompatActivity implements View.OnClickListener{
 
@@ -54,7 +53,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         HashMap<String, ArrayList<String>> schoolCCA = school.getCca();
 
         String subjects = school.getSubjects();
-        ArrayList<String> schoolSubject = new ArrayList<String>();
+        ArrayList<String> schoolSubject = new ArrayList<>();
         schoolSubject.add(subjects);
         ArrayList<String> schoolContact = school.getContactInfo();
         schoolContact.add(0, new String("Address: " + schoolAddress.toLowerCase()));
@@ -79,7 +78,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
             cca.add(entry.substring(0,entry.length()-1));
         }
 
-        listGroup = new ArrayList<String>();
+        listGroup = new ArrayList<>();
         listItem = new HashMap<>();
 
         listGroup.add("CCA");

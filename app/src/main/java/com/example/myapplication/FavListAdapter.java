@@ -22,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,6 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
         return new ViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         School school = favlist.get(position);
@@ -59,7 +57,6 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
         holder.favIcon.setImageResource(R.drawable.ic_favstar);
 
     }
-
 
     @Override
     public int getItemCount() {

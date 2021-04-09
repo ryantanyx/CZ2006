@@ -3,7 +3,6 @@ package com.example.myapplication;
 
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -17,7 +16,6 @@ public class ForumController {
         if (posttitle.length()== 0)
         {
             return false;
-
         }
         else
         {
@@ -30,9 +28,7 @@ public class ForumController {
 
             root.setValue(post);
             return true;
-
         }
-
     }
 
     public static void deleteButtonmethod(String cid, String postKey){
@@ -41,9 +37,6 @@ public class ForumController {
 
         DatabaseReference root = db.getReference("Comment").child(postKey).child(cid);
         root.removeValue();
-
-
-
     }
 
     public static void deletepostmethod(String postKey){
@@ -52,14 +45,7 @@ public class ForumController {
 
         DatabaseReference root = db.getReference("Posts").child(postKey);
         root.removeValue();
-
         db.getReference("Comment").child(postKey).removeValue();
-
-
-
-
-
-
     }
 
     public static boolean checkPost(String postUsername, String name)
@@ -67,21 +53,18 @@ public class ForumController {
         if (postUsername.equals(name))
         {
             return true;
-
         }
         else
         {
             return false;
         }
     }
-
 
     public static boolean checkComment(Comment comment, String name)
     {
         if (comment.getUsername().equals(name))
         {
             return true;
-
         }
         else
         {
@@ -89,13 +72,10 @@ public class ForumController {
         }
     }
 
-
     public static int CApostcommentbuttonmethod(EditText edittextpostcomment, String postKey, String name, int imageNo){
-
 
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference root;
-
 
         if (edittextpostcomment.length()<= 5)
         {
@@ -105,11 +85,7 @@ public class ForumController {
         {
             return 1;
         }
-
-        else
-        {
-
-
+        else {
             String comment_content = edittextpostcomment.getText().toString();
             Comment comment = new Comment(comment_content, name, imageNo);
             root = db.getReference("Comment").child(postKey).push();
@@ -119,14 +95,8 @@ public class ForumController {
             comment.setCid(cid);
             root.setValue(comment);
             return 0;
-
-
         }
-
-
     }
-
-
 }
 
 

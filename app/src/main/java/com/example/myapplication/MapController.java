@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -20,9 +19,8 @@ public class MapController {
             LatLng latLng = getLocationFromAddress(context, sch.getAddress());
             nearbySch.put(sch.getSchoolName(), latLng);
         }
-
         return nearbySch;
-    };
+    }
 
 
     public static double distance(double lat1, double lng1, double lat2, double lng2) {
@@ -37,12 +35,8 @@ public class MapController {
 
         double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
                 * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
-
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-        double dist = earthRadius * c;
-
-        return dist; // output distance, in MILES
+        return earthRadius * c; // output distance, in MILES
     }
 
     public static LatLng getLocationFromAddress(Context context, String strAddress) {
@@ -87,16 +81,10 @@ public class MapController {
         try {
             // May throw an IOException
             address = coder.getFromLocationName(strAddress, 5, 1.225709, 103.602018, 1.473700, 104.025147);
-            if (address == null || address.size() < 1) {
-                return false;
-            } else {
-                return true;
-            }
+            return address != null && address.size() >= 1;
         } catch (IOException ex) {
-
             ex.printStackTrace();
         }
-
         return false;
     }
 }

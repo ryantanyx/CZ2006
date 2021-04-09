@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     private TextView CAposttitle, CApostcontent;
     private ImageView CAbackbutton, deletepostbutton;
     private EditText edittextpostcomment;
@@ -49,8 +47,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference root = db.getReference().child("Comment");
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,21 +58,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         CAbackbutton = (ImageView) findViewById(R.id.CAbackbutton);
         CAbackbutton.setOnClickListener(this);
 
-
         deletepostbutton = (ImageView) findViewById(R.id.deletepostbuttton);
         deletepostbutton.setOnClickListener(this);
-
 
         edittextpostcomment = (EditText) findViewById(R.id.edittextpostcomment);
 
         CApostcommentbutton = (Button) findViewById(R.id.CApostcommentbutton);
         CApostcommentbutton.setOnClickListener(this);
 
-
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
-
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -87,7 +79,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                     imageNo = userProfile.getImageNo();
                     name = userProfile.getName();
-
                 }
             }
 
@@ -96,7 +87,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(CommentActivity.this, "Something went wrong!", Toast.LENGTH_LONG).show();
             }
         });
-
 
         Bundle extras = getIntent().getExtras();
 
@@ -115,7 +105,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView = findViewById(R.id.commentRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
         options = new FirebaseRecyclerOptions.Builder<Comment>().setQuery(root.child(postKey), Comment.class).build();
         adapter = new FirebaseRecyclerAdapter<Comment, CommentViewHolder>(options) {
@@ -139,7 +128,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     holder.userImage.setImageResource(R.drawable.image4);
                 }
 
-
                 holder.deletecommentbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -162,8 +150,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                                                         }
                                                     }).show();
-
-
                                         }
                                     })
                                     .setNegativeButton("Cancel", null);
@@ -187,7 +173,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
 
             }
-
 
             @NonNull
             @Override
@@ -223,14 +208,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                                     ForumController.deletepostmethod(postKey);
                                     CommentActivity.this.finish();
-
                                 }
                             })
                             .setNegativeButton("Cancel", null);
                     AlertDialog alert = builder.create();
                     alert.show();
                     break;
-
                 }
 
                 else
@@ -244,7 +227,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             }).show();
                 }
                 break;
-
 
             case R.id.CApostcommentbutton:
                 int createpostinteger = ForumController.CApostcommentbuttonmethod(edittextpostcomment, postKey, name, imageNo);
@@ -299,12 +281,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-
-
-
     public int CApostcommentbuttonmethod(EditText edittextpostcomment){
-
-
         if (edittextpostcomment.length()== 0)
         {
             return 1;
@@ -326,11 +303,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             comment.setCid(cid);
             root.setValue(comment);
             return 3;
-
-
         }
-
-
     }
 
 

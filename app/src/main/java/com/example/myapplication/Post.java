@@ -2,19 +2,14 @@ package com.example.myapplication;
 
 public class Post {
 
-
     private String title, content, postKey, username, email;
-
-
 
     public Post(String title, String content, String username, String email) {
         this.title = title;
         this.content = content;
         this.username = username;
         this.email = email;
-
     }
-
 
     public Post() {
     }
@@ -58,7 +53,5 @@ public class Post {
     public void setEmail(String email) {
         this.email = email;
     }
-
-
 
 }

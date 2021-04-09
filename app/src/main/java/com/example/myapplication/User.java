@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class User {
@@ -21,7 +20,6 @@ public class User {
         this.imageNo = imageNo;
         this.favList = favList;
     }
-
 
     public String getName() {
         return name;

@@ -3,14 +3,11 @@ package com.example.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -82,12 +79,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         }
         holder.source.setText(model.getSource().getName());
         holder.date.setText(model.getPublishedAt().substring(0,10));
-
-
-
-
-
-
     }
 
     @Override
@@ -122,6 +113,4 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             });
         }
     }
-
-
 }

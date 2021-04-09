@@ -11,18 +11,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
-
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-
-import org.ocpsoft.prettytime.PrettyTime;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
-
     public class Utils {
 
         public static ColorDrawable[] vibrantLightColorList =

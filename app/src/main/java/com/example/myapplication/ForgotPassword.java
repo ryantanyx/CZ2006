@@ -19,12 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPassword extends AppCompatActivity implements View.OnClickListener {
 
+    FirebaseAuth auth;
     private EditText forgotEmail;
     private Button reset;
     private ProgressBar forgotProgress;
     private TextView forgotLogin;
-
-    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,6 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
         forgotLogin.setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

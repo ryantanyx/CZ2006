@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +29,6 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         this.listItem = listItem;
         this.size = size;
     }
-
 
     @Override
     public int getGroupCount() {
@@ -81,7 +78,6 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         textView.setTextSize(size);
         return convertView;
     }
-
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
