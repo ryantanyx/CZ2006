@@ -30,7 +30,6 @@ public class Comparison extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: Create comparison layout
         setContentView(R.layout.fragment_comparing);
 
         schName1 = findViewById(R.id.schName1);
