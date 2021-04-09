@@ -194,8 +194,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 else{
                     adapter.filterCCA(arrayAdapter_child.getItem(position));
                 }
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -335,43 +336,51 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 unselectAllStreams();
                 resetSlider();
                 resetSpinner();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.north:
                 northFilter();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.south:
                 southFilter();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.east:
                 eastFilter();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.west:
                 westFilter();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.express:
                 expressFilter();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.normala:
                 normalaFilter();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.normalt:
                 normaltFilter();
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.backbutton:
                 dialog.dismiss();
@@ -398,7 +407,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 normalTechSelect();
                 break;
             default:
-             break;
+                break;
         }
     }
 
@@ -619,15 +628,17 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
                 int low = (int) (float) psleSlider.getValues().get(0);
                 int high = (int) (float) psleSlider.getValues().get(1);
                 adapter.filterPSLE(low, high);
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
                 break;
             case R.id.distslider:
                 low = (int) (float) distSlider.getValues().get(0);
                 high = (int) (float) distSlider.getValues().get(1);
                 adapter.filterDist(low, high);
-                if (sortRG.getCheckedRadioButtonId() != -1)
+                if (sortRG.getCheckedRadioButtonId() != -1) {
                     sort(true);
+                }
         }
     }
 
@@ -649,36 +660,42 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             switch (index) {
                 case 0:
                     adapter.sort(0);
-                    if (!filter)
+                    if (!filter) {
                         Toast.makeText(getActivity(), "Sorted by School Name!", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case 1:
                     adapter.sort(1);
-                    if (!filter)
+                    if (!filter) {
                         Toast.makeText(getActivity(), "Sorted by Region(ENSW)!", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case 2:
                     adapter.sort(5);
-                    if (!filter)
+                    if (!filter) {
                         Toast.makeText(getActivity(), "Sorted by Distance from Address!", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case 3:
                     if (expressSort.isSelected()) {
                         adapter.sort(2);
-                        if (!filter)
+                        if (!filter) {
                             Toast.makeText(getActivity(), "Sorted by Cut-Off Point (Express)!", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     }
                     else if(normalAcadSort.isSelected()) {
                         adapter.sort(3);
-                        if (!filter)
+                        if (!filter) {
                             Toast.makeText(getActivity(), "Sorted by Cut-Off Point (NA)!", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     }
                     else if (normalTechSort.isSelected()) {
                         adapter.sort(4);
-                        if (!filter)
+                        if (!filter) {
                             Toast.makeText(getActivity(), "Sorted by Cut-Off Point (NA)!", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     }
 

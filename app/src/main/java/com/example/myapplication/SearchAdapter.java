@@ -421,7 +421,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void sort(int choice) {
         List<School> filteredList = new ArrayList<>();
-        resetSchoolList();
+        //resetSchoolList();
         switch(choice){
             case 0:
                 Collections.sort(data, new Comparator<School>() {
@@ -442,13 +442,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 notifyDataSetChanged();
                 return;
             case 2:
-                for(School school:dataset){
-                    if(school.getCutOffPoint().get("express") != 0){
-                        filteredList.add(school);
-                    }
-                }
-                data.clear();
-                data.addAll(filteredList);
+//                for(School school:dataset){
+//                    if(school.getCutOffPoint().get("express") != 0){
+//                        filteredList.add(school);
+//                    }
+//                }
+//                data.clear();
+//                data.addAll(filteredList);
                 Collections.sort(data, new Comparator<School>() {
                     @Override
                     public int compare(School o1, School o2) {
@@ -459,13 +459,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 notifyDataSetChanged();
                 return;
             case 3:
-                for(School school:dataset){
-                    if(school.getCutOffPoint().get("na") != 0){
-                        filteredList.add(school);
-                    }
-                }
-                data.clear();
-                data.addAll(filteredList);
+//                for(School school:dataset){
+//                    if(school.getCutOffPoint().get("na") != 0){
+//                        filteredList.add(school);
+//                    }
+//                }
+//                data.clear();
+//                data.addAll(filteredList);
                 Collections.sort(data, new Comparator<School>() {
                     @Override
                     public int compare(School o1, School o2) {
@@ -476,13 +476,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 notifyDataSetChanged();
                 return;
             case 4:
-                for(School school:dataset){
-                    if(school.getCutOffPoint().get("nt") != 0){
-                        filteredList.add(school);
-                    }
-                }
-                data.clear();
-                data.addAll(filteredList);
+//                for(School school:dataset){
+//                    if(school.getCutOffPoint().get("nt") != 0){
+//                        filteredList.add(school);
+//                    }
+//                }
+//                data.clear();
+//                data.addAll(filteredList);
                 Collections.sort(data, new Comparator<School>() {
                     @Override
                     public int compare(School o1, School o2) {
