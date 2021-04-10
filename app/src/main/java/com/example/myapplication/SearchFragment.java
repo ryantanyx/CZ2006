@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 import android.widget.TextView;
 
 import com.google.android.material.slider.RangeSlider;
@@ -39,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.example.myapplication.R.id.sortRegion;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
@@ -48,22 +45,16 @@ import static com.example.myapplication.R.id.sortRegion;
  */
 public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener {
 
-    RecyclerView recyclerView;
-    SearchAdapter adapter;
-    List<School> schoolList;
-
-    private Dialog dialog;
-    private RadioGroup sortRG;
-    private Switch ascending;
-
-    private int selectedID;
-
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
+    RecyclerView recyclerView;
+    SearchAdapter adapter;
+    List<School> schoolList;
+    private Dialog dialog;
+    private RadioGroup sortRG;
+    private Switch ascending;
+    private int selectedID;
     private String mParam1;
     private String mParam2;
     private SearchView searchView;
@@ -80,7 +71,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     private ArrayAdapter<String> arrayAdapter_parent, arrayAdapter_child;
     private Set<String> set_sports = new HashSet<String>(), set_vpa = new HashSet<String>(), set_cs = new HashSet<String>(), set_ug = new HashSet<String>();
 
-
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -93,7 +83,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
      * @param param2 Parameter 2.
      * @return A new instance of fragment SearchFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SearchFragment newInstance(String param1, String param2) {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
@@ -644,8 +633,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void sort(boolean filter) {
-
-
         int index;
 
         if (sortRG.getCheckedRadioButtonId() == -1) {
@@ -703,8 +690,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         if (!ascending.isChecked()) {
             adapter.reverse();
         }
-        }
-
+    }
 
     public void expressSortSelect() {
         if (expressSort.isSelected()) {
@@ -747,11 +733,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         lookUnSelected(normalAcadSort);
         lookUnSelected(normalTechSort);
     }
+
     private void nonScoreSelect() {
         expressSort.setVisibility(View.GONE);
         normalAcadSort.setVisibility(View.GONE);
         normalTechSort.setVisibility(View.GONE);
     }
+
     private void scoreSelect() {
         expressSort.setVisibility(View.VISIBLE);
         normalAcadSort.setVisibility(View.VISIBLE);

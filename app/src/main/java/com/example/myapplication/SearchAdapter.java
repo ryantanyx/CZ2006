@@ -48,6 +48,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private static double schDistance;
     private static MapController MapController;
     private static User User;
+    private static Context context;
+    boolean flag = true;
     private LayoutInflater layoutInflater;
     private List<School> data;
     private List<School> dataset;
@@ -56,19 +58,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private String currentSearchText ="";
     private String selectedCCA = "all";
     private int pslemin = 0,pslemax = 300,distmin=0,distmax=50;
-
-
-    private static Context context;
     private User userProfile;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
-    boolean flag = true;
     private LatLng userLocation;
     private HashMap<String, Double> schDistList = new HashMap<>();
     private HashMap<String, Double> schOrderedDistList;
     private DataSnapshot snapshot;
-
 
     SearchAdapter(Context context){
         this.context = context;
@@ -76,6 +73,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         secondThread runnable = new secondThread();
         runnable.run();
         this.dataset = new ArrayList<School>(data);
+    }
+
+    public static HashMap<String, Double> getSchDist(List<School> schoolList, LatLng userPosition) {
+        HashMap<String, Double> schDist = new HashMap<>();
+        HashMap<String, LatLng> schLocation = new HashMap<>();
+        schLocation = MapController.getLatLong(context, schoolList);
+        for (Map.Entry<String, LatLng> entry : schLocation.entrySet()) {
+            schDistance = MapController.distance(userPosition.latitude, userPosition.longitude, entry.getValue().latitude, entry.getValue().longitude);
+            schDist.put(entry.getKey(), schDistance);
+        }
+            return schDist;
     }
 
     @NonNull
@@ -99,7 +107,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         ArrayList<School> favlist = new ArrayList<School>();
 
         // getting firebase reference
-
         reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -523,21 +530,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         };
 
     }
+
     public void reverse() {Collections.reverse(data);
     }
-
-    public static HashMap<String, Double> getSchDist(List<School> schoolList, LatLng userPosition) {
-        HashMap<String, Double> schDist = new HashMap<>();
-        HashMap<String, LatLng> schLocation = new HashMap<>();
-        schLocation = MapController.getLatLong(context, schoolList);
-        for (Map.Entry<String, LatLng> entry : schLocation.entrySet()) {
-            schDistance = MapController.distance(userPosition.latitude, userPosition.longitude, entry.getValue().latitude, entry.getValue().longitude);
-            schDist.put(entry.getKey(), schDistance);
-        }
-            return schDist;
-
-    }
-
 
     private List<School> readSchoolData() {
         List<School> schoolList = new ArrayList<>();
@@ -777,7 +772,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 }
             });
 
-
             reference.child(userID).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -823,7 +817,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             });
 
             favIcon.setOnClickListener(new View.OnClickListener(){
-
                 @Override
                 public void onClick(View v) {
                     School school =data.get(getAdapterPosition());
@@ -889,7 +882,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     class secondThread implements Runnable {
 
         secondThread(){
-
         }
 
         @Override
@@ -918,7 +910,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show();
                 }
             });
-
         }
 
         public void run(List<School> data, LatLng userLocation){
@@ -926,9 +917,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 schDistList = new HashMap<>();
                 schDistList = getSchDist(data, userLocation);
             }
-
         }
     }
-
-
 }

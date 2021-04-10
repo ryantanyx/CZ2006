@@ -34,6 +34,12 @@ public class Comment {
     }
 
     /**
+     * Empty constructor
+     */
+    public Comment() {
+    }
+
+    /**
      * Get this comment's ID
      * @return this comment's ID
      */
@@ -47,12 +53,6 @@ public class Comment {
      */
     public void setCid(String cid) {
         this.cid = cid;
-    }
-
-    /**
-     * Empty constructor
-     */
-    public Comment() {
     }
 
     /**

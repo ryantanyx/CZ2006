@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,12 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,8 +25,6 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
-
 
     private final String API_KEY = "4b33862d69d947bf8af52ca799c768bf";
     private RecyclerView newsRecyclerView;
@@ -45,10 +39,10 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    // Required empty public constructor
     public HomeFragment() {
-        // Required empty public constructor
-    }
 
+    }
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -66,7 +60,6 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -76,14 +69,12 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         getActivity().setTitle("Home");
 
-
         newsRecyclerView = view.findViewById(R.id.newsrecyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
         newsRecyclerView.setLayoutManager(layoutManager);
         newsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         newsRecyclerView.setNestedScrollingEnabled(false);
         LoadJson();
-
 
         return view;
     }
@@ -103,20 +94,15 @@ public class HomeFragment extends Fragment {
                     if (!articles.isEmpty()){
                         articles.clear();
                     }
-
                     articles = response.body().getArticle();
                     newsAdapter = new NewsAdapter(articles, getActivity());
                     newsRecyclerView.setAdapter(newsAdapter);
                     newsAdapter.notifyDataSetChanged();
-
-
                 }
-                
                 else
                 {
                     Toast.makeText(getActivity(), "No result", Toast.LENGTH_SHORT).show();
                 }
-                
             }
 
             @Override
@@ -124,8 +110,5 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-
     }
-
 }

@@ -23,7 +23,6 @@ public class Post {
         this.content = content;
         this.username = username;
         this.email = email;
-
     }
 
     /**
@@ -87,7 +86,6 @@ public class Post {
     public void setTitle(String title) {
         this.title = title;
     }
-
     /**
      * Set the content of this post
      * @param content
@@ -103,7 +101,6 @@ public class Post {
     public String getEmail() {
         return email;
     }
-
     /**
      * Set the email of the user who created this post
      * @param email
@@ -111,7 +108,5 @@ public class Post {
     public void setEmail(String email) {
         this.email = email;
     }
-
-
 
 }

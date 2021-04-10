@@ -1,17 +1,13 @@
 package com.example.myapplication;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.zip.Inflater;
+
 /**
  * Represents the Favourites List Page where users can manage their favourite list and compare schools
  * A simple {@link Fragment} subclass.
@@ -50,23 +46,11 @@ public class FavListFragment extends Fragment{
      */
     FavListAdapter adapter;
     /**
-     * ArrayList of schools
-     */
-    ArrayList<School> items;
-    /**
      * Compare button
      */
     Button btn;
-    /**
-     * Instance of FirebaseDatabase
-     */
-    private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String mParam1;
     private String mParam2;
-    /**
-     * Dialog for compare function
-     */
-    private Dialog dialog;
     /**
      * User stored in Firebase
      */
@@ -85,12 +69,11 @@ public class FavListFragment extends Fragment{
      * ArrayList of schools in favourite list
      */
     private ArrayList<School> favlist;
-
     /**
      * Empty constructor
      */
+    // Required empty public constructor
     public FavListFragment() {
-        // Required empty public constructor
     }
     /**
      * Use this factory method to create a new instance of
@@ -231,7 +214,6 @@ public class FavListFragment extends Fragment{
                 }
             }
         });
-
 
         return view;
     }

@@ -19,7 +19,6 @@ public class News {
     @Expose
     private List<Article> article;
 
-
     public String getStatus() {
         return status;
     }

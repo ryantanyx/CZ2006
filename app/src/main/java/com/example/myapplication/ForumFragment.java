@@ -18,8 +18,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ForumFragment#newInstance} factory method to
@@ -27,12 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 public class ForumFragment extends Fragment implements View.OnClickListener{
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -43,9 +39,9 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
     private RecyclerView recyclerView;
     private ImageView createPost;
 
-
+    // Required empty public constructor
     public ForumFragment() {
-        // Required empty public constructor
+
     }
 
     /**
@@ -56,7 +52,6 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
      * @param param2 Parameter 2.
      * @return A new instance of fragment ForumFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ForumFragment newInstance(String param1, String param2) {
         ForumFragment fragment = new ForumFragment();
         Bundle args = new Bundle();
@@ -73,7 +68,6 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -83,19 +77,14 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_forum, container, false);
         getActivity().setTitle("Forum");
 
-
 //Initialise buttons---------------------------------------------------
-
-
         createPost = (ImageView) view.findViewById(R.id.createPost);
         createPost.setOnClickListener(this);
-
 
 //Initialise and run recyclerview and adapter-----------------------------------------------
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
 
         options = new FirebaseRecyclerOptions.Builder<Post>().setQuery(root, Post.class).build();
         adapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(options) {
@@ -118,32 +107,23 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
                         intent.putExtra("postKey", postKey);
                         intent.putExtra("email", email);
                         startActivity(intent);
-
                     }
                 });
 
-                if (post.getTitle().length()>60)
-                {
+                if (post.getTitle().length()>60) {
                     holder.itemtitle.setText("" + post.getTitle().substring(0,60) + "...");
                 }
-                else
-                {
+                else {
                     holder.itemtitle.setText("" + post.getTitle());
                 }
 
-                if (post.getContent().length()>100)
-                {
+                if (post.getContent().length()>100) {
                     holder.itemcontent.setText(post.getContent().substring(0,100) + "...");
                 }
-                else
-                {
+                else {
                     holder.itemcontent.setText(post.getContent());
                 }
-
                 holder.itemusername.setText(post.getUsername());
-
-
-
             }
 
             @NonNull
@@ -154,12 +134,10 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
             }
         };
 
-
         adapter.startListening();
         recyclerView.setAdapter(adapter);
 
         return view;
-
     }
 
     @Override
@@ -172,8 +150,4 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
                 break;
         }
     }
-
-
-
-
 }

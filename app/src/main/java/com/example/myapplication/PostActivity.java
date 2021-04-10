@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
-
 
     private ImageView backbutton;
     private Button postbutton;
@@ -39,6 +32,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private String userID;
     private String name;
     private String email;
+
 //Defining objects inside oncreate ----------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +62,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
                     name = userProfile.getName();
                     email = user.getEmail();
-
                 }
             }
 
@@ -77,9 +70,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(PostActivity.this, "Something went wrong!", Toast.LENGTH_LONG).show();
             }
         });
-
     }
-
 
 //Button switch case -----------------------------
     @Override
@@ -90,7 +81,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.postbutton:
 
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
                 builder.setTitle("WARNING")
                         .setMessage("Your posts will be viewable by anyone using this application. Are you sure you wish to continue?")
@@ -99,20 +89,14 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(DialogInterface dialog, int which) {
 
                                 boolean postsuccess = ForumController.postbuttonmethod(posttitle, postcontent, name, email);
-
-
-                                if (!postsuccess)
-                                {
+                                if (!postsuccess) {
                                     posttitle.setError("Please enter a title");
                                 }
-                                else
-                                {
+                                else {
                                     PostActivity.this.finish();
                                 }
-
                             }
-
-                                })
+                        })
                         .setNegativeButton("Cancel", null);
 
                 AlertDialog alert = builder.create();
@@ -124,16 +108,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
 //Methods below-------------------------------
-
     public void backbuttonmethod(){
         PostActivity.this.finish();
-
     }
-
-
-
-
-
 }

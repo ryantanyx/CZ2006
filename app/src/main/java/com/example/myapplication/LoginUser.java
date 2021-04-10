@@ -50,7 +50,6 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         mAuth = FirebaseAuth.getInstance();
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){

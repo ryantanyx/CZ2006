@@ -115,7 +115,6 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         regProgress = (ProgressBar) findViewById(R.id.regProgress);
         regAgree = (CheckBox) findViewById(R.id.regAgree);
         regGender = (RadioGroup) findViewById(R.id.regGender);
-
     }
 
     @Override
@@ -311,6 +310,5 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 });
-
     }
 }
