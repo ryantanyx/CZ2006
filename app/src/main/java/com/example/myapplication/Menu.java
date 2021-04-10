@@ -17,9 +17,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Menu extends AppCompatActivity {
     /**
-     *     /**
-     *      * Tag to store the simple name of the Menu class
-     *      */
+     * Tag to store the simple name of the Menu class
      */
     private static final String TAG = LoginUser.class.getSimpleName();
     /**
