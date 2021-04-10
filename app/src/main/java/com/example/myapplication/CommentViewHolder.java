@@ -15,13 +15,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * Represents the CommentViewHolder Controller which controls the layout of the comments made using RecyclerView
+ */
 public class CommentViewHolder extends RecyclerView.ViewHolder {
-
+    /**
+     * TextView to display user's comment and name of user
+     */
     TextView usercomment, username;
+    /**
+     * ImageView to display user's profile picture and delete comment icon
+     */
     ImageView userImage, deletecommentbutton;
+    /**
+     * View to display comment in
+     */
     View view;
 
-
+    /**
+     * Constructor to create a comment with the specified layout
+     * @param itemView
+     */
     public CommentViewHolder(@NonNull View itemView) {
         super(itemView);
 

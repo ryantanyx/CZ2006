@@ -38,7 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 
 /**
- * Represents the Settings Page where users can update their profiles.
+ * Represents the Settings Page Boundary where users can update their profiles.
  * A simple {@link Fragment} subclass.
  * Use the {@link AccountFragment#newInstance} factory method to
  * create an instance of this fragment.

@@ -14,7 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Represents the API for retrieval of news articles
+ * Represents the API Controller for retrieval of news articles
  */
 public class ApiClient {
     /**

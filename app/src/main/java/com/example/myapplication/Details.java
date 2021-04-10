@@ -16,15 +16,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the Details Page Boundary which displays the information of the school selected
+ */
 public class Details extends AppCompatActivity implements View.OnClickListener{
-
+    /**
+     * TextView to display name, vision, mission, gender status, and PSLE cut-off points of the school selected
+     */
     TextView schName, schVision, schMission, schGender, schCutOff;
+    /**
+     * ImageView to display school logo and back button
+     */
     ImageView schLogo, backbutton;
+    /**
+     * ExpandableListView to contain the school information
+     */
     ExpandableListView expandableListView;
+    /**
+     * List to store the different groups required
+     */
     List<String> listGroup;
+    /**
+     * ExpandableAdaptor to display the relevant school information
+     */
     ExpandableAdaptor adapter;
+    /**
+     * Hashmap to store the information under a specific group
+     */
     HashMap<String, List<String>> listItem;
-
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +139,10 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         Glide.with(this).load(imageUrl).error(R.drawable.ic_person).into(schLogo);
     }
 
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v View
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){

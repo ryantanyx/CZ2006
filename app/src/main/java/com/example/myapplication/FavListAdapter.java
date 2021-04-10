@@ -27,18 +27,47 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the Favourite List Adapter Controller which controls the favourite list functions
+ */
 public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHolder>{
+    /**
+     * Layout inflater to instantiate layout from XML file
+     */
     private final LayoutInflater layoutInflater;
+    /**
+     * User stored in Firebase
+     */
     private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
     private String userID;
+    /**
+     * List of schools stored in favourite list
+     */
     private List<School> favlist;
 
+    /**
+     * Constructor to create a new favourite list adapter
+     * @param context The application's current context
+     * @param favlist The list of schools stored in favourite list
+     */
     FavListAdapter(Context context, List<School> favlist){
         this.layoutInflater = LayoutInflater.from(context);
         this.favlist = favlist;
     }
 
+    /**
+     * Creates a view holder in the parent ViewGroup with the specified viewType
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,7 +75,11 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
         return new ViewHolder(view);
     }
 
-
+    /**
+     * Displays the view at the specified position
+     * @param holder The view holder whose contents should be updated
+     * @param position The position of the holder with respect to this adapter
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         School school = favlist.get(position);
@@ -60,19 +93,37 @@ public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHold
 
     }
 
-
+    /**
+     * Get the size of the favourite list
+     * @return integer to indicate size of favourite list
+     */
     @Override
     public int getItemCount() {
         return favlist.size();
     }
 
+    /**
+     * ViewHolder class to describe an item view and metadata about its place within the RecyclerView
+     */
     public class ViewHolder extends RecyclerView.ViewHolder{
-
+        /**
+         * ImageView for the school logo
+         */
         ImageView schoolImage;
+        /**
+         * TextView for the school title and description
+         */
         TextView schoolTitle, schoolDesc;
+        /**
+         * ImageButton to display a clickable favourite icon
+         */
         ImageButton favIcon;
         boolean success;
 
+        /**
+         * Constructor to create a new ViewHolder
+         * @param itemView
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             schoolImage = itemView.findViewById(R.id.schoolImage);

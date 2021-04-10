@@ -28,29 +28,85 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Represents the Comment Activity Boundary whereby a user comments on a post
+ */
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
-
+    /**
+     * TextView to display post title and post content
+     */
     private TextView CAposttitle, CApostcontent;
+    /**
+     * ImageView to display back button and delete post icon
+     */
     private ImageView CAbackbutton, deletepostbutton;
+    /**
+     * EditText for user to type his/her comment
+     */
     private EditText edittextpostcomment;
+    /**
+     * Button to post comment
+     */
     private Button CApostcommentbutton;
+    /**
+     * ImageView to display delete comment icon
+     */
     private ImageView deletecommentbutton;
+    /**
+     * Strings to store key, content, title of post, and name of user who created the post
+     */
     private String postKey, content, title, postUsername;
+    /**
+     * FirebaseOptions to configure the firebase
+     */
     private FirebaseRecyclerOptions<Comment> options;
+    /**
+     * Firebase adapter that responds to changes in the firebase
+     */
     private FirebaseRecyclerAdapter<Comment, CommentViewHolder> adapter;
+    /**
+     * RecyclerView to contain the comment
+     */
     private RecyclerView recyclerView;
+    /**
+     * User stored in Firebase
+     */
     private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
     private String userID;
+    /**
+     * Stores user's profile image number to display the correct image
+     */
     private int imageNo;
+    /**
+     * The name of the user who made the comment
+     */
     private String name;
+    /**
+     * Email of the user who created the post
+     */
     private String postEmail;
+    /**
+     * Instance of FirebaseDatabase
+     */
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    /**
+     * Reference to the "Comment" child in Firebase
+     */
     private DatabaseReference root = db.getReference().child("Comment");
 
 
-
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,6 +258,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v View
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -294,14 +354,20 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Stops activity when back button is pressed
+     */
     public void CAbackbuttonmethod(){
         CommentActivity.this.finish();
 
     }
 
 
-
-
+    /**
+     * Posts the comment  and updates Firebase if comment is valid
+     * @param edittextpostcomment Comment written by user
+     * @return integer to indicate validity of the comment written
+     */
     public int CApostcommentbuttonmethod(EditText edittextpostcomment){
 
 
