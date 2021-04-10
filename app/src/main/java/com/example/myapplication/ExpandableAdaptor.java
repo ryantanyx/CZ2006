@@ -68,8 +68,8 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
 
     /**
      * Get the size of the list of items from the position of the group
-     * @param groupPosition The position of the group the items belong to
-     * @return The size of the list of items in the group
+     * @param groupPosition Position of the group
+     * @return The number of child in the group
      */
     @Override
     public int getChildrenCount(int groupPosition) {
@@ -78,8 +78,8 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
 
     /**
      * Get the group from the position
-     * @param groupPosition
-     * @return
+     * @param groupPosition Position of the group
+     * @return returns the entire group as an Object
      */
     @Override
     public Object getGroup(int groupPosition) {
@@ -88,30 +88,52 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
 
     /**
      * Get the item from the group position and item position
-     * @param groupPosition The position of the group in the list
-     * @param childPosition The position of the item in the list
-     * @return
+     * @param groupPosition Position of the group
+     * @param childPosition Position of the child
+     * @return Returns the entire child as an Object
      */
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         return this.listItem.get(this.listGroup.get(groupPosition)).get(childPosition);
     }
-
+    /**
+     * Get the item from the group position and item position
+     * @param groupPosition Position of the group
+     * @return Returns the ID of the group
+     */
     @Override
     public long getGroupId(int groupPosition) {
         return groupPosition;
     }
 
+    /**
+     * Get the item from the group position and item position
+     * @param groupPosition Position of the group
+     * @param childPosition Position of the group
+     * @return Returns the ID of the child
+     */
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
     }
 
+    /**
+     * Get the item from the group position and item position
+     * @return Returns false since the same ID does always refers to the same object
+     */
     @Override
     public boolean hasStableIds() {
         return false;
     }
 
+    /**
+     * Get the item from the group position and item position
+     * @param groupPosition Position of the group
+     * @param isExpanded Whether the group is expanded or not
+     * @param convertView the view to be converted to
+     * @param parent the parent ViewGroup
+     * @return Returns false since the same ID does always refers to the same object
+     */
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String group = (String) getGroup(groupPosition);
@@ -126,6 +148,15 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    /**
+     * Get the item from the group position and item position
+     * @param groupPosition Position of the group
+     * @param childPosition Position of the child
+     * @param isLastChild Whether the child is the last item in the ViewGroup
+     * @param convertView the view to be converted to
+     * @param parent the parent ViewGroup
+     * @return Returns false since the same ID does always refers to the same object
+     */
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String child = (String) getChild(groupPosition,childPosition);
@@ -139,7 +170,12 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         textView.setTextSize(size);
         return convertView;
     }
-
+    /**
+     * Get the item from the group position and item position
+     * @param groupPosition Position of the group
+     * @param childPosition Position of the child
+     * @return Returns false since the same ID does always refers to the same object
+     */
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
