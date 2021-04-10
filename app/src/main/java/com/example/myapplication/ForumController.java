@@ -7,7 +7,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
- * Represents the ForumController which controls the application logic for the forum section
+ * Represents the Forum Controller which controls the application logic for the forum section
  */
 public class ForumController {
 

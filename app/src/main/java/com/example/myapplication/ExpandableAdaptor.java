@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Represents the ExpandableAdaptor Controller which controls the layout of the school details displayed
+ * Represents the Expandable Adaptor Controller which controls the layout of the school details displayed
  */
 public class ExpandableAdaptor extends BaseExpandableListAdapter {
     /**

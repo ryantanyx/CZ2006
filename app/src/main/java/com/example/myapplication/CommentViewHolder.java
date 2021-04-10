@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 /**
- * Represents the CommentViewHolder Controller which controls the layout of the comments made using RecyclerView
+ * Represents the Comment ViewHolder Controller which controls the layout of the comments made using RecyclerView
  */
 public class CommentViewHolder extends RecyclerView.ViewHolder {
     /**

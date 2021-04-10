@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents the MapsFragment Boundary to display the map showing user's address and nearby schools
+ * Represents the Maps Boundary to display the map showing user's address and nearby schools
  */
 public class MapsFragment extends Fragment {
     /**

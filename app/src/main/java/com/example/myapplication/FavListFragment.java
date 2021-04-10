@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents the Favourites List Page where users can manage their favourite list and compare schools
+ * Represents the Favourites List Page Boundary where users can manage their favourite list and compare schools
  */
 public class FavListFragment extends Fragment{
 

@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Represents the PostViewHolder Controller which controls the layout of the posts created using RecyclerView
+ * Represents the Post ViewHolder Controller which controls the layout of the posts created using RecyclerView
  */
 public class PostViewHolder extends RecyclerView.ViewHolder {
 

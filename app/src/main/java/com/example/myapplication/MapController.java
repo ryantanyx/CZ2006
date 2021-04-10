@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents the MapController which controls the functions related to the map or distances
+ * Represents the Map Controller which controls the functions related to the map or distances
  */
 public class MapController {
     /**

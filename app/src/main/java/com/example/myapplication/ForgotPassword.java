@@ -18,7 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * Represents the ForgotPassword Activity when user clicks on the button
+ * Represents the Forgot Password Activity when user clicks on the button
  */
 public class ForgotPassword extends AppCompatActivity implements View.OnClickListener {
     /**

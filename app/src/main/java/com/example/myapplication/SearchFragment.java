@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents the SearchFragment Boundary where users can search for the schools they are interested in
+ * Represents the Search Page Boundary where users can search for the schools they are interested in
  */
 public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener {
 

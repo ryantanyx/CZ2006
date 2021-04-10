@@ -20,7 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Represents the Home or News page where users can read news related to Singapore Education
+ * Represents the Home or News Page where users can read news related to Singapore Education
  */
 public class HomeFragment extends Fragment {
     /**

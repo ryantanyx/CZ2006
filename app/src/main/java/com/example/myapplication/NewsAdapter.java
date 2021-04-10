@@ -26,7 +26,7 @@ import com.bumptech.glide.request.target.Target;
 import java.util.List;
 
 /**
- * Represents the NewsAdapter Controller which controls the news and the list of articles to display
+ * Represents the News Adapter Controller which controls the news and the list of articles to display
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> {
     /**
