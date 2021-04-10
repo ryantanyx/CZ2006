@@ -40,7 +40,6 @@ import java.util.Set;
 
 /**
  * Represents the SearchFragment Boundary where users can search for the schools they are interested in
- * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -393,7 +392,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     }
     /**
      * Switch case to execute different commands for the respective buttons
-     * @param view
+     * @param v View
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override

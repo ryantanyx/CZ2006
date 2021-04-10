@@ -29,7 +29,6 @@ import java.util.List;
 
 /**
  * Represents the Favourites List Page where users can manage their favourite list and compare schools
- * A simple {@link Fragment} subclass.
  * Use the {@link FavListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */

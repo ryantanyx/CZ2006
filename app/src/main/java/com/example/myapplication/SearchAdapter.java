@@ -175,7 +175,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
     /**
      * Displays the view at the specified position
-     * @param holders The view holder whose contents should be updated
+     * @param holder The view holder whose contents should be updated
      * @param position The position of the holder with respect to this adapter
      */
     @Override

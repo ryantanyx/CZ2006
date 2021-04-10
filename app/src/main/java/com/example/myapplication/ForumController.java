@@ -89,7 +89,7 @@ public class ForumController {
      * Checks if the name of the current user matches the name of the comment's creator
      * @param comment The name of the user who made the comment
      * @param name The name of the current user
-     * @return
+     * @return Whether the names match
      */
     public static boolean checkComment(Comment comment, String name)
     {

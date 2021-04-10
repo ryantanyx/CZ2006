@@ -69,7 +69,7 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
     /**
      * Get the size of the list of items from the position of the group
      * @param groupPosition The position of the group the items belong to
-     * @return
+     * @return The size of the list of items in the group
      */
     @Override
     public int getChildrenCount(int groupPosition) {

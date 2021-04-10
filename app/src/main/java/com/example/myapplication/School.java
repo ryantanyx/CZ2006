@@ -51,7 +51,7 @@ public class School implements Parcelable {
 
     /**
      * School constructor to create a new school based on the Parcel
-     * @param in
+     * @param in The parcel
      */
     protected School(Parcel in) {
         imageUrl = in.readString();
@@ -80,7 +80,7 @@ public class School implements Parcelable {
 
     /**
      * Set the mission of this school
-     * @param mission
+     * @param mission This school's new mission
      */
     public void setMission(String mission) {
         this.mission = mission;
@@ -88,7 +88,7 @@ public class School implements Parcelable {
 
     /**
      * Get the vision of this school
-     * @return this school's vision
+     * @return This school's vision
      */
     public String getVision() {
         return vision;
@@ -96,7 +96,7 @@ public class School implements Parcelable {
 
     /**
      * Set the vision of this school
-     * @param vision
+     * @param vision This school's new vision
      */
     public void setVision(String vision) {
         this.vision = vision;
@@ -104,7 +104,7 @@ public class School implements Parcelable {
 
     /**
      * Get the URL of the image of this school
-     * @return the URL of the image
+     * @return The URL of the image
      */
     public String getImageUrl() {
         return imageUrl;
@@ -112,7 +112,7 @@ public class School implements Parcelable {
 
     /**
      * Set the URL for the image of this school
-     * @param imageUrl
+     * @param imageUrl The image's new URL
      */
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
@@ -120,7 +120,7 @@ public class School implements Parcelable {
 
     /**
      * Get the name of this school
-     * @return this school's name
+     * @return This school's name
      */
     public String getSchoolName() {
         return schoolName;
@@ -128,7 +128,7 @@ public class School implements Parcelable {
 
     /**
      * Set the name of this school
-     * @param schoolName
+     * @param schoolName The school's new name
      */
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
@@ -136,7 +136,7 @@ public class School implements Parcelable {
 
     /**
      * Get the address of this school
-     * @return the address of this school
+     * @return The address of this school
      */
     public String getAddress() {
         return address;
@@ -144,7 +144,7 @@ public class School implements Parcelable {
 
     /**
      * Set the address of this school
-     * @param address
+     * @param address This school's new address
      */
     public void setAddress(String address) {
         this.address = address;
@@ -152,7 +152,7 @@ public class School implements Parcelable {
 
     /**
      * Get the gender status of this school (single-sex vs co-ed)
-     * @return the gender status of this school
+     * @return The gender status of this school
      */
     public String getGender() {
         return gender;
@@ -160,7 +160,7 @@ public class School implements Parcelable {
 
     /**
      * Set the gender status of this school
-     * @param gender
+     * @param gender The school's new gender status
      */
     public void setGender(String gender) {
         this.gender = gender;
@@ -168,7 +168,7 @@ public class School implements Parcelable {
 
     /**
      * Get the location of this school
-     * @return this school's location
+     * @return This school's location
      */
     public String getLocation() {
         return location;
@@ -176,7 +176,7 @@ public class School implements Parcelable {
 
     /**
      * Set the location of this school
-     * @param location
+     * @param location This school's new location
      */
     public void setLocation(String location) {
         this.location = location;
@@ -184,7 +184,7 @@ public class School implements Parcelable {
 
     /**
      * Get the region where this school is located in
-     * @return the region of this school
+     * @return The region of this school
      */
     public String getRegion() {
         return region;
@@ -192,7 +192,7 @@ public class School implements Parcelable {
 
     /**
      * Set the region where this school is located in
-     * @param region
+     * @param region This school's new region
      */
     public void setRegion(String region) {
         this.region = region;
@@ -200,7 +200,7 @@ public class School implements Parcelable {
 
     /**
      * Get the type of this school (Government vs Independent)
-     * @return the type of this school
+     * @return The type of this school
      */
     public String getType() {
         return type;
@@ -208,7 +208,7 @@ public class School implements Parcelable {
 
     /**
      * Set the type of this school
-     * @param type
+     * @param type This school's new type
      */
     public void setType(String type) {
         this.type = type;
@@ -224,7 +224,7 @@ public class School implements Parcelable {
 
     /**
      * Set the HashMap of PSLE cut-off points for this school
-     * @param cutOffPoint
+     * @param cutOffPoint This school's new PSLE cut-off points
      */
     public void setCutOffPoint(HashMap<String, Integer> cutOffPoint) {
         this.cutOffPoint = cutOffPoint;
@@ -232,7 +232,7 @@ public class School implements Parcelable {
 
     /**
      * Get the HashMap of the CCAs offered by this school
-     * @return
+     * @return This school's CCAs offered
      */
     public HashMap<String, ArrayList<String>> getCca() {
         return cca;
@@ -240,7 +240,7 @@ public class School implements Parcelable {
 
     /**
      * Set the HashMap of the CCAs offered by this school
-     * @param cca
+     * @param cca This school's new CCAs offered
      */
     public void setCca(HashMap<String, ArrayList<String>> cca) {
         this.cca = cca;
@@ -248,7 +248,7 @@ public class School implements Parcelable {
 
     /**
      * Get the list of subjects in String format offered by this school
-     * @return
+     * @return This school's list of subjects offered
      */
     public String getSubjects() {
         return subjects;
@@ -256,7 +256,7 @@ public class School implements Parcelable {
 
     /**
      * Set the subjects offered by this school
-     * @param subjects
+     * @param subjects This school's new list of subjects offered
      */
     public void setSubjects(String subjects) {
         this.subjects = subjects;
@@ -264,7 +264,7 @@ public class School implements Parcelable {
 
     /**
      * Get the contact information of this school
-     * @return the contact information of this school
+     * @return The contact information of this school
      */
     public ArrayList<String> getContactInfo() {
         return contactInfo;
@@ -272,7 +272,7 @@ public class School implements Parcelable {
 
     /**
      * Set the contact information of this school
-     * @param contactInfo
+     * @param contactInfo This school's new contact information
      */
     public void setContactInfo(ArrayList<String> contactInfo) {
         this.contactInfo = contactInfo;
@@ -280,7 +280,7 @@ public class School implements Parcelable {
 
     /**
      * Get the transport information of this school
-     * @return
+     * @return This school's transport information
      */
     public ArrayList<String> getTransport() {
         return transport;
@@ -288,7 +288,7 @@ public class School implements Parcelable {
 
     /**
      * Set the transport information of this school
-     * @param transport
+     * @param transport This school's new transport information
      */
     public void setTransport(ArrayList<String> transport) {
         this.transport = transport;

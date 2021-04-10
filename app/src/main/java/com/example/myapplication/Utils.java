@@ -42,7 +42,7 @@ public class Utils {
     /**
      * Converts a date to time format
      * @param oldstringDate
-     * @return
+     * @return The time of the day
      */
     public static String DateToTimeFormat(String oldstringDate){
             PrettyTime p = new PrettyTime(new Locale(getCountry()));

@@ -21,7 +21,6 @@ import retrofit2.Response;
 
 /**
  * Represents the Home or News page where users can read news related to Singapore Education
- * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
