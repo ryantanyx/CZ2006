@@ -40,8 +40,6 @@ import java.util.Set;
 
 /**
  * Represents the SearchFragment Boundary where users can search for the schools they are interested in
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class SearchFragment extends Fragment implements View.OnClickListener, RangeSlider.OnChangeListener {
 

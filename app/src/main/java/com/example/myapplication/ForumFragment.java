@@ -20,8 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Represents the Forum Page Boundary where users can engage in discussions
- * Use the {@link ForumFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class ForumFragment extends Fragment implements View.OnClickListener{
 
