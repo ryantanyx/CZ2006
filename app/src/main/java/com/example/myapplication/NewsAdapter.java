@@ -3,14 +3,11 @@ package com.example.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,23 +25,45 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
+/**
+ * Represents the News Adapter Controller which controls the news and the list of articles to display
+ */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> {
-
+    /**
+     * List of articles to display
+     */
     private List<Article> articles;
+    /**
+     * The current context of the application
+     */
     private Context context;
 
+    /**
+     * Constructor to create new NewsAdapter
+     * @param articles List of articles to display
+     * @param context The current context of the application
+     */
     public NewsAdapter(List<Article> articles, Context context) {
         this.articles = articles;
         this.context = context;
     }
-
+    /**
+     * Creates a view holder in the parent ViewGroup with the specified viewType
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return ViewHolder
+     */
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.newsitem, parent, false);
         return new MyViewHolder(view);
     }
-
+    /**
+     * Displays the view at the specified position
+     * @param holders The view holder whose contents should be updated
+     * @param position The position of the holder with respect to this adapter
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holders, int position) {
         final MyViewHolder holder = holders;
@@ -82,14 +101,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         }
         holder.source.setText(model.getSource().getName());
         holder.date.setText(model.getPublishedAt().substring(0,10));
-
-
-
-
-
-
     }
-
+    /**
+     * Get the size of the list of articles
+     * @return integer to indicate size of the list of articles
+     */
     @Override
     public int getItemCount() {
         return articles.size();
@@ -122,6 +138,4 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             });
         }
     }
-
-
 }

@@ -20,15 +20,35 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Represents the User Login Boundary where the user login into the application
+ */
 public class LoginUser extends AppCompatActivity implements View.OnClickListener{
-
+    /**
+     * TextView to display the relevant texts
+     */
     private TextView register, forgotPassword;
+    /**
+     * EditText for user to enter their login email and password
+     */
     private EditText logEmail, logPassword;
+    /**
+     * Login button
+     */
     private Button login;
-
+    /**
+     * Firebase Authenticator to check user's login details
+     */
     private FirebaseAuth mAuth;
+    /**
+     * ProgressBar to display login progress
+     */
     private ProgressBar logProgress;
 
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +69,10 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
 
         mAuth = FirebaseAuth.getInstance();
     }
-
-
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v view
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -66,6 +88,9 @@ public class LoginUser extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Checks user's login details and permits the user into the application or display relevant error messages
+     */
     private void userLogin() {
 
         String email = logEmail.getText().toString().trim();

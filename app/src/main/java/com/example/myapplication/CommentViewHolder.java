@@ -1,27 +1,32 @@
 package com.example.myapplication;
 
-import android.content.DialogInterface;
-import android.media.Image;
+
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+/**
+ * Represents the Comment ViewHolder Controller which controls the layout of the comments made using RecyclerView
+ */
 public class CommentViewHolder extends RecyclerView.ViewHolder {
-
+    /**
+     * TextView to display user's comment and name of user
+     */
     TextView usercomment, username;
+    /**
+     * ImageView to display user's profile picture and delete comment icon
+     */
     ImageView userImage, deletecommentbutton;
+    /**
+     * View to display comment in
+     */
     View view;
-
-
+    /**
+     * Constructor to create a comment with the specified layout
+     * @param itemView
+     */
     public CommentViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -32,11 +37,5 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         username = itemView.findViewById(R.id.username);
         userImage = itemView.findViewById(R.id.userImage);
         view = itemView;
-
-
-
     }
-
-
-
 }

@@ -23,14 +23,20 @@ public class Comment {
 
     /**
      * Constructor to create a new comment
-     * @param usercomment the comment made by the user
-     * @param username the name of the user who made this comment
-     * @param imageNo the image number of the user who made this comment
+     * @param usercomment The comment made by the user
+     * @param username The name of the user who made this comment
+     * @param imageNo The image number of the user who made this comment
      */
     public Comment(String usercomment, String username, int imageNo) {
         this.usercomment = usercomment;
         this.username = username;
         this.imageNo = imageNo;
+    }
+
+    /**
+     * Empty constructor
+     */
+    public Comment() {
     }
 
     /**
@@ -47,12 +53,6 @@ public class Comment {
      */
     public void setCid(String cid) {
         this.cid = cid;
-    }
-
-    /**
-     * Empty constructor
-     */
-    public Comment() {
     }
 
     /**

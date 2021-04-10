@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents the Article entity for the news segment
+ * Represents the Article Entity for the News segment
  */
 public class Article {
 

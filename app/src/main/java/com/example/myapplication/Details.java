@@ -14,17 +14,39 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Represents the Details Page Boundary which displays the information of the school selected
+ */
 public class Details extends AppCompatActivity implements View.OnClickListener{
-
+    /**
+     * TextView to display name, vision, mission, gender status, and PSLE cut-off points of the school selected
+     */
     TextView schName, schVision, schMission, schGender, schCutOff;
+    /**
+     * ImageView to display school logo and back button
+     */
     ImageView schLogo, backbutton;
+    /**
+     * ExpandableListView to contain the school information
+     */
     ExpandableListView expandableListView;
+    /**
+     * List to store the different groups required
+     */
     List<String> listGroup;
+    /**
+     * ExpandableAdaptor to display the relevant school information
+     */
     ExpandableAdaptor adapter;
+    /**
+     * Hashmap to store the information under a specific group
+     */
     HashMap<String, List<String>> listItem;
-
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +76,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         HashMap<String, ArrayList<String>> schoolCCA = school.getCca();
 
         String subjects = school.getSubjects();
-        ArrayList<String> schoolSubject = new ArrayList<String>();
+        ArrayList<String> schoolSubject = new ArrayList<>();
         schoolSubject.add(subjects);
         ArrayList<String> schoolContact = school.getContactInfo();
         schoolContact.add(0, new String("Address: " + schoolAddress.toLowerCase()));
@@ -79,7 +101,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
             cca.add(entry.substring(0,entry.length()-1));
         }
 
-        listGroup = new ArrayList<String>();
+        listGroup = new ArrayList<>();
         listItem = new HashMap<>();
 
         listGroup.add("CCA");
@@ -116,6 +138,10 @@ public class Details extends AppCompatActivity implements View.OnClickListener{
         Glide.with(this).load(imageUrl).error(R.drawable.ic_person).into(schLogo);
     }
 
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v View
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){

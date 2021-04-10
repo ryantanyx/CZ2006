@@ -7,24 +7,49 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Represents the Expandable Adaptor Controller which controls the layout of the school details displayed
+ */
 public class ExpandableAdaptor extends BaseExpandableListAdapter {
+    /**
+     * Context of the current state of the application
+     */
     Context context;
+    /**
+     * List of groups of information to be displayed
+     */
     List<String> listGroup;
+    /**
+     * HashMap of the list of items mapped to each group
+     */
     HashMap<String, List<String>> listItem;
+    /**
+     * Size of the expandable list view
+     */
     int size;
 
+    /**
+     * Constructor to create a new ExpandableAdaptor with default size 20
+     * @param context the application's current context
+     * @param listGroup list of groups to be placed in the view
+     * @param listItem list of items under each header
+     */
     public ExpandableAdaptor(Context context, List<String> listGroup, HashMap<String, List<String>> listItem){
         this.context = context;
         this.listGroup = listGroup;
         this.listItem = listItem;
         this.size = 20;
     }
-
+    /**
+     * Constructor to create a new ExpandableAdaptor with a specific size
+     * @param context The application's current context
+     * @param listGroup List of groups to be placed in the view
+     * @param listItem List of items under each group
+     * @param size Size of the expandable list view
+     */
     public ExpandableAdaptor(Context context, List<String> listGroup, HashMap<String, List<String>> listItem, int size){
         this.context = context;
         this.listGroup = listGroup;
@@ -32,22 +57,41 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         this.size = size;
     }
 
-
+    /**
+     * Get the size of the list of groups
+     * @return the size of the list of groups
+     */
     @Override
     public int getGroupCount() {
         return listGroup.size();
     }
 
+    /**
+     * Get the size of the list of items from the position of the group
+     * @param groupPosition The position of the group the items belong to
+     * @return The size of the list of items in the group
+     */
     @Override
     public int getChildrenCount(int groupPosition) {
         return this.listItem.get(this.listGroup.get(groupPosition)).size();
     }
 
+    /**
+     * Get the group from the position
+     * @param groupPosition
+     * @return
+     */
     @Override
     public Object getGroup(int groupPosition) {
         return this.listGroup.get(groupPosition);
     }
 
+    /**
+     * Get the item from the group position and item position
+     * @param groupPosition The position of the group in the list
+     * @param childPosition The position of the item in the list
+     * @return
+     */
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         return this.listItem.get(this.listGroup.get(groupPosition)).get(childPosition);
@@ -81,7 +125,6 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         textView.setTextSize(size);
         return convertView;
     }
-
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {

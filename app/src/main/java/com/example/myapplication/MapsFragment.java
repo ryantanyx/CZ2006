@@ -30,21 +30,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the Maps Boundary to display the map showing user's address and nearby schools
+ */
 public class MapsFragment extends Fragment {
+    /**
+     * Location of the user in LatLng
+     */
     private LatLng userLocation;
+    /**
+     * Initialise Search Adapter Controller to retrieve list of schools
+     */
     private SearchAdapter adapter;
+    /**
+     * Stores the list of schools
+     */
     private List<School> schoolList;
-
+    /**
+     * Callback interface for when the map is ready to be used.
+     */
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
         /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
+         * Preparing the map and controlling the display
+         * @param googleMap
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -79,9 +87,15 @@ public class MapsFragment extends Fragment {
             googleMap.getUiSettings().setZoomControlsEnabled(true);
             googleMap.getUiSettings().setZoomGesturesEnabled(true);
         }
-
     };
 
+    /**
+     * Initialisation of the fragment and inflates the layout of the fragment onto a container
+     * @param inflater Inflate the layout of the fragment
+     * @param container Container for the layout
+     * @param savedInstanceState
+     * @return The map fragment page
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -149,6 +163,11 @@ public class MapsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Called immediately after onCreateView to initialise Map
+     * @param view View
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

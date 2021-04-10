@@ -43,33 +43,99 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents the Search Adapter Controller which controls the functions related to searching for schools
+ */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
-
+    /**
+     * Distance between school and user's address
+     */
     private static double schDistance;
+    /**
+     * Instance of the MapController
+     */
     private static MapController MapController;
+    /**
+     * User accessing the application
+     */
     private static User User;
-    private LayoutInflater layoutInflater;
-    private List<School> data;
-    private List<School> dataset;
-    private String selectedRegion = "all";
-    private String selectedStream = "all";
-    private String currentSearchText ="";
-    private String selectedCCA = "all";
-    private int pslemin = 0,pslemax = 300,distmin=0,distmax=50;
-
-
+    /**
+     * The current context of the application
+     */
     private static Context context;
-    private User userProfile;
-    private FirebaseUser user;
-    private DatabaseReference reference;
-    private String userID;
+    /**
+     * Boolean Flag
+     */
     boolean flag = true;
+    /**
+     * Layout inflater to instantiate layout from XML file
+     */
+    private LayoutInflater layoutInflater;
+    /**
+     * List of schools used by the adapter
+     */
+    private List<School> data;
+    /**
+     * List of schools available in dataset
+     */
+    private List<School> dataset;
+    /**
+     * Status of region filter
+     */
+    private String selectedRegion = "all";
+    /**
+     * Status of stream filter
+     */
+    private String selectedStream = "all";
+    /**
+     * Current text in search bar
+     */
+    private String currentSearchText ="";
+    /**
+     * Status of CCA filter
+     */
+    private String selectedCCA = "all";
+    /**
+     * PSLE cutoff and distance slider values
+     */
+    private int pslemin = 0,pslemax = 300,distmin=0,distmax=50;
+    /**
+     * User accessing the application
+     */
+    private User userProfile;
+    /**
+     * User stored in Firebase
+     */
+    private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
+    private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
+    private String userID;
+    /**
+     * User's address in LatLng format
+     */
     private LatLng userLocation;
+    /**
+     * HashMap mapping the distance between the school and user's location to each school
+     */
     private HashMap<String, Double> schDistList = new HashMap<>();
+    /**
+     * Ordered HashMap mapping the distance between the school and user's location to each school
+     */
     private HashMap<String, Double> schOrderedDistList;
+    /**
+     * Snapshot of the data in Firebase
+     */
     private DataSnapshot snapshot;
 
-
+    /**
+     * Constructor to create new Search Adapter
+     * @param context The current context of the application
+     */
     SearchAdapter(Context context){
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
@@ -78,6 +144,28 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         this.dataset = new ArrayList<School>(data);
     }
 
+    /**
+     * Calculate the distance between the user's address and each of the school
+     * @param schoolList The list of schools
+     * @param userPosition The user's address
+     * @return HashMap mapping the distance between the school and user's location to each school
+     */
+    public static HashMap<String, Double> getSchDist(List<School> schoolList, LatLng userPosition) {
+        HashMap<String, Double> schDist = new HashMap<>();
+        HashMap<String, LatLng> schLocation = new HashMap<>();
+        schLocation = MapController.getLatLong(context, schoolList);
+        for (Map.Entry<String, LatLng> entry : schLocation.entrySet()) {
+            schDistance = MapController.distance(userPosition.latitude, userPosition.longitude, entry.getValue().latitude, entry.getValue().longitude);
+            schDist.put(entry.getKey(), schDistance);
+        }
+            return schDist;
+    }
+    /**
+     * Creates a view holder in the parent ViewGroup with the specified viewType
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return ViewHolder
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -85,7 +173,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         View view = layoutInflater.inflate(R.layout.custom_view, parent, false);
         return new ViewHolder(view);
     }
-
+    /**
+     * Displays the view at the specified position
+     * @param holder The view holder whose contents should be updated
+     * @param position The position of the holder with respect to this adapter
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -99,7 +191,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         ArrayList<School> favlist = new ArrayList<School>();
 
         // getting firebase reference
-
         reference.child(userID).child("favList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -125,31 +216,51 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             }
         });
     }
-
+    /**
+     * Get the size of the list of schools
+     * @return integer to indicate size of the list of schools
+     */
     @Override
     public int getItemCount() {
         return data.size();
     }
 
+    /**
+     * Filters the list of schools based on text entered in search bar
+     * @param newText The text entered in search bar
+     */
     public void searchViewFilter(String newText) {
         currentSearchText = newText;
         resetSchoolList();
         filter();
     }
 
+    /**
+     * Filters the list of schools based on region selected by the user
+     * @param status The region selected by the user
+     */
     public void filterRegion(String status) {
         resetRegion();
         selectedRegion = status;
         filter();
     }
 
+    /**
+     * Filters the list of schools based on PSLE cut-off score range selected by the user
+     * @param low The lower limit set by the user
+     * @param high The upper limit set by the user
+     */
     public void filterPSLE(int low, int high) {
         resetSchoolList();
         pslemin = low;
         pslemax = high;
         filter();
     }
-
+    /**
+     * Filters the list of schools based on distance from home selected by the user
+     * @param low The lower limit set by the user
+     * @param high The upper limit set by the user
+     */
     public void filterDist(int low, int high) {
         resetSchoolList();
         distmin = low;
@@ -159,18 +270,27 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         filter();
     }
 
+    /**
+     * Filters the list of schools based on stream selected by the user
+     * @param status The stream selected by the user
+     */
     public void filterStream(String status) {
         resetStream();
         selectedStream = status;
         filter();
     }
-
+    /**
+     * Filters the list of schools based on CCA selected by the user
+     * @param status The CCA selected by the user
+     */
     public void filterCCA(String status) {
         resetCCA();
         selectedCCA = status;
         filter();
     }
-
+    /**
+     * Filters the list of schools based on the filter selection of the user
+     */
     public void filter() {
         List<School> filteredList = new ArrayList<>();
         for(School school:dataset) {
@@ -379,30 +499,41 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         data.addAll(filteredList);
         notifyDataSetChanged();
     }
-
+    /**
+     * Resets the school list in the adapter
+     */
     private void resetSchoolList() {
         data.clear();
         data.addAll(dataset);
     }
 
+    /**
+     * Resets the region filter selected by the user
+     */
     public void resetRegion() {
         selectedRegion = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
-
+    /**
+     * Resets the stream filter selected by the user
+     */
     public void resetStream() {
         selectedStream = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
-
+    /**
+     * Resets the CCA filter selected by the user
+     */
     public void resetCCA() {
         selectedCCA = "all";
         resetSchoolList();
         notifyDataSetChanged();
     }
-
+    /**
+     * Resets both the region and stream filter selected by the user
+     */
     public void resetFilter() {
         selectedRegion = "all";
         selectedStream = "all";
@@ -410,14 +541,26 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    /**
+     * Get the region filter selected by the user
+     * @return The region filter selected by the user
+     */
     public String getSelectedRegion() {
         return selectedRegion;
     }
 
+    /**
+     * Get the stream filter selected by the user
+     * @return The stream filter selected by the user
+     */
     public String getSelectedStream() {
         return selectedStream;
     }
 
+    /**
+     * Sort the list of school based on the user's choice
+     * @param choice The sort settings selected by the user
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void sort(int choice) {
         List<School> filteredList = new ArrayList<>();
@@ -523,22 +666,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         };
 
     }
+
+    /**
+     * Reverse the order of the data
+     */
     public void reverse() {Collections.reverse(data);
     }
 
-    public static HashMap<String, Double> getSchDist(List<School> schoolList, LatLng userPosition) {
-        HashMap<String, Double> schDist = new HashMap<>();
-        HashMap<String, LatLng> schLocation = new HashMap<>();
-        schLocation = MapController.getLatLong(context, schoolList);
-        for (Map.Entry<String, LatLng> entry : schLocation.entrySet()) {
-            schDistance = MapController.distance(userPosition.latitude, userPosition.longitude, entry.getValue().latitude, entry.getValue().longitude);
-            schDist.put(entry.getKey(), schDistance);
-        }
-            return schDist;
-
-    }
-
-
+    /**
+     * Read the school data from the text file
+     * @return The list of schools
+     */
     private List<School> readSchoolData() {
         List<School> schoolList = new ArrayList<>();
         try {
@@ -598,6 +736,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return schoolList;
     }
 
+    /**
+     * Read and update the list of schools with the CCA data from the text file
+     * @param schoolList The list of schools
+     * @return The updated list of schools with the CCA data
+     */
     private List<School> readCCAData(List<School> schoolList) {
         Set<String> set_sports = new HashSet<String>(), set_vpa = new HashSet<String>(), set_cs = new HashSet<String>(), set_ug = new HashSet<String>();
         ArrayList<String> temp;
@@ -688,6 +831,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return schoolList;
     }
 
+    /**
+     * Read and updates the list of school with the subjects offered data from the text file
+     * @param schoolList The list of school
+     * @return The updated list of school with the subjects offered data
+     */
     private List<School> readSubjectData(List<School> schoolList) {
         HashMap<String, String> schSubject = new HashMap<String, String>();
 
@@ -725,6 +873,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return schoolList;
     }
 
+    /**
+     * Get the list of schools available
+     * @return The list of schools
+     */
     public List<School> getSchoolList() {
         return dataset;
     }
@@ -777,7 +929,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 }
             });
 
-
             reference.child(userID).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -823,7 +974,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             });
 
             favIcon.setOnClickListener(new View.OnClickListener(){
-
                 @Override
                 public void onClick(View v) {
                     School school =data.get(getAdapterPosition());
@@ -889,7 +1039,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     class secondThread implements Runnable {
 
         secondThread(){
-
         }
 
         @Override
@@ -918,7 +1067,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show();
                 }
             });
-
         }
 
         public void run(List<School> data, LatLng userLocation){
@@ -926,9 +1074,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 schDistList = new HashMap<>();
                 schDistList = getSchDist(data, userLocation);
             }
-
         }
     }
-
-
 }

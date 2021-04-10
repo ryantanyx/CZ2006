@@ -37,25 +37,70 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Represents the User Registration Activity Boundary where users register for an account
+ */
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener{
-
+    /**
+     * Firebase Authenticator
+     */
     private FirebaseAuth mAuth;
+    /**
+     * DatePickerDialog for users to select their birth date
+     */
     private DatePickerDialog picker;
+    /**
+     * AlertDialog for confirmation of registration
+     */
     private AlertDialog dialog;
+    /**
+     * AlertDialog builder to create dialog
+     */
     private AlertDialog.Builder builder;
-
+    /**
+     * EditText for users to enter their name, email, address, password, confirmed password, and birth date
+     */
     private EditText regDate, regName, regEmail, regAddress, regPassword, regReenterPassword;
+    /**
+     * Buttons for user to register, cancel, and to choose a profile picture
+     */
     private Button regUser, regCancel, chooseImage;
+    /**
+     * ProgressBar to show registration progress
+     */
     private ProgressBar regProgress;
+    /**
+     * CheckBox for users to accept disclaimer
+     */
     private CheckBox regAgree;
+    /**
+     * RadioGroup for users to choose gender
+     */
     private RadioGroup regGender;
+    /**
+     * RadioButton to indicate what the user has selected
+     */
     private RadioButton selectedRadioButton;
-
+    /**
+     * Dialog to show success message and profile image options
+     */
     private Dialog dialog2, dialog3;
+    /**
+     * CardView to display the profile image background
+     */
     private CardView regImagebg;
+    /**
+     * ImageView to display the profile image of the user
+     */
     private ImageView regImage;
+    /**
+     * regImageNo to store the image chosen by the user. Default is set to 1
+     */
     private int regImageno = 1;
-
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,9 +160,11 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         regProgress = (ProgressBar) findViewById(R.id.regProgress);
         regAgree = (CheckBox) findViewById(R.id.regAgree);
         regGender = (RadioGroup) findViewById(R.id.regGender);
-
     }
-
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v view
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -185,7 +232,9 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
+    /**
+     * Checks user's registration details and registers the user account or display relevant error messages
+     */
     public void registerUser(View v){
 
         String name = regName.getText().toString().trim();
@@ -311,6 +360,5 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 });
-
     }
 }

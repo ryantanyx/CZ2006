@@ -1,17 +1,13 @@
 package com.example.myapplication;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,29 +26,60 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.zip.Inflater;
 
+/**
+ * Represents the Favourites List Page Boundary where users can manage their favourite list and compare schools
+ */
 public class FavListFragment extends Fragment{
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    /**
+     * RecyclerView to contain the favourite list
+     */
     RecyclerView recyclerView;
+    /**
+     * FavListAdapter to control the favourite list functions
+     */
     FavListAdapter adapter;
-    ArrayList<School> items;
+    /**
+     * Compare button
+     */
     Button btn;
-    private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String mParam1;
     private String mParam2;
-    private Dialog dialog;
+    /**
+     * User stored in Firebase
+     */
     private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
     private String userID;
-    private User userProfile;
-    private ArrayList<School> favlist;
-    public FavListFragment() {
-        // Required empty public constructor
-    }
 
+    //private User userProfile;
+    /**
+     * ArrayList of schools in favourite list
+     */
+    private ArrayList<School> favlist;
+    /**
+     * Empty constructor
+     */
+    // Required empty public constructor
+    public FavListFragment() {
+    }
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment FavListFragment.
+     */
     public static FavListFragment newInstance(String param1, String param2) {
         FavListFragment fragment = new FavListFragment();
         Bundle args = new Bundle();
@@ -61,7 +88,10 @@ public class FavListFragment extends Fragment{
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Initial creation of fragment from savedInstanceState
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +100,13 @@ public class FavListFragment extends Fragment{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    /**
+     * Graphical Initialisation of the fragment and inflates the layout of the fragment onto a container
+     * @param inflater Inflate the layout of the fragment
+     * @param container Container for the layout
+     * @param savedInstanceState
+     * @return The favourites list page
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_favlist, container, false);
@@ -175,7 +211,6 @@ public class FavListFragment extends Fragment{
                 }
             }
         });
-
 
         return view;
     }

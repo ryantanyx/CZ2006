@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -10,27 +9,52 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Represents the Comparison Page Boundary which is part of the Favourite List function to compare between two schools
+ */
 public class Comparison extends AppCompatActivity implements View.OnClickListener{
-
+    /**
+     * TextView to display the various school information
+     */
     TextView schName2, schVision2, schMission2, schGender2, schCutOff2,schName1, schVision1, schMission1, schGender1, schCutOff1;
+    /**
+     * ImageView for the two school logos and back button icon
+     */
     ImageView schLogo2, schLogo1, backbutton;
+    /**
+     * ExpandableListView to contain the school information
+     */
     ExpandableListView expandableListView2, expandableListView1;
+    /**
+     * List to store the different groups required
+     */
     List<String> listGroup2, listGroup1;
+    /**
+     * ExpandableAdaptor to display the relevant school information
+     */
     ExpandableAdaptor adapter2, adapter1;
+    /**
+     * Hashmap to store the information under a specific group
+     */
     HashMap<String, List<String>> listItem2,listItem1;
+    /**
+     * School objects to be compared
+     */
     School school1, school2;
 
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: Create comparison layout
         setContentView(R.layout.fragment_comparing);
 
         schName1 = findViewById(R.id.schName1);
@@ -200,6 +224,10 @@ public class Comparison extends AppCompatActivity implements View.OnClickListene
         Glide.with(this).load(imageUrl2).error(R.drawable.ic_person).into(schLogo2);
     }
 
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v view
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){

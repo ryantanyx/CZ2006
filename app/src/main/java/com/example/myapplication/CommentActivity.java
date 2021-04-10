@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,29 +27,84 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Represents the Comment Activity Boundary whereby a user comments on a post
+ */
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
-
+    /**
+     * TextView to display post title and post content
+     */
     private TextView CAposttitle, CApostcontent;
+    /**
+     * ImageView to display back button and delete post icon
+     */
     private ImageView CAbackbutton, deletepostbutton;
+    /**
+     * EditText for user to type his/her comment
+     */
     private EditText edittextpostcomment;
+    /**
+     * Button to post comment
+     */
     private Button CApostcommentbutton;
+    /**
+     * ImageView to display delete comment icon
+     */
     private ImageView deletecommentbutton;
+    /**
+     * Strings to store key, content, title of post, and name of user who created the post
+     */
     private String postKey, content, title, postUsername;
+    /**
+     * FirebaseOptions to configure the firebase
+     */
     private FirebaseRecyclerOptions<Comment> options;
+    /**
+     * Firebase adapter that responds to changes in the firebase
+     */
     private FirebaseRecyclerAdapter<Comment, CommentViewHolder> adapter;
+    /**
+     * RecyclerView to contain the comment
+     */
     private RecyclerView recyclerView;
+    /**
+     * User stored in Firebase
+     */
     private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
     private String userID;
+    /**
+     * Stores user's profile image number to display the correct image
+     */
     private int imageNo;
+    /**
+     * The name of the user who made the comment
+     */
     private String name;
+    /**
+     * Email of the user who created the post
+     */
     private String postEmail;
+    /**
+     * Instance of FirebaseDatabase
+     */
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    /**
+     * Reference to the "Comment" child in Firebase
+     */
     private DatabaseReference root = db.getReference().child("Comment");
 
-
-
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,21 +116,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         CAbackbutton = (ImageView) findViewById(R.id.CAbackbutton);
         CAbackbutton.setOnClickListener(this);
 
-
         deletepostbutton = (ImageView) findViewById(R.id.deletepostbuttton);
         deletepostbutton.setOnClickListener(this);
-
 
         edittextpostcomment = (EditText) findViewById(R.id.edittextpostcomment);
 
         CApostcommentbutton = (Button) findViewById(R.id.CApostcommentbutton);
         CApostcommentbutton.setOnClickListener(this);
 
-
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
-
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -87,7 +137,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                     imageNo = userProfile.getImageNo();
                     name = userProfile.getName();
-
                 }
             }
 
@@ -96,7 +145,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(CommentActivity.this, "Something went wrong!", Toast.LENGTH_LONG).show();
             }
         });
-
 
         Bundle extras = getIntent().getExtras();
 
@@ -115,7 +163,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView = findViewById(R.id.commentRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
         options = new FirebaseRecyclerOptions.Builder<Comment>().setQuery(root.child(postKey), Comment.class).build();
         adapter = new FirebaseRecyclerAdapter<Comment, CommentViewHolder>(options) {
@@ -139,7 +186,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     holder.userImage.setImageResource(R.drawable.image4);
                 }
 
-
                 holder.deletecommentbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -162,8 +208,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                                                         }
                                                     }).show();
-
-
                                         }
                                     })
                                     .setNegativeButton("Cancel", null);
@@ -188,7 +232,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
             }
 
-
             @NonNull
             @Override
             public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -202,6 +245,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v View
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -223,14 +270,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                                     ForumController.deletepostmethod(postKey);
                                     CommentActivity.this.finish();
-
                                 }
                             })
                             .setNegativeButton("Cancel", null);
                     AlertDialog alert = builder.create();
                     alert.show();
                     break;
-
                 }
 
                 else
@@ -244,7 +289,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             }).show();
                 }
                 break;
-
 
             case R.id.CApostcommentbutton:
                 int createpostinteger = ForumController.CApostcommentbuttonmethod(edittextpostcomment, postKey, name, imageNo);
@@ -294,17 +338,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Stops activity when back button is pressed
+     */
     public void CAbackbuttonmethod(){
         CommentActivity.this.finish();
 
     }
 
 
-
-
+    /**
+     * Posts the comment  and updates Firebase if comment is valid
+     * @param edittextpostcomment Comment written by user
+     * @return integer to indicate validity of the comment written
+     */
     public int CApostcommentbuttonmethod(EditText edittextpostcomment){
-
-
         if (edittextpostcomment.length()== 0)
         {
             return 1;
@@ -326,11 +374,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             comment.setCid(cid);
             root.setValue(comment);
             return 3;
-
-
         }
-
-
     }
 
 

@@ -14,10 +14,21 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Represents the JavaMailAPI that model a mail system
+ */
 public class JavaMailAPI extends AsyncTask<Void, Void, Void> {
-
+    /**
+     * The current context of the application
+     */
     private Context context;
+    /**
+     * The mail session
+     */
     private Session session;
+    /**
+     * The email address of the recipient, subject and message of the mail
+     */
     private String email, subject, message;
 
     public JavaMailAPI(Context context, String email, String subject, String message){
@@ -27,6 +38,11 @@ public class JavaMailAPI extends AsyncTask<Void, Void, Void> {
        this.message = message;
    }
 
+    /**
+     * Sends the email to the recipient
+     * @param voids
+     * @return null
+     */
     @Override
     protected Void doInBackground(Void... voids) {
         Properties properties = new Properties();

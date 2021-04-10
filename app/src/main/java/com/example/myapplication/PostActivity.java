@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,21 +19,55 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+/**
+ * Represents the Post Activity Boundary whereby a user creates a post
+ */
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
-
-
+    /**
+     * ImageView to display back button
+     */
     private ImageView backbutton;
+    /**
+     * Button to create post
+     */
     private Button postbutton;
+    /**
+     * EditText for users to enter post title and content
+     */
     private EditText posttitle, postcontent;
+    /**
+     * Instance of the Firebase
+     */
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference root;
+    /**
+     * User stored in Firebase
+     */
     private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
     private String userID;
+    /**
+     * The name of the user who created the post
+     */
     private String name;
+    /**
+     * Email of the user who created the post
+     */
     private String email;
-//Defining objects inside oncreate ----------------
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
+    //Defining objects inside oncreate ----------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +96,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
                     name = userProfile.getName();
                     email = user.getEmail();
-
                 }
             }
 
@@ -77,11 +104,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(PostActivity.this, "Something went wrong!", Toast.LENGTH_LONG).show();
             }
         });
-
     }
-
-
-//Button switch case -----------------------------
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v View
+     */
+    //Button switch case -----------------------------
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -89,7 +117,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 backbuttonmethod();
                 break;
             case R.id.postbutton:
-
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
                 builder.setTitle("WARNING")
@@ -99,20 +126,14 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(DialogInterface dialog, int which) {
 
                                 boolean postsuccess = ForumController.postbuttonmethod(posttitle, postcontent, name, email);
-
-
-                                if (!postsuccess)
-                                {
+                                if (!postsuccess) {
                                     posttitle.setError("Please enter a title");
                                 }
-                                else
-                                {
+                                else {
                                     PostActivity.this.finish();
                                 }
-
                             }
-
-                                })
+                        })
                         .setNegativeButton("Cancel", null);
 
                 AlertDialog alert = builder.create();
@@ -124,16 +145,11 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-//Methods below-------------------------------
-
+    //Methods below-------------------------------
+    /**
+     * Stops activity when back button is pressed
+     */
     public void backbuttonmethod(){
         PostActivity.this.finish();
-
     }
-
-
-
-
-
 }
