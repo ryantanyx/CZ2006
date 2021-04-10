@@ -12,12 +12,28 @@ import androidx.fragment.app.FragmentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents the Menu Activity Boundary which displays the menu bar and helps to switch between fragments after user login
+ */
 public class Menu extends AppCompatActivity {
-
+    /**
+     *     /**
+     *      * Tag to store the simple name of the Menu class
+     *      */
+     */
     private static final String TAG = LoginUser.class.getSimpleName();
+    /**
+     * AnimatedBottomBar for users to switch between different sections of the application
+     */
     private AnimatedBottomBar animatedBottomBar;
+    /**
+     * Fragment Manager to manage the switching of fragments
+     */
     private FragmentManager fragmentManager;
-
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

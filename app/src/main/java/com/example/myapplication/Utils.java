@@ -11,9 +11,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
-    public class Utils {
-
-        public static ColorDrawable[] vibrantLightColorList =
+/**
+ * Represents the Utility class for the formatting and style of the application
+ */
+public class Utils {
+    /**
+     * Creates a list of vibrant light colours
+     */
+    public static ColorDrawable[] vibrantLightColorList =
                 {
                         new ColorDrawable(Color.parseColor("#ffeead")),
                         new ColorDrawable(Color.parseColor("#93cfb3")),
@@ -25,12 +30,21 @@ import java.util.Random;
                         new ColorDrawable(Color.parseColor("#d93947"))
                 };
 
-        public static ColorDrawable getRandomDrawbleColor() {
+    /**
+     * Get a random colour from the list of vibrant light colours
+     * @return A random colour
+     */
+    public static ColorDrawable getRandomDrawbleColor() {
             int idx = new Random().nextInt(vibrantLightColorList.length);
             return vibrantLightColorList[idx];
         }
 
-        public static String DateToTimeFormat(String oldstringDate){
+    /**
+     * Converts a date to time format
+     * @param oldstringDate
+     * @return
+     */
+    public static String DateToTimeFormat(String oldstringDate){
             PrettyTime p = new PrettyTime(new Locale(getCountry()));
             String isTime = null;
             try {
@@ -45,7 +59,12 @@ import java.util.Random;
             return isTime;
         }
 
-        public static String DateFormat(String oldstringDate){
+    /**
+     * Reformats a date
+     * @param oldstringDate The current date format
+     * @return The new date format
+     */
+    public static String DateFormat(String oldstringDate){
             String newDate;
             SimpleDateFormat dateFormat = new SimpleDateFormat("E, d MMM yyyy", new Locale(getCountry()));
             try {
@@ -59,7 +78,11 @@ import java.util.Random;
             return newDate;
         }
 
-        public static String getCountry(){
+    /**
+     * Get the country the user belongs to
+     * @return The country the user belongs to
+     */
+    public static String getCountry(){
             Locale locale = Locale.getDefault();
             String country = String.valueOf(locale.getCountry());
             return country.toLowerCase();

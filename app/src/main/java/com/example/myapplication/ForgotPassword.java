@@ -17,14 +17,34 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Represents the ForgotPassword Activity when user clicks on the button
+ */
 public class ForgotPassword extends AppCompatActivity implements View.OnClickListener {
-
+    /**
+     * Firebase authenticator
+     */
     FirebaseAuth auth;
+    /**
+     * EditText for user to enter their email
+     */
     private EditText forgotEmail;
+    /**
+     * Reset password button
+     */
     private Button reset;
+    /**
+     * ProgressBar to indicate progress
+     */
     private ProgressBar forgotProgress;
+    /**
+     * TextView to display the relevant text
+     */
     private TextView forgotLogin;
-
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +61,9 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    /**
+     * Sends email to user for password reset if fields entered are valid
+     */
     private void resetPassword(){
         String email = forgotEmail.getText().toString().trim();
 
@@ -84,7 +107,10 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
-
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v view
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()) {

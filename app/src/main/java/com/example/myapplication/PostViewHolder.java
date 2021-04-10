@@ -7,6 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Represents the PostViewHolder Controller which controls the layout of the posts created using RecyclerView
+ */
 public class PostViewHolder extends RecyclerView.ViewHolder {
 
     TextView itemcontent, itemtitle, itemusername;

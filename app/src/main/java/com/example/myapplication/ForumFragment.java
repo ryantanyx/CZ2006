@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
+ * Represents the Forum Page Boundary where users can engage in discussions
  * A simple {@link Fragment} subclass.
  * Use the {@link ForumFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -31,12 +32,29 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
 
     private String mParam1;
     private String mParam2;
-
+    /**
+     * Instance of the Firebase
+     */
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    /**
+     * Reference to the "Post" child in Firebase
+     */
     private DatabaseReference root = db.getReference().child("Posts");
+    /**
+     * FirebaseOptions to configure the firebase
+     */
     private FirebaseRecyclerOptions<Post> options;
+    /**
+     * Firebase adapter that responds to changes in the firebase
+     */
     private FirebaseRecyclerAdapter<Post, PostViewHolder> adapter;
+    /**
+     * RecyclerView to contain the post
+     */
     private RecyclerView recyclerView;
+    /**
+     * ImageView of the create post button
+     */
     private ImageView createPost;
 
     // Required empty public constructor
@@ -60,7 +78,10 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Initial creation of fragment from savedInstanceState
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +90,13 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    /**
+     * Graphical Initialisation of the fragment and inflates the layout of the fragment onto a container
+     * @param inflater Inflate the layout of the fragment
+     * @param container Container for the layout
+     * @param savedInstanceState
+     * @return The forum page
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -139,7 +166,10 @@ public class ForumFragment extends Fragment implements View.OnClickListener{
 
         return view;
     }
-
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v View
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

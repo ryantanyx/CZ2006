@@ -19,21 +19,55 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+/**
+ * Represents the Post Activity Boundary whereby a user creates a post
+ */
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
-
+    /**
+     * ImageView to display back button
+     */
     private ImageView backbutton;
+    /**
+     * Button to create post
+     */
     private Button postbutton;
+    /**
+     * EditText for users to enter post title and content
+     */
     private EditText posttitle, postcontent;
+    /**
+     * Instance of the Firebase
+     */
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference root;
+    /**
+     * User stored in Firebase
+     */
     private FirebaseUser user;
+    /**
+     * Reference in database to retrieve information from
+     */
     private DatabaseReference reference;
+    /**
+     * User ID stored in Firebase
+     */
     private String userID;
+    /**
+     * The name of the user who created the post
+     */
     private String name;
+    /**
+     * Email of the user who created the post
+     */
     private String email;
-
-//Defining objects inside oncreate ----------------
+    /**
+     * Creation of activity from savedInstanceState and setting the layout
+     * @param savedInstanceState
+     */
+    //Defining objects inside oncreate ----------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +105,11 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
-//Button switch case -----------------------------
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param v View
+     */
+    //Button switch case -----------------------------
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -108,7 +145,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-//Methods below-------------------------------
+    //Methods below-------------------------------
+    /**
+     * Stops activity when back button is pressed
+     */
     public void backbuttonmethod(){
         PostActivity.this.finish();
     }

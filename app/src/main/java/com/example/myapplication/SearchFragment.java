@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Represents the SearchFragment Boundary where users can search for the schools they are interested in
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -48,29 +49,92 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    /**
+     * RecyclerView to contain the list of schools
+     */
     RecyclerView recyclerView;
+    /**
+     * Instance of the SearchAdapter to control the logic
+     */
     SearchAdapter adapter;
+    /**
+     * The list of schools available
+     */
     List<School> schoolList;
+    /**
+     * Dialog for the sort function
+     */
     private Dialog dialog;
+    /**
+     * RadioGroup to display sort options
+     */
     private RadioGroup sortRG;
+    /**
+     * Switch button to select ascending or descending for sort
+     */
     private Switch ascending;
+    /**
+     * Integer to store the user's sort choice
+     */
     private int selectedID;
     private String mParam1;
     private String mParam2;
+    /**
+     * SearchView to display search bar
+     */
     private SearchView searchView;
+    /**
+     * Boolean to indicate whether filter page is hidden
+     */
     private boolean filterHidden = true;
+    /**
+     * Buttons for the region filter and reset button
+     */
     private AppCompatButton resetButton, northButton, southButton, eastButton, westButton, filterButton;
+    /**
+     * Buttons for the stream filter
+     */
     private AppCompatButton expressButton, normalaButton, normaltButton;
+    /**
+     * Buttons for sorting by stream
+     */
     private AppCompatButton expressSort, normalAcadSort, normalTechSort;
+    /**
+     * RadioButtons for sorting by school name, region, PSLE cut-off and distance
+     */
     private RadioButton sortSchoolName, sortRegion, sortPSLECutOff,sortDistance;
+    /**
+     * RangeSlider for users to select range of PSLE scores and distance from home
+     */
     private RangeSlider psleSlider,distSlider;
+    /**
+     * TextView to display relevant text in Filter page
+     */
     private TextView region,streams,pslecutoff,cca,ccatype,ccaspecific,distText;
+    /**
+     * Spinner for users to select CCA to filter
+     */
     private AppCompatSpinner cca1,cca2;
+    /**
+     * Integers to store values of colours
+     */
     private int black,white,red;
+    /**
+     * ArrayList for drop down list when selecting CCA to filter
+     */
     private ArrayList<String> arrayList_parent, arrayList_all, arrayList_sports, arrayList_vpa, arrayList_cs,arrayList_ug;
+    /**
+     * ArrayAdapter to control text displayed in drop down list
+     */
     private ArrayAdapter<String> arrayAdapter_parent, arrayAdapter_child;
+    /**
+     * Set of each CCA type to ensure duplicates are removed
+     */
     private Set<String> set_sports = new HashSet<String>(), set_vpa = new HashSet<String>(), set_cs = new HashSet<String>(), set_ug = new HashSet<String>();
 
+    /**
+     * Required empty public constructor
+     */
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -91,7 +155,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Initial creation of fragment from savedInstanceState
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +167,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    /**
+     * Graphical Initialisation of the fragment and inflates the layout of the fragment onto a container
+     * @param inflater Inflate the layout of the fragment
+     * @param container Container for the layout
+     * @param savedInstanceState
+     * @return The search page
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -228,7 +301,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         return view;
     }
 
-
+    /**
+     * Create the options menu at the top of the page
+     * @param menu The menu to be created
+     * @param inflater The inflater to inflate the menu onto the layout
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
@@ -260,6 +337,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         });
     }
 
+    /**
+     * Populate the drop down list in the CCA filter
+     */
     private void ccaSpinner(){
         arrayList_parent = new ArrayList<>();
         arrayList_all = new ArrayList<>();
@@ -311,7 +391,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         Collections.sort(arrayList_cs);
         Collections.sort(arrayList_ug);
     }
-
+    /**
+     * Switch case to execute different commands for the respective buttons
+     * @param view
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
@@ -400,6 +483,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         }
     }
 
+    /**
+     * Filter by north region
+     */
     private void northFilter() {
         if (!adapter.getSelectedRegion().contains("north"))  {
             adapter.filterRegion("north");
@@ -414,7 +500,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.clearFocus();
         }
     }
-
+    /**
+     * Filter by south region
+     */
     private void southFilter() {
         if (!adapter.getSelectedRegion().contains("south")) {
             adapter.filterRegion("south");
@@ -429,7 +517,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.clearFocus();
         }
     }
-
+    /**
+     * Filter by east region
+     */
     private void eastFilter() {
         if (!adapter.getSelectedRegion().contains("east"))
         {
@@ -445,7 +535,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.clearFocus();
         }
     }
-
+    /**
+     * Filter by west region
+     */
     private void westFilter() {
         if (!adapter.getSelectedRegion().contains("west"))
         {
@@ -462,7 +554,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.clearFocus();
         }
     }
-
+    /**
+     * Filter by express stream
+     */
     private void expressFilter() {
         if (!adapter.getSelectedStream().contains("express"))
         {
@@ -479,7 +573,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.clearFocus();
         }
     }
-
+    /**
+     * Filter by normal academic stream
+     */
     private void normalaFilter() {
         if (!adapter.getSelectedStream().contains("na"))
         {
@@ -496,7 +592,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.clearFocus();
         }
     }
-
+    /**
+     * Filter by normal technical stream
+     */
     private void normaltFilter() {
         if (!adapter.getSelectedStream().contains("nt"))
         {
@@ -513,17 +611,24 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             searchView.clearFocus();
         }
     }
-
+    /**
+     * Reset the CCA filter selection
+     */
     private void resetSpinner() {
         cca1.setSelection(0);
         cca2.setSelection(0);
     }
-
+    /**
+     * Reset the PSLE cutoff and distance sliders
+     */
     private void resetSlider() {
         psleSlider.setValues((float)(0),(float)(300));
         distSlider.setValues((float)(0),(float)(50));
     }
 
+    /**
+     * Show/hide the filter page when filter button is clicked on
+     */
     private void showFilterTapped() {
         if (filterHidden) {
             filterHidden = false;
@@ -534,6 +639,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         }
     }
 
+    /**
+     * Hide the filter page
+     */
     private void hideFilter() {
         resetButton.setVisibility(View.GONE);
         northButton.setVisibility(View.GONE);
@@ -557,6 +665,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         filterButton.setText("FILTER");
     }
 
+    /**
+     * Show the filter page
+     */
     private void showFilter() {
         resetButton.setVisibility(View.VISIBLE);
         northButton.setVisibility(View.VISIBLE);
@@ -580,22 +691,35 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         filterButton.setText("HIDE");
     }
 
+    /**
+     * Populate the list of colours used in the fragment
+     */
     private void initColors() {
         black = ContextCompat.getColor(getContext(), R.color.black);
         white = ContextCompat.getColor(getContext(), R.color.white);
         red = ContextCompat.getColor(getContext(), android.R.color.holo_red_light);
     }
 
+    /**
+     * Show users the button is selected by changing colour
+     * @param button
+     */
     private void lookSelected(AppCompatButton button) {
         button.setTextColor(white);
         button.setBackgroundColor(red);
     }
-
+    /**
+     * Show users the button is not selected by changing colour
+     * @param button
+     */
     private void lookUnSelected(AppCompatButton button) {
         button.setTextColor(black);
         button.setBackgroundColor(white);
     }
 
+    /**
+     * Unselect all the region filter buttons
+     */
     private void unselectAllRegion() {
         lookUnSelected(northButton);
         lookUnSelected(southButton);
@@ -603,12 +727,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         lookUnSelected(westButton);
     }
 
+    /**
+     * Unselect all the stream filter buttons
+     */
     private void unselectAllStreams() {
         lookUnSelected(expressButton);
         lookUnSelected(normalaButton);
         lookUnSelected(normaltButton);
     }
 
+    /**
+     * Switch case for the sliders to execute their functions when value is changed
+     * @param slider The slider with the change in value
+     * @param value The value of the slider
+     * @param fromUser Whether the change was initiated from user
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
@@ -631,6 +764,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         }
     }
 
+    /**
+     * Switch case to sort the list of schools depending on user's selection
+     * @param filter Flag to indicate whether the sort is performed from the filter function
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void sort(boolean filter) {
         int index;
@@ -692,6 +829,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         }
     }
 
+    /**
+     * Changes the colour and set whether sort by express button is selected
+     */
     public void expressSortSelect() {
         if (expressSort.isSelected()) {
             lookUnSelected(expressSort);
@@ -702,7 +842,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             expressSort.setSelected(true);
         }
     }
-
+    /**
+     * Changes the colour and set whether sort by normal academic button is selected
+     */
     public void normalAcadSelect() {
         if (normalAcadSort.isSelected()) {
             lookUnSelected(normalAcadSort);
@@ -713,7 +855,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             normalAcadSort.setSelected(true);
         }
     }
-
+    /**
+     * Changes the colour and set whether sort by normal technical button is selected
+     */
     public void normalTechSelect() {
         if (normalTechSort.isSelected()) {
             lookUnSelected(normalTechSort);
@@ -724,7 +868,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
             normalTechSort.setSelected(true);
         }
     }
-
+    /**
+     * Unselect all sort buttons
+     */
     private void unselectAllSort() {
         expressSort.setSelected(false);
         normalAcadSort.setSelected(false);
@@ -734,12 +880,18 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ra
         lookUnSelected(normalTechSort);
     }
 
+    /**
+     * Hide buttons if PSLE cut-off sort was not selected
+     */
     private void nonScoreSelect() {
         expressSort.setVisibility(View.GONE);
         normalAcadSort.setVisibility(View.GONE);
         normalTechSort.setVisibility(View.GONE);
     }
 
+    /**
+     * Show buttons if PSLE cut-off sort was selected
+     */
     private void scoreSelect() {
         expressSort.setVisibility(View.VISIBLE);
         normalAcadSort.setVisibility(View.VISIBLE);

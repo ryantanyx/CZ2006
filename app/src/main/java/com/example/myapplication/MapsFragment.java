@@ -30,13 +30,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the MapsFragment Boundary to display the map showing user's address and nearby schools
+ */
 public class MapsFragment extends Fragment {
+    /**
+     * Location of the user in LatLng
+     */
     private LatLng userLocation;
+    /**
+     * Initialise Search Adapter Controller to retrieve list of schools
+     */
     private SearchAdapter adapter;
+    /**
+     * Stores the list of schools
+     */
     private List<School> schoolList;
-
+    /**
+     * Callback interface for when the map is ready to be used.
+     */
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
+        /**
+         * Preparing the map and controlling the display
+         * @param googleMap
+         */
         @Override
         public void onMapReady(GoogleMap googleMap) {
             LatLngBounds sgBounds = new LatLngBounds(
@@ -72,6 +89,13 @@ public class MapsFragment extends Fragment {
         }
     };
 
+    /**
+     * Initialisation of the fragment and inflates the layout of the fragment onto a container
+     * @param inflater Inflate the layout of the fragment
+     * @param container Container for the layout
+     * @param savedInstanceState
+     * @return The map fragment page
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -139,6 +163,11 @@ public class MapsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Called immediately after onCreateView to initialise Map
+     * @param view View
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
