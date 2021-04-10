@@ -52,21 +52,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
      */
     private static double schDistance;
     /**
-     * Instance of the MapController
-     */
-    private static MapController MapController;
-    /**
-     * User accessing the application
-     */
-    private static User User;
-    /**
      * The current context of the application
      */
     private static Context context;
-    /**
-     * Boolean Flag
-     */
-    boolean flag = true;
     /**
      * Layout inflater to instantiate layout from XML file
      */
@@ -100,10 +88,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
      */
     private int pslemin = 0,pslemax = 300,distmin=0,distmax=50;
     /**
-     * User accessing the application
-     */
-    private User userProfile;
-    /**
      * User stored in Firebase
      */
     private FirebaseUser user;
@@ -123,14 +107,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
      * HashMap mapping the distance between the school and user's location to each school
      */
     private HashMap<String, Double> schDistList = new HashMap<>();
-    /**
-     * Ordered HashMap mapping the distance between the school and user's location to each school
-     */
-    private HashMap<String, Double> schOrderedDistList;
-    /**
-     * Snapshot of the data in Firebase
-     */
-    private DataSnapshot snapshot;
 
     /**
      * Constructor to create new Search Adapter
