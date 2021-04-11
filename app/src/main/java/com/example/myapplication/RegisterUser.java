@@ -270,12 +270,6 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        /*if(!MapController.isValidAddress(v.getContext(), address)){
-            regAddress.setError("Please provide a valid home address!");
-            regAddress.requestFocus();
-            return;
-        }*/
-
         if(password.isEmpty()){
             regPassword.setError("Password is not entered!");
             regPassword.requestFocus();
