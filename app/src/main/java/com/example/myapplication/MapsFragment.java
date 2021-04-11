@@ -103,6 +103,7 @@ public class MapsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        getActivity().setTitle("Maps");
         FirebaseUser user;
         DatabaseReference reference;
         String userID;
